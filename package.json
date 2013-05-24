@@ -1,0 +1,26 @@
+{
+  "name": "webapps",
+  "version": "0.0.1",
+  "main": "app.js",
+  "repository": "",
+  "author": "",
+  "license": "Harry's favourite license",
+  "scripts": {
+    "start": "./node_modules/.bin/supervisor app.coffee"
+  },
+  "dependencies": {
+    "coffee-script": "*",
+    "cookie": "*",
+    "express": "*",
+    "inflection": "*",
+    "jade": "*",
+    "nconf": "*",
+    "pkginfo": "*",
+    "underscore": "*",
+    "underscore.string": "*",
+    "component": "~0.16.0"
+  },
+  "devDependencies": {
+    "supervisor": "~0.5.2"
+  }
+}
