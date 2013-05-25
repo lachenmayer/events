@@ -1,3 +1,7 @@
+JADE_FILES 		= ['views/*.jade']
+SCRIPT_FILES 	= ['views/*.coffee']
+STYLUS_FILES 	= ['views/*.stylus']
+
 module.exports = (grunt) ->
 	grunt.initConfig
 		pkg: grunt.file.readJSON('package.json'),
@@ -9,8 +13,7 @@ module.exports = (grunt) ->
 					pretty: true
 				files: [
 					expand: true
-					cwd: 'views'
-					src: ['**/*.jade']
+					src: JADE_FILES
 					dest: 'public'
 					ext: '.html'
 				]
@@ -20,7 +23,7 @@ module.exports = (grunt) ->
 			config:
 				files: [
 					expand: true
-					src: ['views/*.coffee']
+					src: SCRIPT_FILES
 					dest: 'public/js'
 					ext: '.js'
 				]
@@ -30,16 +33,30 @@ module.exports = (grunt) ->
 			compile:
 				files: [
 					expand: true
-					src: ['views/*.stylus']
+					src: STYLUS_FILES
 					dest: 'public/css'
 					ext: '.css'
 				]
+				
+		# Watch config
+		watch:
+			scripts:
+				files: SCRIPT_FILES
+				tasks: ['coffee']
+			jade:
+				files: JADE_FILES
+				tasks: ['jade']
+			stylus:
+				files: STYLUS_FILES
+				tasks: ['stylus']
+			
 					
 
   # Load the NPM tasks.
 	grunt.loadNpmTasks 'grunt-contrib-jade';
 	grunt.loadNpmTasks 'grunt-contrib-coffee';
 	grunt.loadNpmTasks 'grunt-contrib-stylus';
+	grunt.loadNpmTasks 'grunt-contrib-watch';
 	
 	# Register our default tasks.
 	grunt.registerTask 'default', ['jade', 'coffee', 'stylus'];
