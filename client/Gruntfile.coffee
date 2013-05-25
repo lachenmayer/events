@@ -51,6 +51,10 @@ module.exports = (grunt) ->
 				tasks: ['stylus']
 			
 					
+	# Copy libraries
+	grunt.registerTask 'copy-backbone', ->
+		grunt.file.mkdir 'public/js/lib'
+		grunt.file.copy 'node_modules/backbone/backbone-min.js', 'public/js/lib/backbone-min.js'
 
   # Load the NPM tasks.
 	grunt.loadNpmTasks 'grunt-contrib-jade';
@@ -59,4 +63,4 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks 'grunt-contrib-watch';
 	
 	# Register our default tasks.
-	grunt.registerTask 'default', ['jade', 'coffee', 'stylus'];
+	grunt.registerTask 'default', ['jade', 'coffee', 'stylus', 'copy-backbone'];
