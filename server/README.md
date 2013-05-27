@@ -1,3 +1,3 @@
-#node-coffeescript-express-boilerplate
+# Serverside of the Webapps Application
 
-Simple project structure for MVC based express.js projects using CoffeeScript.
+Powered by Coffeescript + Node + Neo4j

@@ -66,6 +66,5 @@ module.exports = (grunt) ->
 	  'jade',
 	  'coffee',
 	  'stylus',
-	  'copy-backbone',
-	  'watch'
+	  'copy-backbone'
   ]
