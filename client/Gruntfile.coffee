@@ -37,28 +37,36 @@ module.exports = (grunt) ->
 					ext: '.css'
 				]
 				
+		# Component config
+		component:
+		  install:
+		    options:
+		      action: 'install'
+		component_build:
+		  app:
+		    output: 'public/build'
+				
 		# Watch config
 		watch:
 		  jade:
   		  files: ['templates/*.jade']
-  		  tasks: ['jade']
+  		  tasks: 'jade'
   		coffee:
         files: ['js/*.coffee']
-        tasks: ['coffee']
+        tasks: 'coffee'
       stylus:
         files: ['css/*.stylus']
-        tasks: ['stylus']
-			
-					
-	# Copy libraries
-	grunt.registerTask 'copy-backbone', ->
-		grunt.file.mkdir 'public/js/lib'
-		grunt.file.copy 'node_modules/backbone/backbone-min.js', 'public/js/lib/backbone-min.js'
+        tasks: 'stylus'
+      component:
+        files: 'component.json'
+        tasks: 'component'
 
   # Load dependencies
 	grunt.loadNpmTasks 'grunt-contrib-jade'
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-stylus'
+	grunt.loadNpmTasks 'grunt-component'
+	grunt.loadNpmTasks 'grunt-component-build'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
 	
 	# Register our default tasks
@@ -66,5 +74,6 @@ module.exports = (grunt) ->
 	  'jade',
 	  'coffee',
 	  'stylus',
-	  'copy-backbone'
+	  'component',
+	  'component_build',
   ]
