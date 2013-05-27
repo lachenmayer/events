@@ -39,7 +39,7 @@ module.exports = (grunt) ->
 				
 		# Watch config
 		watch:
-		  jade:		  
+		  jade:
   		  files: ['templates/*.jade']
   		  tasks: ['jade']
   		coffee:
