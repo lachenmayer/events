@@ -20,7 +20,9 @@
     "underscore.string": "*",
     "component": "~0.16.0",
     "cheerio": "~0.11.0",
-    "neo4j": "~0.2.20"
+    "neo4j": "~0.2.20",
+    "moment": "~2.0.0",
+    "request": "~2.21.0"
   },
   "devDependencies": {
     "supervisor": "~0.5.2"

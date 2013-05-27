@@ -1,10 +1,22 @@
-request = require("request")
-cheerio = require('cheerio')
-url     = require('url')
+request = require 'request'
+cheerio = require 'cheerio'
+url     = require 'url'
+moment  = require 'moment'
+
+
+
+# fetchUnionEvent
+
+#
 
 exports.scrape = (handler) ->
 	# Scrape all of the dates for the event
-	fetchUnionEvent "2013", "06", handler
+	now = moment()
+	lastMonth = moment().subtract('month', 1)
+	nextMonth = moment().add('month', 1)
+	fetchUnionEvent lastMonth, handler
+	fetchUnionEvent now, handler
+	fetchUnionEvent nextMonth, handler
 
 # Defines the url for the union website
 UNION_URL = "https://www.imperialcollegeunion.org/whats-on"
@@ -64,9 +76,9 @@ fetchEvent = (year, month, $, handler) ->
 			followEvent details, u, handler
 
 # A method that fetches data from the imperial website
-fetchUnionEvent = (year, month, handler) ->
-	fetchAndExecute EVENTS_SITE(year, month), ($) ->
-		fetchEvent year, month, $, handler
+fetchUnionEvent = (moment, handler) ->
+	fetchAndExecute EVENTS_SITE(moment.year(), moment.month() + 1), ($) ->
+		fetchEvent moment.year(), moment.month() + 1, $, handler
 
 fetchAndExecute = (uri, handler) ->
 	request {

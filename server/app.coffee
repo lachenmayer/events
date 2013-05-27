@@ -1,4 +1,5 @@
 express = require 'express'
+eventDiscoveryAPI = require 'eventDiscovery'
 
 app = express()
 
@@ -14,3 +15,6 @@ app.use express.logger 'dev'
 
 app.listen PORT, ->
   console.log "running! on port #{PORT}"
+
+app.get '/eventdiscovery', eventDiscoveryAPI.all
+
