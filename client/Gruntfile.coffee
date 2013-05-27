@@ -1,7 +1,3 @@
-JADE_FILES 		= ['views/*.jade']
-SCRIPT_FILES 	= ['views/*.coffee']
-STYLUS_FILES 	= ['views/*.stylus']
-
 module.exports = (grunt) ->
 	grunt.initConfig
 		pkg: grunt.file.readJSON('package.json'),
@@ -12,10 +8,11 @@ module.exports = (grunt) ->
 				options:
 					pretty: true
 				files: [
-					expand: true
-					src: JADE_FILES
-					dest: 'public'
-					ext: '.html'
+				  expand: true
+				  cwd: 'views'
+				  src: ['**/*.jade']
+				  dest: 'public/'
+				  ext: '.html'
 				]
 				
 		# CoffeeScript config
@@ -23,7 +20,8 @@ module.exports = (grunt) ->
 			config:
 				files: [
 					expand: true
-					src: SCRIPT_FILES
+					cwd: 'views'
+					src: ['**/*.coffee']
 					dest: 'public/js'
 					ext: '.js'
 				]
@@ -33,22 +31,23 @@ module.exports = (grunt) ->
 			compile:
 				files: [
 					expand: true
-					src: STYLUS_FILES
+					cwd: 'views'
+					src: ['**/*.stylus']
 					dest: 'public/css'
 					ext: '.css'
 				]
 				
 		# Watch config
 		watch:
-			scripts:
-				files: SCRIPT_FILES
-				tasks: ['coffee']
-			jade:
-				files: JADE_FILES
-				tasks: ['jade']
-			stylus:
-				files: STYLUS_FILES
-				tasks: ['stylus']
+		  jade:		  
+  		  files: ['views/*.jade']
+  		  tasks: ['jade']
+  		coffee:
+        files: ['views/*.coffee']
+        tasks: ['coffee']
+      stylus:
+        files: ['views/*.stylus']
+        tasks: ['stylus']
 			
 					
 	# Copy libraries
@@ -56,11 +55,17 @@ module.exports = (grunt) ->
 		grunt.file.mkdir 'public/js/lib'
 		grunt.file.copy 'node_modules/backbone/backbone-min.js', 'public/js/lib/backbone-min.js'
 
-  # Load the NPM tasks.
-	grunt.loadNpmTasks 'grunt-contrib-jade';
-	grunt.loadNpmTasks 'grunt-contrib-coffee';
-	grunt.loadNpmTasks 'grunt-contrib-stylus';
-	grunt.loadNpmTasks 'grunt-contrib-watch';
+  # Load dependencies
+	grunt.loadNpmTasks 'grunt-contrib-jade'
+	grunt.loadNpmTasks 'grunt-contrib-coffee'
+	grunt.loadNpmTasks 'grunt-contrib-stylus'
+	grunt.loadNpmTasks 'grunt-contrib-watch'
 	
-	# Register our default tasks.
-	grunt.registerTask 'default', ['jade', 'coffee', 'stylus', 'copy-backbone'];
+	# Register our default tasks
+	grunt.registerTask 'default',  [
+	  'jade',
+	  'coffee',
+	  'stylus',
+	  'copy-backbone',
+	  'watch'
+  ]
