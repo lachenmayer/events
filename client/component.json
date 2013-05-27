@@ -1,0 +1,7 @@
+{
+    "name": "Events",
+    "dependencies": {
+        "solutionio/backbone" : "master",
+        "cayasso/list": "master"
+    }
+}

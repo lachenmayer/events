@@ -10,42 +10,42 @@ Dummy data is to be provided.
 ------
 WIP Schema
 
-Event
-{
-	From: <TIMESTAMP>
-	To: <TIMESTAMP>
-	Description: <String>
-	Summary: <String>
-}
-Maps to Location, Users ,Tags
+    Event
+    {
+    	From: <TIMESTAMP>
+    	To: <TIMESTAMP>
+    	Description: <String>
+    	Summary: <String>
+    }
+    Maps to Location, Users ,Tags
 
-User 
-{
-	Name: <String>
-	UserName: <String>
-}
-Maps to Users, Tags, Events
+    User 
+    {
+    	Name: <String>
+    	UserName: <String>
+    }
+    Maps to Users, Tags, Events
 
-Tags:
-{
-	TagName: <String>
-}
-Maps to Events, Users
+    Tags:
+    {
+    	TagName: <String>
+    }
+    Maps to Events, Users
 
-Location:
-{
-	GeoLoc: <GMaps GeoLoc>
-	Location: <String>
-}
-Maps to Events
+    Location:
+    {
+    	GeoLoc: <GMaps GeoLoc>
+    	Location: <String>
+    }
+    Maps to Events
 
-Relationships:
-[
-Host,
-Attending,
-Maybe,
-Declined,
-subscribedTo,
-taggedWith,
-locatedAt
-]
+    Relationships:
+    [
+    Host,
+    Attending,
+    Maybe,
+    Declined,
+    subscribedTo,
+    taggedWith,
+    locatedAt
+    ]

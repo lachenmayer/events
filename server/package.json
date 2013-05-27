@@ -18,7 +18,8 @@
     "pkginfo": "*",
     "underscore": "*",
     "underscore.string": "*",
-    "component": "~0.16.0"
+    "component": "~0.16.0",
+    "node-neo4j": "~1.0.3"
   },
   "devDependencies": {
     "supervisor": "~0.5.2"
