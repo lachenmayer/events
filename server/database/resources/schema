@@ -38,3 +38,14 @@ Location:
 	Location: <String>
 }
 Maps to Events
+
+Relationships:
+[
+Host,
+Attending,
+Maybe,
+Declined,
+subscribedTo,
+taggedWith,
+locatedAt
+]
