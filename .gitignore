@@ -14,3 +14,7 @@ node_modules
 
 
 npm-debug.log
+
+# Intellij idea files
+.idea
+*.iml
