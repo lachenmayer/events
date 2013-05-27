@@ -9,7 +9,7 @@ module.exports = (grunt) ->
 					pretty: true
 				files: [
 				  expand: true
-				  cwd: 'views'
+				  cwd: 'templates'
 				  src: ['**/*.jade']
 				  dest: 'public/'
 				  ext: '.html'
@@ -20,7 +20,7 @@ module.exports = (grunt) ->
 			config:
 				files: [
 					expand: true
-					cwd: 'views'
+					cwd: 'js'
 					src: ['**/*.coffee']
 					dest: 'public/js'
 					ext: '.js'
@@ -40,10 +40,10 @@ module.exports = (grunt) ->
 		# Watch config
 		watch:
 		  jade:		  
-  		  files: ['views/*.jade']
+  		  files: ['templates/*.jade']
   		  tasks: ['jade']
   		coffee:
-        files: ['views/*.coffee']
+        files: ['js/*.coffee']
         tasks: ['coffee']
       stylus:
         files: ['css/*.stylus']
