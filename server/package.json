@@ -19,7 +19,8 @@
     "underscore": "*",
     "underscore.string": "*",
     "component": "~0.16.0",
-    "node-neo4j": "~1.0.3"
+    "cheerio": "~0.11.0",
+    "neo4j": "~0.2.20"
   },
   "devDependencies": {
     "supervisor": "~0.5.2"

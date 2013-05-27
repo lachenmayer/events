@@ -2,6 +2,9 @@ request = require("request")
 cheerio = require('cheerio')
 url     = require('url')
 
+exports.scrape = (handler) ->
+	# Scrape all of the dates for the event
+	fetchUnionEvent "2013", "06", handler
 
 # Defines the url for the union website
 UNION_URL = "https://www.imperialcollegeunion.org/whats-on"
@@ -23,7 +26,7 @@ getDate = (year, month, day, time) ->
 	return "#{year}/#{month}/#{day} #{time}"
 
 
-followEvent = (details, u) ->
+followEvent = (details, u, handler) ->
 	# Should fetch the website and get the details
 	fetchAndExecute u, ($) ->
 		location      = $(".whatsoneventpagevenue").text()
@@ -33,11 +36,10 @@ followEvent = (details, u) ->
 		details["description"] = description
 		details["image"] = imageAbsolute
 		details["source"] = "scrapedData"
-		console.log details
+		handler details
 
 
-fetchEvent = (year, month, $) ->
-	events = []
+fetchEvent = (year, month, $, handler) ->
 	$("table.calendar .calendar-day").each (index, td) ->
 		day = $(td).find(".day-number").text()
 		$(td).find(".calendar-event li").each (index, e) ->
@@ -59,14 +61,12 @@ fetchEvent = (year, month, $) ->
 				type: eventType
 			}
 
-			followEvent details, u
-
-console.log "Starting to fetch the website"
+			followEvent details, u, handler
 
 # A method that fetches data from the imperial website
-fetchUnionEvent = (year, month) ->
+fetchUnionEvent = (year, month, handler) ->
 	fetchAndExecute EVENTS_SITE(year, month), ($) ->
-		fetchEvent year, month, $
+		fetchEvent year, month, $, handler
 
 fetchAndExecute = (uri, handler) ->
 	request {
@@ -76,13 +76,3 @@ fetchAndExecute = (uri, handler) ->
 		console.log "Parsing #{uri}"
 		handler $
 		console.log "Paresed #{uri}"
-
-# Invoking of an event
-fetchUnionEvent "2013", "06"
-
-# # A repeater function
-# repeater = (handle, timeout) ->
-# 	handler = ->
-# 		handle()
-# 		setTimeout handler, timeout
-# 	handler()
