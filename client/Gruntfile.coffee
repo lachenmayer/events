@@ -31,7 +31,7 @@ module.exports = (grunt) ->
 			compile:
 				files: [
 					expand: true
-					cwd: 'views'
+					cwd: 'css'
 					src: ['**/*.stylus']
 					dest: 'public/css'
 					ext: '.css'
@@ -46,7 +46,7 @@ module.exports = (grunt) ->
         files: ['views/*.coffee']
         tasks: ['coffee']
       stylus:
-        files: ['views/*.stylus']
+        files: ['css/*.stylus']
         tasks: ['stylus']
 			
 					
