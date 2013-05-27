@@ -5,6 +5,7 @@
   "main": "index.js",
   "devDependencies" : {
   	"backbone": "~1.0.0",
+  	"component": "~0.16",
     "grunt": "~0.4.1",
     "grunt-contrib-jade": "~0.6.0",
     "grunt-contrib-coffee": "~0.7.0",
