@@ -1,13 +1,12 @@
+###
+  Scraper for the events website on the union site
+###
+
 request = require 'request'
 cheerio = require 'cheerio'
 url     = require 'url'
 moment  = require 'moment'
 
-
-
-# fetchUnionEvent
-
-#
 
 exports.scrape = (handler) ->
 	# Scrape all of the dates for the event
@@ -55,20 +54,19 @@ fetchEvent = (year, month, $, handler) ->
 	$("table.calendar .calendar-day").each (index, td) ->
 		day = $(td).find(".day-number").text()
 		$(td).find(".calendar-event li").each (index, e) ->
-			eventType = $(e).attr('class')
-			time   = $(e).find("a").children().first().text()
+			eventType   = $(e).attr('class')
+			time        = $(e).find("a").children().first().text()
 			$(e).find("a").children().remove()
-			message   = $(e).find("a").text()
-			config = parseMessage message, time
+			message     = $(e).find("a").text()
+			config      = parseMessage message, time
 			relativeUrl = $(e).find("a").attr('href')
-			u = url.resolve EVENTS_SITE(year, month), relativeUrl
+			u           = url.resolve EVENTS_SITE(year, month), relativeUrl
 
 			details = {
 				name: config.name
 				host: config.host
 				url: u
 				location: config.location
-				# description: details.description
 				date: getDate year, month, day, config.time
 				type: eventType
 			}
@@ -85,6 +83,5 @@ fetchAndExecute = (uri, handler) ->
 		uri: uri
 	}, (error, response, body) ->
 		$ = cheerio.load(body)
-		console.log "Parsing #{uri}"
 		handler $
 		console.log "Paresed #{uri}"
