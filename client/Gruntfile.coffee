@@ -53,7 +53,13 @@ module.exports = (grunt) ->
       app:
         files:
           'public/js/app.js' : ['build/app.js']
-        
+
+    # Copying files
+    copy:
+      app:
+        src: 'build/app.css'
+        dest: 'public/css/app.css'
+
     # Watch config
     watch:
       jade:
@@ -74,6 +80,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
+  grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-component'
   grunt.loadNpmTasks 'grunt-component-build'
   grunt.loadNpmTasks 'grunt-contrib-watch'
@@ -81,7 +88,8 @@ module.exports = (grunt) ->
   grunt.registerTask 'component_update', [
     'component',
     'component_build',
-    'uglify'
+    'uglify:app',
+    'copy:app'
   ]
   
   # Register our default tasks
