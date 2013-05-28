@@ -45,7 +45,7 @@ followEvent = (details, u, handler) ->
 		imageAbsolute = u + "/image"
 		details["location"]    = location
 		details["description"] = description
-		details["image"] = imageAbsolute
+		details["image"]  = imageAbsolute
 		details["source"] = "scrapedData"
 		handler details
 
