@@ -5,10 +5,13 @@ db = database.db
 
 pushToNeo = (config) ->
   # Might need to parse the config file
-  newNode = db.createNode config
-  newNode.save (err, node) ->
-    if (err)
-      console.log "Error saving the data to the database #{err} #{node}"
+  database.getNode "event", (err, eventNode) ->
+    newNode = db.createNode config
+    newNode.save (err, node) ->
+      if (err)
+        console.log "Error saving the data to the database #{err} #{node}"
+      else
+        makeRelationship eventNode, node, "EVENT", -> # Event created (log to file?)
 
 scrapeAll = ->
   # Remove the previously scraped data
