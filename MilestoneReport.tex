@@ -1,0 +1,46 @@
+\documentclass[a4wide, 11pt]{article}
+\usepackage{a4, fullpage}
+\usepackage[margin=2.5cm]{geometry}
+\setlength{\parskip}{0.4cm}
+\setlength{\parindent}{0cm}
+\newcommand{\tx}{\texttt}
+
+\begin{document}
+\title{WebApps: Milestone Report}
+\author{Alex Rozanski (anr11), Artur Spychaj (azs11),\\ Harry Lachenmayer (hl2711) and Thomas Rooney (tr111)}
+
+\maketitle
+
+\section*{App description}
+
+Imperial hosts many fantastic events. These events are advertised on billboards and on many different mailing lists, which makes it impossible to know exactly what's happening at any given time. We are building a web app which lets you discover events at Imperial based on your interests, and also makes it easier to announce and promote events.
+
+We have identified three main user groups for this app: \textbf{undergraduates}, \textbf{postgraduates} and \textbf{event organisers}.
+
+\section*{User Interaction}
+
+The user is presented with a list of tags for events. They can choose which tags they are interested in. The user is then shown a list of events relating to the chosen tags. The user can log in with their Imperial username, and can choose to receive email updates for events relating to their interests.
+
+A user can also create new events. An event needs to have a name and a description, and a list of tags.
+
+\section*{Implementation}
+
+We chose to implement this application in \textit{CoffeeScript}. We chose CoffeeScript because of its very clean and concise syntax, and because it compiles down to JavaScript, which means that we can use it on the client-side. We felt it was advantageous to also write the server-side components in the same programming language, especially as the \textit{Node.js} server-side platform is a compelling option.
+
+\subsection*{Server-side}
+
+The server-side of the application is based on Node.js, and exposes a REST interface to any client. This allows us to hide all the server implementation details from the client, and similarly allows us to write several client-side implementations, for example a web client and an iOS or Android client.
+
+Our data is stored in a \textit{Neo4j} database (Neo4j being a graph database server). Since our data consists mostly of many-to-many relationships, we felt that a graph database allowed us to model the data in the cleanest manner possible.
+
+\subsection*{Client-side}
+
+The client-side of the application is implemented in CoffeeScript, using the \textit{Backbone.js} library. Backbone is a minimal MVC library for client-side JavaScript web apps. The client-side interacts with the server via REST requests.
+
+The client-side templates are written in \textit{Jade}, which is a templating language that compiles down to HTML. We use the build tools \textit{grunt} and \textit{component} to automatically compile and minify the code.
+
+\section*{Group Structure/Work Division}
+
+Alex and Harry are responsible for the client-side implementation. Thomas and Artur are responsible for the server-side implementation, and Artur is additionally responsible for a scraper for the Union event calendar.
+
+\end{document}
