@@ -18,3 +18,7 @@ npm-debug.log
 # Intellij idea files
 .idea
 *.iml
+
+# LaTeX stuff
+*.aux
+*.pdf
