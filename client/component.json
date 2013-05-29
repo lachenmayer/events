@@ -3,5 +3,7 @@
     "dependencies": {
         "solutionio/backbone" : "master",
         "cayasso/list": "master"
-    }
+    },
+    "local": ["main"],
+    "paths": ["components", "lib"]
 }
