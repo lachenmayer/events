@@ -4,12 +4,6 @@ async = require('async')
 URL = "http://localhost:7474"
 db = new neo4j.GraphDatabase(URL)
 
-# Defines the exported variables and functions
-exports.db = db
-exports.setup = setup
-exports.makeNode = makeNode
-exports.makeRelationship = makeRelationship
-
 createNodes = (nodes, created, handler) ->
   if (nodes.length == 0)
     handler()
@@ -78,6 +72,13 @@ outputNode = (err, node) ->
     else
       console.log node[0].m.data
 
-# Sets up the database fields
-# If already created skips the setup
-setup()
+# Defines the exported variables and functions
+exports.db = db
+exports.setup = setup
+exports.makeNode = makeNode
+exports.makeRelationship = makeRelationship
+exports.getNode = getNode
+
+# Running the script sets up the database
+if (!module.parent)
+  setup()

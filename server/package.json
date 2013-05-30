@@ -23,7 +23,7 @@
     "neo4j": "~0.2.20",
     "moment": "~2.0.0",
     "request": "~2.21.0",
-    "swagger-node-express": "~1.2.3"
+    "swagger-node-express": "~1.2.3",
     "async": "~0.2.9"
   },
   "devDependencies": {
