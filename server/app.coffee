@@ -1,6 +1,7 @@
 express = require 'express'
 swagger = require 'swagger-node-express'
 swaggerModels = require './models'
+eventData = require './database/events'
 
 app = express()
 
@@ -38,16 +39,16 @@ getEventById =
     params: [swagger.pathParam("eventId", "ID of event to be fetched", "long")]
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("eventId"), swagger.errors.notFound("event")]
-    nickname: "getEventById"
+    nickname: "getNodeById"
 
   action: (req, res) ->
-    throw swagger.errors.invalid("eventId")  unless req.params.eventId
+    throw swagger.errors.invalid("eventId") unless req.params.eventId
     id = parseInt(req.params.eventId)
-    event = eventData.getEventById(id)
-    if event
-      res.send JSON.stringify(event)
-    else
-      throw swagger.errors.notFound("event")
+    eventData.getEventById id, (event) ->
+      if event
+        res.send JSON.stringify(event)
+      else
+        throw swagger.errors.notFound("event")
 
 getEventsInRange =
   spec:
@@ -72,7 +73,26 @@ getEventsInRange =
     events = getEventsInRangeF(req.query)
     res.send JSON.stringify(events)
 
+getAllEvents =
+  spec:
+    description: "Get all of the events"
+    path: "/event.json/ALL"
+    notes: "Returns all of the events saved in the database"
+    method: "GET"
+    params: []
+    responseClass: "event"
+    errorResponses: [swagger.errors.notFound("events")]
+    nickname: "getAllEvents"
 
+  action: (req, res) ->
+    eventData.getAllEvents (events) ->
+      if events
+        res.send JSON.stringify(events)
+      else
+        throw swagger.errors.notFound("events")
+
+
+swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventById
 swagger.configure("http://petstore.swagger.wordnik.com", "0.1");
