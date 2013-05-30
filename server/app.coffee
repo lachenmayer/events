@@ -49,9 +49,30 @@ getEventById =
     else
       throw swagger.errors.notFound("event")
 
+getEventInRange =
+  spec:
+    description: "Get Event In a given time range"
+    path: "/event.json/findInRange"
+    notes: "Returns a list of events"
+    summary: "Find events within range"
+    method: "GET"
+    params: [
+      swagger.params.query("eventRangeRequestHeader", "Event Range Request Header", "eventRangeRequestHeader", true, true, true, {})
+    ]
+    responseClass: "List[event]"
+    errorResponses: [swagger.errors.invalid("eventRangeRequestHeader")]
+    nickname: "getEventInRange"
+  action: (req, res) ->
+    console.log "Request", req
+    throw swagger.errors.invalid("eventRangeRequestHeader")  unless req.params.eventRangeRequestHeader
+    events = eventData.getEventsInRange(req.params.eventRangeRequestHeader)
+    res.send JSON.stringify(events)
+
+
+swagger.addGet getEventInRange
 swagger.addGet getEventById
 swagger.configure("http://petstore.swagger.wordnik.com", "0.1");
-
+  
 
 
 app.listen PORT, ->

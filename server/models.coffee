@@ -20,6 +20,17 @@ exports.models =
         type: "string"
       url:
         type: "string"
+  eventRangeRequestHeader:
+    id: "eventRangeRequestHeader"
+    properties:
+      from:
+        type: "long"
+      to:
+        type: "long"
+      max:
+        type: "long"
+      offset:
+        type: "long"
 
 
 
