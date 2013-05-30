@@ -8,9 +8,12 @@
   "development": {},
   "license": "MIT",
   "scripts": [
-    "index.coffee"
+    "index.js"
   ],
   "styles": [
     "main.styl"
+  ],
+  "templates": [
+    "main.jade"
   ]
 }

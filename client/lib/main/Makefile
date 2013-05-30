@@ -1,6 +1,6 @@
 
-build: components index.coffee main.css
-	@component build --dev --use component-coffee
+build: components index.js main.css
+	@component build
 
 components: component.json
 	@component install --dev
