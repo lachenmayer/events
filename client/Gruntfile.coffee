@@ -75,8 +75,11 @@ module.exports = (grunt) ->
         files: ['js/*.coffee']
         tasks: 'coffee'
       stylus:
-        files: ['css/*.stylus']
+        files: ['css/*.styl']
         tasks: 'stylus'
+      lib:
+        files: ['lib/**/*.jade', 'lib/**/*.styl', 'lib/**/*.coffee']
+        tasks: ['component_private']
       component:
         files: 'component.json'
         tasks: 'component_update'
@@ -90,7 +93,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-component'
   grunt.loadNpmTasks 'grunt-component-build'
   grunt.loadNpmTasks 'grunt-contrib-watch'
-    
+
+  grunt.registerTask 'component_private', [
+    'component_build',
+    'uglify:app',
+    'copy:app'
+  ]
   grunt.registerTask 'component_update', [
     'component',
     'component_build',
