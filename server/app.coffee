@@ -49,7 +49,7 @@ getEventById =
     else
       throw swagger.errors.notFound("event")
 
-getEventInRange =
+getEventsInRange =
   spec:
     description: "Get Event In a given time range"
     path: "/event.json/findInRange"
@@ -58,21 +58,29 @@ getEventInRange =
     method: "GET"
     params: [
       swagger.params.query("eventRangeRequestHeader", "Event Range Request Header", "eventRangeRequestHeader", true, true, true, {})
-    ]
+      ]
     responseClass: "List[event]"
     errorResponses: [swagger.errors.invalid("eventRangeRequestHeader")]
     nickname: "getEventInRange"
   action: (req, res) ->
-    console.log "Request", req
-    throw swagger.errors.invalid("eventRangeRequestHeader")  unless req.params.eventRangeRequestHeader
-    events = eventData.getEventsInRange(req.params.eventRangeRequestHeader)
+    console.log "Request Query", req.query
+    throw swagger.errors.invalid("eventRangeRequestHeader")  unless (\
+      req.query.from \
+      and req.query.to\
+      and req.query.max\
+      and req.query.offset)
+    events = getEventsInRangeF(req.query)
     res.send JSON.stringify(events)
 
 
-swagger.addGet getEventInRange
+swagger.addGet getEventsInRange
 swagger.addGet getEventById
 swagger.configure("http://petstore.swagger.wordnik.com", "0.1");
-  
+
+getEventsInRangeF = (query) ->
+  return stub_response = [{
+
+  }]
 
 
 app.listen PORT, ->
