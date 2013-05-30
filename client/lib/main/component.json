@@ -7,11 +7,10 @@
   "dependencies": {},
   "development": {},
   "license": "MIT",
-  "main": "index.js",
   "scripts": [
     "index.coffee"
   ],
   "styles": [
-    "main.css"
+    "main.styl"
   ]
 }

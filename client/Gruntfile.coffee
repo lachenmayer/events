@@ -47,6 +47,9 @@ module.exports = (grunt) ->
     component_build:
       app:
         output: 'build'
+        configure: (builder) ->
+          builder.use (require 'component-stylus')
+          builder.use (require 'component-jade')
 
     # Minification
     uglify:
