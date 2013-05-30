@@ -1,9 +1,14 @@
 {
-    "name": "Events",
-    "dependencies": {
-        "solutionio/backbone" : "master",
-        "cayasso/list": "master"
-    },
-    "local": ["main"],
-    "paths": ["components", "lib"]
+  "name": "Events",
+  "dependencies": {
+    "solutionio/backbone": "*",
+    "cayasso/list": "*",
+    "component/jquery": "*"
+  },
+  "local": [
+    "main"
+  ],
+  "paths": [
+    "lib"
+  ]
 }

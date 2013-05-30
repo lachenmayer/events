@@ -47,7 +47,7 @@ module.exports = (grunt) ->
     component_build:
       app:
         output: 'build'
-        styles: false
+        styles: true
         scripts: true
         plugins: ['coffee']
         configure: (builder) ->
@@ -55,16 +55,19 @@ module.exports = (grunt) ->
           builder.use (require 'component-jade')
 
     # Minification
-    uglify:
-      app:
-        files:
-          'public/js/app.js' : ['build/app.js']
+#     uglify# :
+#       app:
+#         files:
+#           'public/js/app.js' : ['build/app.js']
 
     # Copying files
     copy:
-      app:
+      app_css:
         src: 'build/app.css'
         dest: 'public/css/app.css'
+      app_js:
+        src: 'build/app.js'
+        dest: 'public/js/app.js'
 
     # Watch config
     watch:
@@ -96,14 +99,12 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'component_private', [
     'component_build',
-    'uglify:app',
-    'copy:app'
+    'copy'
   ]
   grunt.registerTask 'component_update', [
     'component',
     'component_build',
-    'uglify:app',
-    'copy:app'
+    'copy'
   ]
   
   # Register our default tasks

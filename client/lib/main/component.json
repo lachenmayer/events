@@ -4,11 +4,11 @@
   "description": "main",
   "version": "0.0.1",
   "keywords": [],
-  "dependencies": {},
-  "development": {},
-  "license": "MIT",
+  "dependencies": {
+    "solutionio/backbone": "*"
+  },
   "scripts": [
-    "index.js"
+    "index.coffee"
   ],
   "styles": [
     "main.styl"
