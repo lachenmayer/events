@@ -30,16 +30,15 @@ getAllEvents = (handler) ->
           handler((event.data for event in events))
 
 getEventsInRange = (query, handler) ->
-  query = "START root=#{database.rootNodeId}
+  query = "START root=node(#{database.rootNodeId})
            MATCH root-->events-[:EVENT]->e
            WHERE events.name = \"event\"
            AND e.date > #{query.from}
            AND e.date < #{query.to}
-           SKIP #{query.offset} LIMIT #{query.max}
-           RETURN e"
+           RETURN e
+           SKIP #{query.offset} LIMIT #{query.max}"
   db.query query, {}, (err, events) ->
     if err
-      console.log "Could not find the events in range #{err}"
       handler(null)
     else
       handler((event.e.data for event in events))
