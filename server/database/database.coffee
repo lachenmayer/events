@@ -87,6 +87,7 @@ exports.setup = setup
 exports.makeNode = makeNode
 exports.makeRelationship = makeRelationship
 exports.getNode = getNode
+exports.rootNodeId = ROOT_NODE_ID
 
 # Running the script sets up the database
 if (!module.parent)
