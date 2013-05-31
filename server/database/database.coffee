@@ -11,17 +11,20 @@ createNodes = (nodes, created, handler) ->
     db.createNode(nodes[0]).save ->
 
 setupRelations = (err, nodes) ->
-  console.log "Created the nodes"
-  {rootNode, eventNode, peopleNode, datesNode}  = nodes
-  async.parallel [
-    (callback) -> makeRelationship(rootNode, eventNode, "property", callback)
-    (callback) -> makeRelationship(rootNode, peopleNode, "property", callback)
-    (callback) -> makeRelationship(rootNode, datesNode, "property", callback)
-  ], (err) ->
-    if (err)
-      console.log "Events-database: error #{err}"
-    else
-      console.log "Events-database: Database set up"
+  if err
+    console.log "Error in creating nodes #{err}"
+  else
+    console.log "Created the nodes"
+    {rootNode, eventNode, peopleNode, datesNode}  = nodes
+    async.parallel [
+      (callback) -> makeRelationship(rootNode, eventNode, "property", callback)
+      (callback) -> makeRelationship(rootNode, peopleNode, "property", callback)
+      (callback) -> makeRelationship(rootNode, datesNode, "property", callback)
+    ], (err) ->
+      if (err)
+        console.log "Events-database: error #{err}"
+      else
+        console.log "Events-database: Database set up"
 
 
 # Creates the node if it hasn't been defined yet
