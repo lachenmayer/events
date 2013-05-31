@@ -36,6 +36,4 @@ exports.MainView = Backbone.View.extend({
     @.assignViewElement @contentView, '.inner'
       
     return this
-  
-
-});
+})
