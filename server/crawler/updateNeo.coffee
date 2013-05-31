@@ -15,13 +15,16 @@ pushToNeo = (config) ->
 
 scrapeAll = ->
   # Remove the previously scraped data
-  query = "START n=Node(*)
-           WHERE n.source = \"scrapedData\"
-           DELETE n"
-  db.query(query)
+  query =  "START n=Node(*)
+            MATCH n-[r?]-()              
+            WHERE HAS(n.source) AND n.source = 'scrapedData'
+            DELETE n,r"
+          
+  db.query query, (res) -> 
+    console.log "executed delete. Result:", res
+    union.scrape pushToNeo
+  
 
-  # Add the new data to the database
-  union.scrape pushToNeo
 
 main = ->
   console.log "Events-scrape: Updating the auto-generated events"

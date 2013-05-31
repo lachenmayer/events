@@ -29,5 +29,23 @@ getAllEvents = (handler) ->
         else
           handler((event.data for event in events))
 
+getEventsInRange = (query) ->
+  database.getNode "event", (err, eventNode) ->
+    if (err)
+      console.log "Error #{err}"
+      handler(null)
+    else
+      eventNode.getRelationshipNodes "EVENT", (err, events) ->
+        if (err)
+          return []
+        else
+          # Strip results if they're not within the time range
+          # Sort by time ascending from the 'from' point
+          # offset by 'offset' results
+          # return from 'offset' to 'from' with max 'max'
+          handler((event.data for event in events))
+
+
 exports.getEventById = getNodeById
 exports.getAllEvents = getAllEvents
+exports.getEventsInRange = getEventsInRange
