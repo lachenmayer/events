@@ -3,6 +3,7 @@ async = require('async')
 
 URL = "http://localhost:7474"
 db = new neo4j.GraphDatabase(URL)
+ROOT_NODE_ID = 0
 
 createNodes = (nodes, created, handler) ->
   if (nodes.length == 0)
@@ -11,18 +12,23 @@ createNodes = (nodes, created, handler) ->
     db.createNode(nodes[0]).save ->
 
 setupRelations = (err, nodes) ->
-  console.log "Created the nodes"
-  {rootNode, eventNode, peopleNode, datesNode}  = nodes
-  async.parallel [
-    (callback) -> makeRelationship(rootNode, eventNode, "property", callback)
-    (callback) -> makeRelationship(rootNode, peopleNode, "property", callback)
-    (callback) -> makeRelationship(rootNode, datesNode, "property", callback)
-  ], (err) ->
-    if (err)
-      console.log "Events-database: error #{err}"
-    else
-      console.log "Events-database: Database set up"
+  if err
+    console.log "Error in creating nodes #{err}"
+  else
+    console.log "Created the nodes"
+    {rootNode, eventNode, peopleNode, datesNode}  = nodes
+    async.parallel [
+      (callback) -> makeRelationship(rootNode, eventNode, "property", callback)
+      (callback) -> makeRelationship(rootNode, peopleNode, "property", callback)
+      (callback) -> makeRelationship(rootNode, datesNode, "property", callback)
+    ], (err) ->
+      if (err)
+        console.log "Events-database: error #{err}"
+      else
+        console.log "Events-database: Database set up"
 
+getRootNode = (callback) ->
+  db.getNodeById(ROOT_NODE_ID) callback
 
 # Creates the node if it hasn't been defined yet
 makeNode = (root, name, callback) ->
@@ -48,13 +54,16 @@ makeRelationship = (node1, node2, type, callback) ->
 # Sets up the initial nodes in the database
 setup = ->
   console.log "Events-database: Setting up the database"
-  db.getNodeById(0) (err, rootNode) ->
-    async.parallel {
-      eventNode:  (callback) -> makeNode rootNode, "event", callback
-      peopleNode: (callback) -> makeNode rootNode, "person", callback
-      datesNode:  (callback) -> makeNode rootNode, "date", callback
-      rootNode:   (callback) -> callback(null, rootNode)
-    }, setupRelations
+  getRootNode (err, rootNode) ->
+    if err
+      console.log "Could not find the root node #{err}"
+    else
+      async.parallel {
+        eventNode:  (callback) -> makeNode rootNode, "event", callback
+        peopleNode: (callback) -> makeNode rootNode, "person", callback
+        datesNode:  (callback) -> makeNode rootNode, "date", callback
+        rootNode:   (callback) -> callback(null, rootNode)
+      }, setupRelations
 
 # Function that looks for the main nodes being directly liked to the root node
 getNode = (fieldName, handler) ->
@@ -78,6 +87,7 @@ exports.setup = setup
 exports.makeNode = makeNode
 exports.makeRelationship = makeRelationship
 exports.getNode = getNode
+exports.rootNodeId = ROOT_NODE_ID
 
 # Running the script sets up the database
 if (!module.parent)

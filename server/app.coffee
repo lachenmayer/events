@@ -29,6 +29,12 @@ swagger.setAppHandler app
 
 swagger.addModels swaggerModels
 
+returnJson = (res, name) -> (value) ->
+  if value
+    res.send JSON.stringify value
+  else
+    throw swagger.errors.notFound(name)
+
 getEventById =
   spec:
     description: "Get Event By Node ID"
@@ -44,11 +50,7 @@ getEventById =
   action: (req, res) ->
     throw swagger.errors.invalid("eventId") unless req.params.eventId
     id = parseInt(req.params.eventId)
-    eventData.getEventById id, (event) ->
-      if event
-        res.send JSON.stringify(event)
-      else
-        throw swagger.errors.notFound("event")
+    eventData.getEventById id, returnJson(res, "event")
 
 getEventsInRange =
   spec:
@@ -70,8 +72,7 @@ getEventsInRange =
       and req.query.to\
       and req.query.max\
       and req.query.offset)
-    events = eventData.getEventsInRange(req.query)
-    res.send JSON.stringify(events)
+    eventData.getEventsInRange req.query, returnJson(res, "events")
 
 getAllEvents =
   spec:
