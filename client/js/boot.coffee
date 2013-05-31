@@ -1,13 +1,12 @@
 # Set up dependencies.
-window.$ = window.jQuery = require('component-jquery');
+window.$ = window.jQuery = require('component-jquery')
 Backbone = require('solutionio-backbone');
 EventsList = require('events-list')
 _ = require('component-underscore')
 
 # Store our stuff in a global app object.
-window.App = {
+window.App =
   dispatcher: _.clone(Backbone.Events)
-};
 
 # Set up the main view
 $(->

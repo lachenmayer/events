@@ -8,15 +8,14 @@ exports.MainView = Backbone.View.extend({
   mainTemplate: require('./main')
   
   initialize: ->
-    App.dispatcher.on('setTitle', (title) ->
-      @title = title
-      @.render()
-    , this)
+    App.dispatcher.on 'setTitle', (title) ->
+        @title = title
+        @.render()
+      , this
 
   setContentView: (view) ->  
     # Unbind the old view from .inner
-    if @contentView
-      @contentView.setElement(null)
+    @contentView.setElement(null) unless !@contentView
     
     # Set the new view
     @contentView = view
@@ -24,18 +23,17 @@ exports.MainView = Backbone.View.extend({
 
   # Puts 'view' in the element returned by $(selector)
   assignViewElement: (view, selector) ->
-    if @contentView
-      view.setElement(@$(selector)).render()
+    view.setElement(@$(selector)).render() unless !@contentView
 
     
   render: ->
     # Render the main template
-    @$el.html(@mainTemplate(
+    @$el.html @mainTemplate(
       title: @title
-    ))
+    )
     
     # Render the content view into .inner
-    @.assignViewElement(@contentView, '.inner')
+    @.assignViewElement @contentView, '.inner'
       
     return this
   

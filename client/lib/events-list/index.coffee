@@ -1,9 +1,12 @@
+# Dependencies
 Backbone = require('../solutionio-backbone')
 List = require('../cayasso-list')
 
 exports.EventsList = Backbone.View.extend({
+  mainTemplate: require('./events-list')
+
   render: ->
-    @$el.html(require('./events-list')())
+    @$el.html @mainTemplate()
     
     return this
 
