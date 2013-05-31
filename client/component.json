@@ -9,7 +9,8 @@
   },
   "local": [
     "main",
-    "events-list"
+    "events-list",
+    "model"
   ],
   "paths": [
     "lib"

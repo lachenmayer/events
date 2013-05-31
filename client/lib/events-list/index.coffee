@@ -3,17 +3,20 @@ Backbone = require '../solutionio-backbone'
 List = require '../cayasso-list'
 Main = require '../main/'
 Model = require '../model/'
+_ = require '../underscore/'
 
 exports.EventsList = Backbone.View.extend({
   mainTemplate: require('./events-list')
   
   initialize: ->
-    console.log(Main)
-  
-    new Model.Event()
+    @eventlist = new Model.EventList()
+    @eventlist.fetch()
+    @.render()
   
   render: ->
-    @$el.html @mainTemplate()
+    console.log(@eventlist)
+  
+    @$el.html _.template(@mainTemplate(), this)
     
     return this
 

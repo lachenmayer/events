@@ -1,0 +1,18 @@
+{
+  "name": "model",
+  "repo": "model/model",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "solutionio-backbone": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.coffee",
+    "lib/event.coffee",
+    "lib/eventlist.coffee"
+  ]
+}
