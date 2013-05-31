@@ -5,14 +5,14 @@ Main = require '../main/'
 Model = require '../model/'
 _ = require '../underscore/'
 
-exports.EventsList = Backbone.View.extend({
+exports.EventsList = Backbone.View.extend
+
   mainTemplate: require('./events-list')
-  
+
   initialize: ->
     @eventlist = new Model.EventList()  
     @eventlist.bind 'reset', =>
       @render()
-    
     @eventlist.fetch()
 
   render: ->
@@ -20,4 +20,4 @@ exports.EventsList = Backbone.View.extend({
     
     this
 
-});
+
