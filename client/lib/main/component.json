@@ -7,6 +7,12 @@
   "dependencies": {
     "solutionio/backbone": "*"
   },
+  "local": [
+    "events-list"
+  ],
+  "paths": [
+    "../"
+  ],
   "scripts": [
     "index.coffee"
   ],

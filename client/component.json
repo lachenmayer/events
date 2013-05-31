@@ -6,7 +6,8 @@
     "component/jquery": "*"
   },
   "local": [
-    "main"
+    "main",
+    "events-list"
   ],
   "paths": [
     "lib"

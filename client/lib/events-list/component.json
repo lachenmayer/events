@@ -1,0 +1,18 @@
+{
+  "name": "events-list",
+  "repo": "events-list",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "solutionio/backbone": "*"
+  },
+  "scripts": [
+    "index.coffee"
+  ],
+  "styles": [
+    "events-list.styl"
+  ],
+  "templates": [
+    "events-list.jade"
+  ]
+}
