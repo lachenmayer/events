@@ -35,7 +35,8 @@ getEventsInRange = (query, handler) ->
            WHERE events.name = \"event\"
            AND e.date > #{query.from}
            AND e.date < #{query.to}
-           SKIP #{query.offset} LIMIT #{query.max}"
+           SKIP #{query.offset} LIMIT #{query.max}
+           RETURN e"
   db.query query, {}, (err, events) ->
     if err
       console.log "Could not find the events in range #{err}"
