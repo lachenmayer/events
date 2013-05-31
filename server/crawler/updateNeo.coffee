@@ -11,7 +11,7 @@ pushToNeo = (config) ->
       if (err)
         console.log "Error saving the data to the database #{err} #{node}"
       else
-        makeRelationship eventNode, node, "EVENT", -> # Event created (log to file?)
+        database.makeRelationship eventNode, node, "EVENT", -> # Event created (log to file?)
 
 scrapeAll = ->
   # Remove the previously scraped data
