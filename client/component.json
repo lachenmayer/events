@@ -3,7 +3,9 @@
   "dependencies": {
     "solutionio/backbone": "*",
     "cayasso/list": "*",
-    "component/jquery": "*"
+    "component/jquery": "*",
+    "monstercat/jade-runtime": "*",
+    "component/underscore": "*"
   },
   "local": [
     "main",
