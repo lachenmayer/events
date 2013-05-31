@@ -34,7 +34,7 @@ parseMessage = (message, time) ->
 
 
 getDate = (year, month, day, time) ->
-	return "#{year}/#{month}/#{day} #{time}"
+	return moment("#{year} #{month} #{day}", "YYYY MM DD", 'en').unix()
 
 
 followEvent = (details, u, handler) ->
