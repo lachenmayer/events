@@ -9,15 +9,15 @@ exports.EventsList = Backbone.View.extend({
   mainTemplate: require('./events-list')
   
   initialize: ->
-    @eventlist = new Model.EventList()
+    @eventlist = new Model.EventList()  
+    @eventlist.bind 'reset', =>
+      @render()
+    
     @eventlist.fetch()
-    @.render()
-  
+
   render: ->
-    console.log(@eventlist)
-  
     @$el.html _.template(@mainTemplate(), this)
     
-    return this
+    this
 
 });

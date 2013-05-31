@@ -1,5 +1,7 @@
 #events-list
-  ul.list
-    <% _.each(eventlist, function(event) { %> 
-    li Hello
-    <% }); %>
+  ul
+    - this.eventlist.each(function(event) {
+      li
+        h2.name= event.get('name')
+        p.description= event.get('description')
+    - });
