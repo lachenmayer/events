@@ -3,6 +3,7 @@ async = require('async')
 
 URL = "http://localhost:7474"
 db = new neo4j.GraphDatabase(URL)
+ROOT_NODE_ID = 0
 
 createNodes = (nodes, created, handler) ->
   if (nodes.length == 0)
@@ -26,6 +27,8 @@ setupRelations = (err, nodes) ->
       else
         console.log "Events-database: Database set up"
 
+getRootNode = (callback) ->
+  db.getNodeById(ROOT_NODE_ID) callback
 
 # Creates the node if it hasn't been defined yet
 makeNode = (root, name, callback) ->
@@ -51,13 +54,16 @@ makeRelationship = (node1, node2, type, callback) ->
 # Sets up the initial nodes in the database
 setup = ->
   console.log "Events-database: Setting up the database"
-  db.getNodeById(0) (err, rootNode) ->
-    async.parallel {
-      eventNode:  (callback) -> makeNode rootNode, "event", callback
-      peopleNode: (callback) -> makeNode rootNode, "person", callback
-      datesNode:  (callback) -> makeNode rootNode, "date", callback
-      rootNode:   (callback) -> callback(null, rootNode)
-    }, setupRelations
+  getRootNode (err, rootNode) ->
+    if err
+      console.log "Could not find the root node #{err}"
+    else
+      async.parallel {
+        eventNode:  (callback) -> makeNode rootNode, "event", callback
+        peopleNode: (callback) -> makeNode rootNode, "person", callback
+        datesNode:  (callback) -> makeNode rootNode, "date", callback
+        rootNode:   (callback) -> callback(null, rootNode)
+      }, setupRelations
 
 # Function that looks for the main nodes being directly liked to the root node
 getNode = (fieldName, handler) ->
