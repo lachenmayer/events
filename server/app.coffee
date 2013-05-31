@@ -70,7 +70,7 @@ getEventsInRange =
       and req.query.to\
       and req.query.max\
       and req.query.offset)
-    events = getEventsInRangeF(req.query)
+    events = eventData.getEventsInRange(req.query)
     res.send JSON.stringify(events)
 
 getAllEvents =
@@ -83,7 +83,6 @@ getAllEvents =
     responseClass: "event"
     errorResponses: [swagger.errors.notFound("events")]
     nickname: "getAllEvents"
-
   action: (req, res) ->
     eventData.getAllEvents (events) ->
       if events
@@ -96,12 +95,6 @@ swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventById
 swagger.configure("http://petstore.swagger.wordnik.com", "0.1");
-
-getEventsInRangeF = (query) ->
-  return stub_response = [{
-
-  }]
-
 
 app.listen PORT, ->
   console.log "running! on port #{PORT}"
