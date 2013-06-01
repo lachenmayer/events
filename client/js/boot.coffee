@@ -9,6 +9,9 @@ window.App =
 
 # Set up the main view
 $ ->
+  # hide iOS browser chrome
+  window.top.scrollTo(0, 1)
+
   Main = require 'main'
 
   App.MainView = new Main.MainView
