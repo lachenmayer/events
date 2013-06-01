@@ -1,4 +1,6 @@
 #!/bin/bash
 
-cd ../client
-nginx -s stop
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd $DIR
+./ctl stop
