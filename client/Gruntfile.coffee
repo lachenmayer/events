@@ -49,8 +49,8 @@ module.exports = (grunt) ->
         output: 'build'
         styles: true
         scripts: true
-        plugins: ['coffee']
         configure: (builder) ->
+          builder.use (require 'component-coffee')
           builder.use (require 'component-stylus')
           builder.use (require 'component-jade')
 
