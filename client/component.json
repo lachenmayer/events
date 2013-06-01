@@ -5,7 +5,8 @@
     "cayasso/list": "*",
     "component/jquery": "*",
     "monstercat/jade-runtime": "*",
-    "component/underscore": "*"
+    "component/underscore": "*",
+    "component/moment": "*"
   },
   "local": [
     "main",

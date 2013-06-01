@@ -1,23 +1,23 @@
 # Dependencies
 Backbone = require '../solutionio-backbone'
-List = require '../cayasso-list'
-Main = require '../main/'
-Model = require '../model/'
-_ = require '../underscore/'
+List     = require '../cayasso-list'
+moment   = require '../moment'
+_        = require '../underscore/'
 
-exports.EventsList = Backbone.View.extend
+Main     = require '../main/'
+Model    = require '../model/'
 
-  mainTemplate: require('./events-list')
+exports.EventsListView = Backbone.View.extend
+
+  mainTemplate: require './events-list'
 
   initialize: ->
-    @eventlist = new Model.EventList()  
-    @eventlist.bind 'reset', =>
+    @eventsList = new Model.Events()
+    @eventsList.bind 'reset', =>
       @render()
-    @eventlist.fetch()
+    @eventsList.fetch()
 
   render: ->
     @$el.html _.template(@mainTemplate(), this)
-    
     this
-
 

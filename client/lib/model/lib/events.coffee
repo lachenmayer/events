@@ -1,4 +1,4 @@
 Backbone = require '../../solutionio-backbone'
 
-exports.EventList = Backbone.Collection.extend
+exports.Events = Backbone.Collection.extend
   url: 'events'

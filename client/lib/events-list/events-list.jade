@@ -1,7 +1,11 @@
 #events-list
   ul
-    - this.eventlist.each(function(event) {
+    - this.eventsList.each(function(event) {
       li
-        h2.name= event.get('name')
-        p.description= event.get('description')
+        .event
+          .time
+            p= event.get('date')
+          .info
+            h2.name= event.get('name')
+            p.location= event.get('location')
     - });

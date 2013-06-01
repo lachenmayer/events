@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "keywords": [],
   "dependencies": {
-    "solutionio-backbone": "*"
+    "solutionio/backbone": "*"
   },
   "development": {},
   "license": "MIT",
@@ -13,6 +13,6 @@
   "scripts": [
     "index.coffee",
     "lib/event.coffee",
-    "lib/eventlist.coffee"
+    "lib/events.coffee"
   ]
 }
