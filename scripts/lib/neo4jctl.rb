@@ -21,6 +21,6 @@ class Neo4jCtl < Ctl
     end
     
     def is_running?
-      `../server/database/neo4j-community-1.9/bin/neo4j status | grep "not running" | wc -l`
+      `../server/database/neo4j-community-1.9/bin/neo4j status | grep "not running" | wc -l` == "1"
     end
 end
