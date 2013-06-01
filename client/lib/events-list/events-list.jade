@@ -1,11 +1,15 @@
 #events-list
-  ul
-    - this.eventsList.each(function(event) {
-      li
-        .event
-          .time
-            p= event.get('date')
-          .info
-            h2.name= event.get('name')
-            p.location= event.get('location')
-    - });
+  .day
+    .day-header
+      p Today
+    .day-events
+      ul
+        - this.eventsList.each(function(event) {
+          li
+            .event
+              .time
+                p= event.get('date')
+              .info
+                h2.name= event.get('name')
+                p.location= event.get('location')
+        - });

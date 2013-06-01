@@ -6,7 +6,8 @@
     "component/jquery": "*",
     "monstercat/jade-runtime": "*",
     "component/underscore": "*",
-    "component/moment": "*"
+    "component/moment": "*",
+    "ianstormtaylor/reset": "*"
   },
   "local": [
     "main",
