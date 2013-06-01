@@ -2,7 +2,10 @@ require 'lib/ctl.rb'
 
 class Neo4jCtl < Ctl
     def start
-      stop if is_running?
+      if is_running?
+        puts "Neo4j is already running."
+        return
+      end
       
       printf "Starting Neo4j... "
       `../server/database/neo4j-community-1.9/bin/neo4j start > /dev/null`

@@ -2,7 +2,10 @@ require 'lib/ctl.rb'
 
 class NodeCtl < Ctl
     def start
-        stop if is_running?
+        if is_running?
+          puts "Node is already running." 
+          return
+        end
 
         printf "Starting node... "
         `coffee ../server/app.coffee > /dev/null &`

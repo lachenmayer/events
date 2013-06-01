@@ -3,7 +3,10 @@ require 'lib/ctl.rb'
 class NginxCtl < Ctl
 
     def start
-        stop if is_running?
+        if is_running?
+          puts "nginx is already running." 
+          return
+        end
 
         printf "Starting nginx... "
         `nginx`
