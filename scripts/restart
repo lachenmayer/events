@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./ctl stop && ./ctl start

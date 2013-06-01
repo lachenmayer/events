@@ -1,4 +1,3 @@
 #!/bin/bash
 
-cd ../client
-nginx -s stop
+./ctl stop
