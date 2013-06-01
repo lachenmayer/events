@@ -3,7 +3,7 @@ db = database.db
 
 getNodeById = (id, handler) ->
   # Returns the node only if it is referenced by the events node
-  query = "START e=Node(#{id})
+  query = "START e=node(#{id})
            MATCH events-[:EVENT]->e
            WHERE events.name = \"event\"
            RETURN e"
@@ -36,6 +36,7 @@ getEventsInRange = (query, handler) ->
            AND e.date > #{query.from}
            AND e.date < #{query.to}
            RETURN e
+           ORDER BY e.date ASCN
            SKIP #{query.offset} LIMIT #{query.max}"
   db.query query, {}, (err, events) ->
     if err
