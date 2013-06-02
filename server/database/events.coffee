@@ -2,41 +2,33 @@ database = require('./database.coffee')
 db = database.db
 
 getNodeById = (id, handler) ->
-  # Returns the node only if it is referenced by the events node
-  query = "START e=Node(#{id})
-           MATCH events-[:EVENT]->e
-           WHERE events.name = \"event\"
-           RETURN e"
-  db.query query, {}, (err, eventNode) ->
-    if err
-      console.log "Error: #{err}"
-      handler null
-    else if (eventNode.length == 0)
-      console.log "Error: no results found for id #{id}"
-      handler null
-    else
-      handler eventNode[0].e.data
+  database.getTableNodeById "EVENT", id, (err, node) -> handler node
 
 getAllEvents = (handler) ->
-  database.getNode "event", (err, eventNode) ->
+  database.getTable "EVENT", (err, eventNode) ->
     if (err)
       console.log "Error #{err}"
       handler(null)
     else
       eventNode.getRelationshipNodes "EVENT", (err, events) ->
-        if (err)
+        if err
           handler(null)
         else
           handler((event.data for event in events))
 
 getEventsInRange = (query, handler) ->
-  query = "START root=#{database.rootNodeId}
-           MATCH root-->events-[:EVENT]->e
-           WHERE events.name = \"event\"
-           AND e.date > #{query.from}
-           AND e.date < #{query.to}
-           SKIP #{query.offset} LIMIT #{query.max}"
-  db.query query, {}, (err, events) ->
+  query = "START root=Node(rootId)
+           MATCH root-[:EVENT]->events-->e
+           WHERE e.date > {from}
+           AND e.date < {to}
+           SKIP {offset} LIMIT {limit}"
+  params =
+    rootId: database.rootNodeId,
+    from: query.from,
+    to: query.to,
+    offset: query.offset,
+    limit: query.max
+  db.query query, params, (err, events) ->
     if err
       console.log "Could not find the events in range #{err}"
       handler(null)
@@ -44,6 +36,14 @@ getEventsInRange = (query, handler) ->
       handler((event.e.data for event in events))
 
 
+makePublicEvent = (event, callback) ->
+  database.getTable "EVENT", (err, eventNode) ->
+    if err
+      console.log "Failed getting the table event: #{err}"
+    else
+      database.makeRelationship eventNode, event, "EVENT", callback
+
 exports.getEventById = getNodeById
 exports.getAllEvents = getAllEvents
 exports.getEventsInRange = getEventsInRange
+exports.makePublicEvent  = makePublicEvent
