@@ -13,7 +13,7 @@ getAllEvents = (handler) ->
       eventNode.getRelationshipNodes "EVENT", (err, events) ->
         if err
           handler(null)
-        else  
+        else
           handler((event.data for event in events))
 
 getEventsInRange = (query, handler) ->

@@ -3,6 +3,7 @@ swagger = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData = require './database/events'
 everyauth = require 'everyauth'
+userData  = require './database/users'
 
 app = express()
 
@@ -30,11 +31,32 @@ swagger.setAppHandler app
 
 swagger.addModels swaggerModels
 
-returnJson = (res, name) -> (value) ->
+returnJson = (res) -> (value) ->
   if value
     res.send JSON.stringify value
   else
-    res.send {}
+    res.send JSON.stringify {}
+
+getUserByUsername =
+  spec:
+    decription: "Get the username by ID"
+    path: "/user.json/{username}"
+    notes: "Returns a username based on the given ID"
+    summary: "Find username by ID"
+    method: "GET"
+    params: [swagger.pathParam("username", "username", "string")]
+    responseClass: "user"
+    errorResponses: [swagger.errors.invalid("username"), swagger.errors.notFound("user")]
+    nickname: "getUserByUsername"
+
+  action: (req, res) ->
+    throw swagger.errors.invalid("username") unless req.params.username
+    username = req.params.username
+    userData.findUserByUsername username, (err, user) ->
+      if err
+        throw swagger.errors.notFound("user")
+      else
+        returnJson(res)(user)
 
 getEventById =
   spec:
@@ -51,7 +73,7 @@ getEventById =
   action: (req, res) ->
     throw swagger.errors.invalid("eventId") unless req.params.eventId
     id = parseInt(req.params.eventId)
-    eventData.getEventById id, returnJson(res, "event")
+    eventData.getEventById id, returnJson(res)
 
 getEventsInRange =
   spec:
@@ -73,7 +95,7 @@ getEventsInRange =
       and req.query.to\
       and req.query.max\
       and req.query.offset)
-    eventData.getEventsInRange req.query, returnJson(res, "events")
+    eventData.getEventsInRange req.query, returnJson(res)
 
 getAllEvents =
   spec:
@@ -93,6 +115,7 @@ getAllEvents =
         throw swagger.errors.notFound("events")
 
 
+swagger.addGet getUserByUsername
 swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventById
