@@ -3,3 +3,6 @@ public/*
 # Components are be downloaded and build when needed
 components/*
 build/*
+
+# Local conf is set on a per-user basis
+local_dirs.conf

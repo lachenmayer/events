@@ -1,6 +1,15 @@
 #events-list
-  ul.list
-    li
-      h2.event-name Super-awesome Event
-      p.description Description
-      
+  .day
+    .day-header
+      p Today
+    .day-events
+      ul
+        - this.eventsList.each(function(event) {
+          li
+            .event
+              .time
+                p= event.get('date')
+              .info
+                h2.name= event.get('name')
+                p.location= event.get('location')
+        - });

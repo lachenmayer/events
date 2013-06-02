@@ -5,11 +5,14 @@
     "cayasso/list": "*",
     "component/jquery": "*",
     "monstercat/jade-runtime": "*",
-    "component/underscore": "*"
+    "component/underscore": "*",
+    "component/moment": "*",
+    "ianstormtaylor/reset": "*"
   },
   "local": [
     "main",
-    "events-list"
+    "events-list",
+    "model"
   ],
   "paths": [
     "lib"

@@ -13,7 +13,7 @@ getAllEvents = (handler) ->
       eventNode.getRelationshipNodes "EVENT", (err, events) ->
         if err
           handler(null)
-        else
+        else  
           handler((event.data for event in events))
 
 getEventsInRange = (query, handler) ->
@@ -21,6 +21,8 @@ getEventsInRange = (query, handler) ->
            MATCH root-[:EVENT]->events-->e
            WHERE e.date > {from}
            AND e.date < {to}
+           RETURN e
+           ORDER BY e.date ASCN
            SKIP {offset} LIMIT {limit}"
   params =
     rootId: database.rootNodeId,
@@ -30,7 +32,6 @@ getEventsInRange = (query, handler) ->
     limit: query.max
   db.query query, params, (err, events) ->
     if err
-      console.log "Could not find the events in range #{err}"
       handler(null)
     else
       handler((event.e.data for event in events))

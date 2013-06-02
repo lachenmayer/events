@@ -1,0 +1,2 @@
+set $public_root /path/to/events/client/public;
+set $test_root /path/to/events/client/testdata;

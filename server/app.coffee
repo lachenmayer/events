@@ -2,6 +2,7 @@ express = require 'express'
 swagger = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData = require './database/events'
+everyauth = require 'everyauth'
 
 app = express()
 
@@ -33,7 +34,7 @@ returnJson = (res, name) -> (value) ->
   if value
     res.send JSON.stringify value
   else
-    throw swagger.errors.notFound(name)
+    res.send {}
 
 getEventById =
   spec:
@@ -96,6 +97,9 @@ swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventById
 swagger.configure("http://petstore.swagger.wordnik.com", "0.1");
+
+everyauth.helpExpress app
+
 
 app.listen PORT, ->
   console.log "running! on port #{PORT}"
