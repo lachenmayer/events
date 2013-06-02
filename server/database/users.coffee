@@ -31,9 +31,9 @@ getUserEvents = (id, callback) ->
       callback null, (event.event for event in events)
 
 # Returns the list of friends a given user has
-getUserFriends = (id, callback) ->
+getUserRelations = (id, relation, callback) ->
   query = "START r=Node({rootId}), m=Node({myId})
-           MATCH r-[:USERS]->u-->m-[:FRIEND]->f
+           MATCH r-[:USERS]->u-->m-[:#{relation}]->f
            RETURN f"
   db.query query, {rootId: database.rootNodeId, myId: id}, (err, friends) ->
     if err
@@ -41,6 +41,15 @@ getUserFriends = (id, callback) ->
       callback err, null
     else
       callback null, (friend.f for friend in friends)
+
+getUserFriends = (id, callback) ->
+  getUserRelations id, "FRIEND", callback
+
+getUserInvited = (id, callback) ->
+  getUserRelations id, "INVITED", callback
+
+getUserInvitations = (id, callback) ->
+  getUserRelations id, "INVITED_BY", callback
 
 # Determines the distance from me to a possible friend.
 # Can be used to determine the access permissions
@@ -92,28 +101,35 @@ checkLogIn = (username, password, callback) ->
     else
       callback err, user
 
-# Befriends two people
+# USER1 sends the invitation to USER2
 # user1 <node> node of the first user
 # user2 <node> node of the second user
-befriend = (user1, user2, callback) ->
+invite = (user1, user2, callback) ->
   async.series [
-    (callback) -> database.makeRelationship user1, user2, "FRIEND", callback
-    (callback) -> database.makeRelationship user2, user1, "FRIEND", callback
+    (callback) -> database.makeRelationship user1, user2, "INVITED", callback
+    (callback) -> database.makeRelationship user1, user2, "INVITED_BY", callback
   ], callback
 
-# Links two people as friends
-# username1 <string> name of the first user
-# username2 <string> name of the second user
-addToFriends = (username1, username2, callback) ->
+# Accepts the invitation userId2 sent to userId1
+# Removes the invitation edge and adds the friends edge
+# userId1 <integer> id of the user that accepts the invitation
+# userId2 <integer> id of the user that sent the invitation
+accept_invitation = (userId1, userId2, callback) ->
+  query = "START u1=node({userId1}), u2=node({userId2})
+           MATCH u1-[r1:INVITED_BY]->u2, u2-[r2:INVITED]->u1
+           CREATE u1-[:FRIEND]->u2<-[:FRIEND]-u1
+           DELETE r1, r2"
+  db.query query, {userId1: userId1, userId2: userId2}, callback
+
+getUsers = (username1, username2, f, callback) ->
   async.parallel [
     (callback) -> findUserNode username1, callback
     (callback) -> findUserNode username2, callback
   ], (err, users) ->
-    [user1, user2] = users
     if err
       callback err, null
     else
-      befriend user1, user2, callback
+      f users, callback
 
 # Unfriends both people from each other
 # userId1 <integer> id of the node for the first user
@@ -124,19 +140,26 @@ unfriend = (userId1, userId2, callback) ->
            DELETE r"
   db.query query, {id1: userId1, id2: userId2}, callback
 
+# Links two people as friends
+# username1 <string> name of the first user
+# username2 <string> name of the second user
+addToFriends = (username1, username2, callback) ->
+  f = (users,callback) -> accept_invitation users[0].id, users[1].id, callback
+  getUsers username1, username2, f, callback
+
+# Makes the USERNAME1 send a friend invitation to USERNAME2
+# username1 <string> name of the first user
+# username2 <string> name of the second user
+send_invite = (username1, username2, callback) ->
+  f = (users, callback) -> invite users[0], users[1], callback
+  getUsers username1, username2, f, callback
+
 # Unfriends both people from each other.
 # username1 <string> name of the first user
 # username2 <string> name of the second user
 removeFromFriends = (username1, username2, callback) ->
-  async.parallel [
-    (callback) -> findUser username1, callback
-    (callback) -> findUser username2, callback
-  ], (err, users) ->
-    [user1, user2] = users
-    if err
-      callback err, null
-    else
-      unfriend user1, user2, callback
+  f = (users, callback) -> unfriend users[0], users[1], callback
+  getUsers username1, username2, f, callback
 
 
 # Exporting the functions globally
@@ -144,8 +167,11 @@ exports.createUser  = createUser
 exports.getUserById = getUserById
 exports.getUserFriends = getUserFriends
 exports.getUserEvents  = getUserEvents
+exports.getUserInvited     = getUserInvited
+exports.getUserInvitations = getUserInvitations
 exports.findFriendDistance = findFriendDistance
 exports.findUserByUsername = findUser
 exports.checkLogIn         = checkLogIn
 exports.addToFriends       = addToFriends
+exports.send_invite        = send_invite
 exports.removeFromFriends  = removeFromFriends
