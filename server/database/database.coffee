@@ -14,6 +14,15 @@ TABLES = [
   "GROUP"       # Table with groups/societies
 ]
 
+# Filters the result of a callback
+# If an error occurs then propagates the error
+# Otherwise maps the result using the f function
+returnValue = (err, data, f, callback) ->
+  if err
+    callback err, null
+  else
+    callback err, (f data)
+
 getRootNode = (callback) ->
   db.getNodeById(ROOT_NODE_ID) callback
 
@@ -31,6 +40,7 @@ getTableNodeById = (tableName, nodeId, callback) ->
       console.log "Could not find node with id #{nodeId} inside of the table #{tableName}"
       callback err, null
     else
+      results[0].n.data['id'] = results[0].n.id
       callback null, results[0].n
 
 # Creates a table with a given name
@@ -99,17 +109,7 @@ setup = ->
 getTable = (fieldName, handler) ->
   query = "START root=Node(0) MATCH (root)-[:#{fieldName}]->table RETURN table"
   db.query query, {}, (err, results) ->
-    if (err)
-      handler(err, null)
-    else
-      handler(null, results[0].table)
-
-# Handler that prints the found node from the database
-outputNode = (err, node) ->
-    if (err)
-      console.log "Error in fetching the node #{err}"
-    else
-      console.log node[0].m.data
+    returnValue err, results, ((results) -> results[0].table), handler
 
 # Defines the exported variables and functions
 exports.db = db
@@ -119,6 +119,7 @@ exports.getTable = getTable
 exports.rootNodeId = ROOT_NODE_ID
 exports.createNode = createNode
 exports.getTableNodeById = getTableNodeById
+exports.returnValue      = returnValue
 
 # Running the script sets up the database
 if (!module.parent)

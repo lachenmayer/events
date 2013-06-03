@@ -1,8 +1,12 @@
 database = require('./database.coffee')
 db = database.db
 
-getNodeById = (id, handler) ->
-  database.getTableNodeById "EVENT", id, (err, node) -> handler node
+getNodeById = (id, callback) ->
+  database.getTableNodeById "EVENT", id, callback
+
+getEventById = (id, callback) ->
+  getNodeById id, (err, node) ->
+    database.returnValue err, node, ((node) -> node.data), (err, node) -> callback node
 
 getAllEvents = (handler) ->
   database.getTable "EVENT", (err, eventNode) ->
@@ -14,6 +18,7 @@ getAllEvents = (handler) ->
         if err
           handler(null)
         else
+          event.data['id'] = event.id for event in events
           handler((event.data for event in events))
 
 getEventsInRange = (query, handler) ->
@@ -34,6 +39,7 @@ getEventsInRange = (query, handler) ->
     if err
       handler(null)
     else
+      event.e.data['id'] = event.e.id for event in events
       handler((event.e.data for event in events))
 
 
@@ -44,7 +50,7 @@ makePublicEvent = (event, callback) ->
     else
       database.makeRelationship eventNode, event, "EVENT", callback
 
-exports.getEventById = getNodeById
+exports.getEventById = getEventById
 exports.getAllEvents = getAllEvents
 exports.getEventsInRange = getEventsInRange
 exports.makePublicEvent  = makePublicEvent
