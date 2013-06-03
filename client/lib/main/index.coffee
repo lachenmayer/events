@@ -1,7 +1,7 @@
-# set up dependencies
-Backbone = require('../solutionio-backbone')
-jade = require('../jade-runtime')
-_ = require('../component-underscore')
+_         = require '../component-underscore'
+Backbone  = require '../solutionio-backbone'
+jade      = require '../jade-runtime'
+NavBar    = require('../super-megawesome-navbar').NavBar
 
 exports.MainView = Backbone.View.extend
   title: "Events"
@@ -11,27 +11,22 @@ exports.MainView = Backbone.View.extend
     App.dispatcher.on 'setTitle', (title) =>
         @title = title
         @.render()
-
-  setContentView: (view) ->
-    # Unbind the old view from .inner
-    @contentView.setElement(null) unless !@contentView
-
-    # Set the new view
-    @contentView = view
-    @render()
-
-  # Puts 'view' in the element returned by $(selector)
-  assignViewElement: (view, selector) ->
-    view.setElement(@$(selector)).render() unless !@contentView
-
+    App.NavBar = new NavBar
+      title: '#navbar h1'     # Selector for the title element
+      backButton: '#navbar a'
+      container: '#main-view .inner'
+      
+  setContentView: (view)->
+    App.NavBar.setRootViewObject
+      view: view
+      title: 'Hello'
 
   render: ->
     # Render the main template
     @$el.html @mainTemplate
       title: @title
-
-    # Render the content view into .inner
-    @assignViewElement @contentView, '.inner'
-
+    App.NavBar.setElement $('#app')
+    App.NavBar.render()
+    
     this
 

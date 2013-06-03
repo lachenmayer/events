@@ -18,12 +18,27 @@ nav
   z-index: 1000                 // We want the navbar to always show.
   border-bottom: 1px solid #888
   box-shadow: 0 3px 5px rgba(0,0,0,0.2)
+  
+  #back
+    height: 25px
+    margin-left: 10px
+    margin-top: 10px
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 10000
+    display: none
 
   h1
     margin: 0
     line-height: $nav_height
     color: #444
     text-shadow: 0 1px #ddd
+    position: absolute
+    width: 100%
+    z-index: 1000
+    top: 0
+    left: 0
 
 #main-view
   background-color: #eee
