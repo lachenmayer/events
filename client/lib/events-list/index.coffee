@@ -1,11 +1,12 @@
 # Dependencies
-Backbone = require '../solutionio-backbone'
-List     = require '../cayasso-list'
-moment   = require '../moment'
-_        = require '../underscore/'
+Backbone  = require '../solutionio-backbone'
+List      = require '../cayasso-list'
+moment    = require '../moment'
+_         = require '../underscore/'
 
-Main     = require '../main/'
-Model    = require '../model/'
+Main      = require '../main/'
+Model     = require '../model/'
+EventView = require('../event-view/').EventView
 
 moment.lang 'en',
   calendar:
@@ -47,7 +48,12 @@ exports.EventsListView = Backbone.View.extend
       day.events.push e
 
   openEvent: (eventId) ->
-    console.log eventId
+    event = @eventsList.get eventId
+    eventView = new EventView
+      model: event
+    App.NavBar.pushViewObject
+      view: eventView
+      title: event.get 'name'
 
   render: ->
     @$el.html _.template @mainTemplate
