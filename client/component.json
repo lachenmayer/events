@@ -12,6 +12,7 @@
   "local": [
     "main",
     "events-list",
+    "event-view",
     "model"
   ],
   "paths": [
