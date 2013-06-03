@@ -20,5 +20,7 @@ $ ->
 
   # Set the Events List as the content view
   App.EventsListView = new EventsListView()
-  App.MainView.setContentView App.EventsListView
+  App.MainView.setContentViewObject
+    view: App.EventsListView
+    title: 'Upcoming Events'
 

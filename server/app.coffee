@@ -1,12 +1,11 @@
-express = require 'express'
-swagger = require 'swagger-node-express'
+express       = require 'express'
+swagger       = require 'swagger-node-express'
+everyauth     = require 'everyauth'
 swaggerModels = require './models'
-eventData = require './database/events'
-everyauth = require 'everyauth'
-userData  = require './database/users'
+eventData     = require './database/events'
+userData      = require './database/users'
 
 app = express()
-
 
 PORT = 5278
 

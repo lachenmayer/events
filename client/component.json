@@ -13,6 +13,7 @@
     "main",
     "events-list",
     "event-view",
+    "navbar",
     "model"
   ],
   "paths": [
