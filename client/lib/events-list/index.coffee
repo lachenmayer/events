@@ -13,6 +13,7 @@ exports.EventsListView = Backbone.View.extend
 
   initialize: ->
     @eventsList = new Model.Events()
+    @dayLists = []
     @eventsList.bind 'reset', =>
       @splitEvents()
       @render()
@@ -25,7 +26,7 @@ exports.EventsListView = Backbone.View.extend
       date: date
       events: []
     day = newDay moment()
-    @eventsList.each (e) ->
+    @eventsList.each (e) =>
       eventDate = moment.unix e.get 'date'
       unless eventDate.isSame day.date, 'day'
         @dayLists.push day if day.events.length > 0
