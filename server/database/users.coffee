@@ -17,7 +17,7 @@ createUser = (data, callback) ->
 # How to treat the permissions??
 getUserById = (id, callback) ->
   database.getTableNodeById "USERS", id, (err, user) ->
-    database.returnValue err, user, ((node) -> node.data), callback
+    database.returnValue err, user, ((node) -> database.returnDataWithId node), callback
 
 # Returns the list of events a given user has subscribed to
 getUserEvents = (id, callback) ->
@@ -25,7 +25,7 @@ getUserEvents = (id, callback) ->
            MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|:SUBSCRIBED_TO]->event
            RETURN event"
   db.query query, {rootId: database.rootNodeId, myId: id}, (err, events) ->
-    database.returnValue err, events, (value.event.data for value in data), callback
+    database.returnValue err, events, ((data) -> database.returnListWithId (value.event for value in data)), callback
 
 # Returns the list of friends a given user has
 getUserRelations = (id, relation, callback) ->

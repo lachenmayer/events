@@ -14,6 +14,13 @@ TABLES = [
   "GROUP"       # Table with groups/societies
 ]
 
+returnDataWithId = (value) ->
+  value.data['id'] = value.id
+  return value.data
+
+returnListWithId = (values) ->
+  return (returnDataWithId(value) for value in values)
+
 # Filters the result of a callback
 # If an error occurs then propagates the error
 # Otherwise maps the result using the f function
@@ -40,7 +47,6 @@ getTableNodeById = (tableName, nodeId, callback) ->
       console.log "Could not find node with id #{nodeId} inside of the table #{tableName}"
       callback err, null
     else
-      results[0].n.data['id'] = results[0].n.id
       callback null, results[0].n
 
 # Creates a table with a given name
@@ -120,6 +126,8 @@ exports.rootNodeId = ROOT_NODE_ID
 exports.createNode = createNode
 exports.getTableNodeById = getTableNodeById
 exports.returnValue      = returnValue
+exports.returnDataWithId = returnDataWithId
+exports.returnListWithId = returnListWithId
 
 # Running the script sets up the database
 if (!module.parent)
