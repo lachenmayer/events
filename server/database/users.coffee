@@ -16,7 +16,8 @@ createUser = (data, callback) ->
 
 # How to treat the permissions??
 getUserById = (id, callback) ->
-  database.getTableNodeById "USERS", id, (err, user) -> callback err, user
+  database.getTableNodeById "USERS", id, (err, user) ->
+    database.returnValue err, user, ((node) -> node.data), callback
 
 # Returns the list of events a given user has subscribed to
 getUserEvents = (id, callback) ->
@@ -24,11 +25,7 @@ getUserEvents = (id, callback) ->
            MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|:SUBSCRIBED_TO]->event
            RETURN event"
   db.query query, {rootId: database.rootNodeId, myId: id}, (err, events) ->
-    if err
-      console.log "Error in getting user events #{err}"
-      callback err, null
-    else
-      callback null, (event.event for event in events)
+    database.returnValue err, events, (value.event.data for value in data), callback
 
 # Returns the list of friends a given user has
 getUserRelations = (id, relation, callback) ->
@@ -36,11 +33,7 @@ getUserRelations = (id, relation, callback) ->
            MATCH r-[:USERS]->u-->m-[:#{relation}]->f
            RETURN f"
   db.query query, {rootId: database.rootNodeId, myId: id}, (err, friends) ->
-    if err
-      console.log "Error #{err}"
-      callback err, null
-    else
-      callback null, (friend.f for friend in friends)
+    database.returnValue err, friends, ((data) -> (value.f.data for value in data)), callback
 
 getUserFriends = (id, callback) ->
   getUserRelations id, "FRIEND", callback
@@ -126,10 +119,7 @@ getUsers = (username1, username2, f, callback) ->
     (callback) -> findUserNode username1, callback
     (callback) -> findUserNode username2, callback
   ], (err, users) ->
-    if err
-      callback err, null
-    else
-      f users, callback
+    database.returnValue err, users, f, callback
 
 # Unfriends both people from each other
 # userId1 <integer> id of the node for the first user
