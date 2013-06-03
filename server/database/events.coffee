@@ -8,21 +8,19 @@ getEventById = (id, callback) ->
   getNodeById id, (err, node) ->
     database.returnValue err, node, ((node) -> node.data), (err, node) -> callback node
 
+# Returns all of the events
+# The events are sorted according to the date
 getAllEvents = (handler) ->
-  database.getTable "EVENT", (err, eventNode) ->
-    if (err)
-      console.log "Error #{err}"
-      handler(null)
-    else
-      eventNode.getRelationshipNodes "EVENT", (err, events) ->
-        if err
-          handler(null)
-        else
-          event.data['id'] = event.id for event in events
-          handler((event.data for event in events))
+  query = "START root=node({rootId})
+           MATCH root-[:EVENT]->events-->e
+           RETURN e
+           ORDER BY e.date"
+  db.query query, {rootId: database.rootNodeId}, (err, events) ->
+    f = (nodes) -> database.returnListWithId (e.e for e in nodes)
+    database.returnValue err, events, f, handler
 
 getEventsInRange = (query, handler) ->
-  query = "START root=Node(rootId)
+  query = "START root=Node({rootId})
            MATCH root-[:EVENT]->events-->e
            WHERE e.date > {from}
            AND e.date < {to}
@@ -39,8 +37,7 @@ getEventsInRange = (query, handler) ->
     if err
       handler(null)
     else
-      event.e.data['id'] = event.e.id for event in events
-      handler((event.e.data for event in events))
+      handler(database.returnListWithId (event.e for event in events))
 
 
 makePublicEvent = (event, callback) ->

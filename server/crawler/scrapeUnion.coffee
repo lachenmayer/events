@@ -31,7 +31,7 @@ parseMessage = (message, time) ->
 	}
 
 getDate = (year, month, day, time) ->
-	return moment("#{year} #{month} #{day}", "YYYY MM DD", 'en').unix()
+  return moment("#{year} #{month} #{day} #{time}", "YYYY MM DD HH:mm", 'en').unix()
 
 
 followEvent = (details, u, handler) ->
@@ -52,9 +52,8 @@ fetchEvent = (year, month, $, handler) ->
 		day = $(td).find(".day-number").text()
 		$(td).find(".calendar-event li").each (index, e) ->
 			eventType   = $(e).attr('class')
-			time        = $(e).find("a").children().first().text()
-			$(e).find("a").children().remove()
-			message     = $(e).find("a").text()
+			time        = $(e).find("a").children()['0'].prev.data
+			message     = $(e).find("a").children()['0'].next.data
 			config      = parseMessage message, time
 			relativeUrl = $(e).find("a").attr('href')
 			u           = url.resolve EVENTS_SITE(year, month), relativeUrl

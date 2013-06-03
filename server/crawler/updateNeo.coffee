@@ -15,12 +15,16 @@ pushToNeo = (config) ->
 scrapeAll = ->
   # In case any new relations are added make sure to remove all of them
   query =  "START root=Node({rootNodeId})
-            MATCH root-[:SCRAPEDDATA]->scrapeddata-[r]->event
+            MATCH root-[:SCRAPEDDATA]->scrapeddata-->event
+            WITH event
+            MATCH event-[r]-()
             DELETE event, r"
-          
   db.query query, {rootNodeId: database.rootNodeId}, (err, res) ->
-    console.log "executed delete. Result:", res
-    union.scrape pushToNeo
+    if err
+      console.log "Error #{err}"
+    else
+      console.log "executed delete. Result:", res
+      union.scrape pushToNeo
 
 main = ->
   console.log "Events-scrape: Updating the auto-generated events"
