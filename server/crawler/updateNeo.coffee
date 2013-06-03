@@ -1,30 +1,26 @@
-union = require('./scrapeUnion.coffee')
-database = require('../database/database.coffee')
+union    = require './scrapeUnion.coffee'
+database = require '../database/database.coffee'
+events   = require '../database/events'
 
 db = database.db
 
 pushToNeo = (config) ->
   # Might need to parse the config file
-  database.getNode "event", (err, eventNode) ->
-    newNode = db.createNode config
-    newNode.save (err, node) ->
-      if (err)
-        console.log "Error saving the data to the database #{err} #{node}"
-      else
-        database.makeRelationship eventNode, node, "EVENT", -> # Event created (log to file?)
+  database.createNode "SCRAPEDDATA", config, "ORGANIZES", (err, scrapedEvent) ->
+    if err
+      console.log "Failed creating the event: #{err}"
+    else
+      events.makePublicEvent scrapedEvent, -> # Made the event public
 
 scrapeAll = ->
-  # Remove the previously scraped data
-  query =  "START n=Node(*)
-            MATCH n-[r?]-()              
-            WHERE HAS(n.source) AND n.source = 'scrapedData'
-            DELETE n,r"
+  # In case any new relations are added make sure to remove all of them
+  query =  "START root=Node({rootNodeId})
+            MATCH root-[:SCRAPEDDATA]->scrapeddata-[r]->event
+            DELETE event, r"
           
-  db.query query, (res) -> 
+  db.query query, {rootNodeId: database.rootNodeId}, (err, res) ->
     console.log "executed delete. Result:", res
     union.scrape pushToNeo
-  
-
 
 main = ->
   console.log "Events-scrape: Updating the auto-generated events"

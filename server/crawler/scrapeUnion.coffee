@@ -7,8 +7,12 @@ cheerio = require 'cheerio'
 url     = require 'url'
 moment  = require 'moment'
 
+# Defines the url for the union website
+UNION_URL = "https://www.imperialcollegeunion.org/whats-on"
+EVENTS_SITE = (year, month) ->
+  return "#{UNION_URL}/month/#{year}/#{month}"
 
-exports.scrape = (handler) ->
+scrape = (handler) ->
 	# Scrape all of the dates for the event
 	now = moment()
 	lastMonth = moment().subtract('month', 1)
@@ -16,12 +20,6 @@ exports.scrape = (handler) ->
 	fetchUnionEvent lastMonth, handler
 	fetchUnionEvent now, handler
 	fetchUnionEvent nextMonth, handler
-
-# Defines the url for the union website
-UNION_URL = "https://www.imperialcollegeunion.org/whats-on"
-EVENTS_SITE = (year, month) ->
-	return "#{UNION_URL}/month/#{year}/#{month}"
-
 
 parseMessage = (message, time) ->
 	split = message.split("@").map (el) -> el.trim()
@@ -32,7 +30,6 @@ parseMessage = (message, time) ->
 		time: time
 	}
 
-
 getDate = (year, month, day, time) ->
 	return moment("#{year} #{month} #{day}", "YYYY MM DD", 'en').unix()
 
@@ -40,8 +37,8 @@ getDate = (year, month, day, time) ->
 followEvent = (details, u, handler) ->
 	# Should fetch the website and get the details
 	fetchAndExecute u, ($) ->
-		location      = $(".whatsoneventpagevenue").text()
-		description   = $(".whatsoneventpagedesc").text()
+		location      = $(".whatsoneventpagevenue").text().trim()
+		description   = $(".whatsoneventpagedesc").text().trim()
 		imageAbsolute = u + "/image"
 		details["location"]    = location
 		details["description"] = description
@@ -85,3 +82,5 @@ fetchAndExecute = (uri, handler) ->
 		$ = cheerio.load(body)
 		handler $
 		console.log "Paresed #{uri}"
+
+exports.scrape = scrape
