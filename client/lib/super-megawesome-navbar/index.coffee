@@ -28,10 +28,11 @@ exports.NavBar = Backbone.View.extend
     
   pushViewObject: (viewObject) ->
     @viewObjects.push(viewObject)
-    @render
+    @render()
     
-  updateContentView: ->
-    @currentViewObject().view.setElement(@$container).render() if @currentViewObject()?
+  updateContentView: ->  
+    if @$container and @currentViewObject()? and @currentViewObject().view?
+      @currentViewObject().view.setElement(@$container).render()
     
   updateElements: ->
     @$titleElement = @$el.find @options.title
@@ -44,15 +45,14 @@ exports.NavBar = Backbone.View.extend
     @updateElements()
 
   render: ->
-    return if !@currentViewObject()?
-    
     if @numberOfViewObjects() > 1
       @$backButton.html @viewObjects[@viewObjects.length - 2].title
       @$backButton.show()
     else
       @$backButton.hide()
-  
-    @$titleElement.html @currentViewObject().title
-    @updateContentView()
+      
+    if @currentViewObject()?
+      @$titleElement.html @currentViewObject().title
+      @updateContentView()
     
     this
