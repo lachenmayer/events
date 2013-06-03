@@ -2,14 +2,14 @@
   for day in days
     .day
       .day-header
-        p Today
+        p= day.date.format('dddd, MMMM Do YYYY')
       .day-events
         ul
-          for event in day
+          for event in day.events
             li
               .event
                 .time
-                  p= event.get('date')
+                  p= moment.unix(event.get('date')).format('H:mm')
                 .info
                   h2.name= event.get('name')
                   p.location= event.get('location')

@@ -20,10 +20,18 @@ exports.EventsListView = Backbone.View.extend
 
   # separate events list into a list for each day
   splitEvents: ->
+    days = []
+    newDay = (date) ->
+      date: date
+      events: []
+    day = newDay moment()
     @eventsList.each (e) ->
-      date = moment.unix e.get 'date'
-      console.log date.date()
-    []
+      eventDate = moment.unix e.get 'date'
+      unless eventDate.isSame day.date, 'day'
+        days.push day if day.events.length > 0
+        day = newDay eventDate
+      day.events.push e
+    days
 
   render: ->
     @$el.html _.template @mainTemplate
