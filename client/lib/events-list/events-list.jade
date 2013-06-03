@@ -1,15 +1,16 @@
 #events-list
-  .day
-    .day-header
-      p Today
-    .day-events
-      ul
-        - this.eventsList.each(function(event) {
-          li
-            .event
-              .time
-                p= event.get('date')
-              .info
-                h2.name= event.get('name')
-                p.location= event.get('location')
-        - });
+  for day in days
+    .day
+      .day-header
+        p Today
+      .day-events
+        ul
+          for event in day
+            li
+              .event
+                .time
+                  p= event.get('date')
+                .info
+                  h2.name= event.get('name')
+                  p.location= event.get('location')
+
