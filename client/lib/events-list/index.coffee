@@ -26,7 +26,7 @@ exports.EventsListView = Backbone.View.extend
     []
 
   render: ->
-    @$el.html _.template @mainTemplate(),
+    @$el.html _.template @mainTemplate
       days: @splitEvents()
     this
 
