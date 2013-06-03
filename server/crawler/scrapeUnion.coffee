@@ -52,8 +52,8 @@ fetchEvent = (year, month, $, handler) ->
 		day = $(td).find(".day-number").text()
 		$(td).find(".calendar-event li").each (index, e) ->
 			eventType   = $(e).attr('class')
-			time        = $(e).find("a").children()['0'].prev.data
-			message     = $(e).find("a").children()['0'].next.data
+			time        = $(e).find("a").children()['0'].next.data
+			message     = $(e).find("a").children()['0'].prev.data
 			config      = parseMessage message, time
 			relativeUrl = $(e).find("a").attr('href')
 			u           = url.resolve EVENTS_SITE(year, month), relativeUrl
