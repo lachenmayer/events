@@ -1,0 +1,19 @@
+{
+  "name": "event-view",
+  "repo": "event-view",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "main": "index.js",
+  "scripts": [
+    "index.coffee"
+  ],
+  "styles": [
+    "event-view.styl"
+  ],
+  "templates": [
+    "event-view.jade"
+  ]
+}
