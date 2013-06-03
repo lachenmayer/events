@@ -32,10 +32,8 @@ swagger.setAppHandler app
 swagger.addModels swaggerModels
 
 returnJson = (res) -> (value) ->
-  if value
-    res.send JSON.stringify value
-  else
-    res.send JSON.stringify {}
+  value = {} unless value?
+  res.send JSON.stringify value
 
 getUserByUsername =
   spec:
@@ -90,7 +88,7 @@ getEventsInRange =
     nickname: "getEventInRange"
   action: (req, res) ->
     console.log "Request Query", req.query
-    throw swagger.errors.invalid("eventRangeRequestHeader")  unless (\
+    throw swagger.errors.invalid("eventRangeRequestHeader") unless (\
       req.query.from \
       and req.query.to\
       and req.query.max\
@@ -122,13 +120,8 @@ swagger.addGet getUserByUsername
 swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventById
-swagger.configure("http://petstore.swagger.wordnik.com", "0.1");
-
-everyauth.helpExpress app
-
+swagger.configure "http://petstore.swagger.wordnik.com", "0.1"
 
 app.listen PORT, ->
   console.log "running! on port #{PORT}"
-
-
 

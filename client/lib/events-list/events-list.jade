@@ -6,11 +6,12 @@
       .day-events
         ul
           for event in day.events
-            li
-              .event
-                .time
-                  p= moment.unix(event.get('date')).format('H:mm')
-                .info
-                  h2.name= event.get('name')
-                  p.location= event.get('location')
+            a(href='/event/' + event.get('id'))
+              li
+                .event
+                  .time
+                    p= moment.unix(event.get('date')).format('H:mm')
+                  .info
+                    h2.name= event.get('name')
+                    p.location= event.get('location')
 
