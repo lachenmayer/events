@@ -2,15 +2,14 @@
   for day in days
     .day
       .day-header
-        p= day.date.format('dddd, MMMM Do YYYY')
+        p= day.date.calendar()
       .day-events
         table
           for event in day.events
-            a(href='/event/' + event.get('id'))
-              tr
-                td.time
-                  span= moment.unix(event.get('date')).format('H:mm')
-                td.info
-                  h2.name= event.get('name')
-                  p.location= event.get('location')
+            tr(class=event.get('id'))
+              td.time
+                span= moment.unix(event.get('date')).format('H:mm')
+              td.info
+                h2.name= event.get('name')
+                p.location= event.get('location')
 

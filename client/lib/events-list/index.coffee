@@ -7,9 +7,22 @@ _        = require '../underscore/'
 Main     = require '../main/'
 Model    = require '../model/'
 
+moment.lang 'en',
+  calendar:
+    lastDay  : '[Yesterday]'
+    sameDay  : '[Today]'
+    nextDay  : '[Tomorrow]'
+    lastWeek : 'dddd, MMMM Do'
+    nextWeek : 'dddd, MMMM Do'
+    sameElse : 'dddd, MMMM Do'
+
 exports.EventsListView = Backbone.View.extend
 
   mainTemplate: require './events-list'
+
+  events:
+    'click tr': (e) ->
+      @openEvent +e.currentTarget.className
 
   initialize: ->
     @eventsList = new Model.Events()
@@ -32,6 +45,9 @@ exports.EventsListView = Backbone.View.extend
         @dayLists.push day if day.events.length > 0
         day = newDay eventDate
       day.events.push e
+
+  openEvent: (eventId) ->
+    console.log eventId
 
   render: ->
     @$el.html _.template @mainTemplate
