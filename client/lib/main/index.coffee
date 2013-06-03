@@ -16,10 +16,8 @@ exports.MainView = Backbone.View.extend
       backButton: '#navbar a'
       container: '#main-view .inner'
       
-  setContentView: (view)->
-    App.NavBar.setRootViewObject
-      view: view
-      title: 'Hello'
+  setContentViewObject: (viewObject)->
+    App.NavBar.setRootViewObject viewObject
 
   render: ->
     # Render the main template
