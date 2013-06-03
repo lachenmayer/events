@@ -108,8 +108,11 @@ getAllEvents =
     errorResponses: [swagger.errors.notFound("events")]
     nickname: "getAllEvents"
   action: (req, res) ->
-    eventData.getAllEvents (events) ->
-      if events
+    eventData.getAllEvents (err, events) ->
+      if err
+        console.log "Error #{err}"
+        throw swagger.errors.notFound("events")
+      else if events
         res.send JSON.stringify(events)
       else
         throw swagger.errors.notFound("events")
