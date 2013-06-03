@@ -23,4 +23,8 @@ $ ->
   App.MainView.setContentViewObject
     view: App.EventsListView
     title: 'Upcoming Events'
+    
+  App.NavBar.pushViewObject
+    view: null
+    title: 'Hello'
 

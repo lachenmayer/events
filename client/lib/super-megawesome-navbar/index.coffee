@@ -30,6 +30,12 @@ exports.NavBar = Backbone.View.extend
     @viewObjects.push(viewObject)
     @render()
     
+  popViewObject: ->
+    return if @numberOfViewObjects() <= 1
+  
+    @viewObjects.pop()    
+    @render()
+    
   updateContentView: ->  
     if @$container and @currentViewObject()? and @currentViewObject().view?
       @currentViewObject().view.setElement(@$container).render()
@@ -37,6 +43,8 @@ exports.NavBar = Backbone.View.extend
   updateElements: ->
     @$titleElement = @$el.find @options.title
     @$backButton = @$el.find @options.backButton
+    @$backButton.on 'click', =>
+      @popViewObject()
     @$container = @$el.find @options.container
     
   setElement: (el)->
