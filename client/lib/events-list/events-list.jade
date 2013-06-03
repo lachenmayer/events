@@ -4,14 +4,13 @@
       .day-header
         p= day.date.format('dddd, MMMM Do YYYY')
       .day-events
-        ul
+        table
           for event in day.events
             a(href='/event/' + event.get('id'))
-              li
-                .event
-                  .time
-                    p= moment.unix(event.get('date')).format('H:mm')
-                  .info
-                    h2.name= event.get('name')
-                    p.location= event.get('location')
+              tr
+                td.time
+                  span= moment.unix(event.get('date')).format('H:mm')
+                td.info
+                  h2.name= event.get('name')
+                  p.location= event.get('location')
 
