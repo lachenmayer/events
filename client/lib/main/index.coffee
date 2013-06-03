@@ -1,7 +1,7 @@
 _         = require '../component-underscore'
 Backbone  = require '../solutionio-backbone'
 jade      = require '../jade-runtime'
-NavBar    = require('../super-megawesome-navbar').NavBar
+NavBar    = require('../navbar').NavBar
 
 exports.MainView = Backbone.View.extend
   title: "Events"

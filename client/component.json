@@ -13,7 +13,7 @@
     "main",
     "events-list",
     "event-view",
-    "super-megawesome-navbar",
+    "navbar",
     "model"
   ],
   "paths": [
