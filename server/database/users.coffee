@@ -45,23 +45,16 @@ getUserById = (id, callback) ->
     database.returnValue err, user, ((node) -> database.returnDataWithId node), callback
 
 generateNewAPIKey = (username, callback) ->
-  findOrCreateUserNode username, (err, userNode) ->
-    if (err)
-      callback err, null
-    else
-      new_key = uuid.v1()
-      timestamp = moment().add('d', 1).unix()
-      # Traverse to userNode-[:API_KEY]->KEY
-      userNode.getRelationshipNodes "API_KEY", (err, nodes) ->
-        if (err)
-          callback err, null
-        else
-          console.log "Check #{nodes[0]}"
-          nodes[0].key = new_key
-          nodes[0].timestamp = timestamp
-          nodes[0].save (err...) ->
-            if err
-              console.log "Err: #{err}"
+  findOrCreateUserNode username, database.handle callback, (userNode) ->
+    newKey = uuid.v1()
+    timestamp = moment().add('d', 1).unix()
+    # Traverse to userNode-[:API_KEY]->KEY
+    userNode.getRelationshipNodes "API_KEY", database.handle callback, (nodes) ->
+      console.log "Check #{nodes[0]}"
+      nodes[0].key = newKey
+      nodes[0].timestamp = timestamp
+      nodes[0].save database.handle callback, ->
+        callback null, newKey
 
 # Verifies the key and returns whether the USERNAME, KEYAPI combination is valid
 verifyKey = (username, keyAPI, callback) ->
@@ -101,11 +94,8 @@ findFriendDistance = (me, friendId, callback) ->
   query = "START r=Node({rootId}), m=Node({myId}), f=Node({friendId})
            MATCH r-[:USERS]->u-->m, r-[:USERS]->u-->f, d=m-[:FRIEND*0..2]->f
            RETURN length(d)"
-  db.query query, {rootId: database.rootNodeId, myId: me, friendId: friendId}, (err, lengths) ->
-    if err
-      console.log "Error: #{err}"
-      callback err, null
-    else if (lengths.length == 0)
+  db.query query, {rootId: database.rootNodeId, myId: me, friendId: friendId}, database.handle callback, (lengths) ->
+    if (lengths.length == 0)
       callback null, WE_ARE_NOT_RELATED
     else
       minDistance = Math.min.apply @, (length for length in lengths)
@@ -113,14 +103,13 @@ findFriendDistance = (me, friendId, callback) ->
 
 # Finds and returns a user with specific username
 findUserNode = (username, callback) ->
-  findMatchingUsers username, (err, users) ->
-    if err
-      callback err, null
-    else if (users.length == 0)
-      console.log "Could not find the user #{username}"
-      callback err, null
+  findMatchingUsers username, database.handle callback, (users) ->
+    if (users.length == 0)
+      errMsg = "Could not find the user #{username}"
+      console.log errMsg
+      callback errMsg, null
     else
-      callback err, users[0].user
+      callback null, users[0].user
 
 # Finds and returns the list of matching users
 findMatchingUsers = (username, callback) ->
@@ -128,34 +117,26 @@ findMatchingUsers = (username, callback) ->
              MATCH r-[:USERS]->u-->user
              WHERE user.username = {username}
              RETURN user"
-  db.query query, {rootId: database.rootNodeId, username: username}, (err, users) ->
-    if err
-      console.log "Could not find the user #{username}: #{err}"
-      callback err, null
-    else
-      callback err, users
+  db.query query, {rootId: database.rootNodeId, username: username},
+    database.handleErr callback, "Could not find the user #{username}", (users) ->
+      callback null, users
 
 # Finds a user
 # Assumes that the user exists
 # If the user might not exist use findMatchingUsers instead
 # username <string> username
 findUser = (username, callback) ->
-  findUserNode username, (err, user) ->
-    if err
-      callback err, user
-    else
-      # Remove any fields that should not be exposed to the logged in user
-      {username, email} = user.data
-      callback err, {username: username, email: email}
+  findUserNode username, database.handle callback, (user) ->
+    # Remove any fields that should not be exposed to the logged in user
+    {username, email} = user.data
+    callback null, {username: username, email: email}
 
 checkLogIn = (username, password, callback) ->
-  findUser username, (err, user) ->
-    if err
-      callback err, null
-    else if (!user || (user.password != password))
+  findUser username, database.handle callback, (user) ->
+    if (!user || (user.password != password))
       callback "Authorization failed", null
     else
-      callback err, user
+      callback null, user
 
 # USER1 sends the invitation to USER2
 # user1 <node> node of the first user

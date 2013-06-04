@@ -38,10 +38,7 @@ handleWithError = (callback, errorMessage, handlerWithNoErrors) -> (err, data) -
 # If an error occurs then propagates the error
 # Otherwise maps the result using the f function
 returnValue = (err, data, f, callback) ->
-  if err
-    callback err, null
-  else
-    callback err, (f data)
+  handler(callback, (data) -> callback null, f data)(err, data)
 
 getRootNode = (callback) ->
   db.getNodeById(ROOT_NODE_ID) callback
