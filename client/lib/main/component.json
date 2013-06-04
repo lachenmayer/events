@@ -13,9 +13,6 @@
   "paths": [
     "../"
   ],
-  "scripts": [
-    "index.coffee"
-  ],
   "styles": [
     "main.styl"
   ]

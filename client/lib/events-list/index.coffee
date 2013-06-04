@@ -3,8 +3,8 @@ Backbone  = require '../solutionio-backbone'
 List      = require '../cayasso-list'
 moment    = require '../moment'
 _         = require '../underscore'
+jade      = require '../monstercat-jade-runtime'
 
-Main      = require '../main'
 Model     = require '../model'
 eventView = require '../event-view'
 
@@ -26,12 +26,10 @@ exports.EventsListView = Backbone.View.extend
       @openEvent +e.currentTarget.className
 
   initialize: ->
-    @eventsList = new Model.Events()
     @dayLists = []
-    @eventsList.bind 'reset', =>
+    @collection.bind 'reset', =>
       @splitEvents()
       @render()
-    @eventsList.fetch()
 
   # separate events list into a list for each day
   splitEvents: ->
@@ -40,7 +38,7 @@ exports.EventsListView = Backbone.View.extend
       date: date
       events: []
     day = newDay moment()
-    @eventsList.each (e) =>
+    @collection.each (e) =>
       eventDate = moment.unix e.get 'date'
       unless eventDate.isSame day.date, 'day'
         @dayLists.push day if day.events.length > 0
@@ -48,8 +46,7 @@ exports.EventsListView = Backbone.View.extend
       day.events.push e
 
   openEvent: (eventId) ->
-    event = @eventsList.get eventId
-    eventView.loadView event
+    App.Router.navigate "/event/#{eventId}", true
 
   render: ->
     @$el.html _.template @mainTemplate
