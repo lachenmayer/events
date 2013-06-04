@@ -1,10 +1,11 @@
 window.$ = window.jQuery = require 'component-jquery'
 Backbone       = require 'solutionio-backbone'
-EventsListView = require('events-list').EventsListView
 _              = require 'component-underscore'
 
+EventsListView = require('events-list').EventsListView
 Router = require('routes').Router
 NavBar = require('navbar').NavBar
+Events = require('model').Events
 
 # Store our stuff in a global app object.
 window.App =
@@ -24,7 +25,11 @@ $ ->
   App.NavBar.setElement $('#content')
   App.NavBar.render()
 
-  App.EventsListView = new EventsListView()
+  App.EventsList = new Events
+
+  App.EventsListView = new EventsListView
+    collection: App.EventsList
+
   App.NavBar.setRootViewObject
     view: App.EventsListView
     title: 'Upcoming Events'
