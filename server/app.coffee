@@ -3,13 +3,25 @@ swagger       = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
-passport      = require 'passport'
-localpassport = require 'passport-local'
 krb5          = require 'node-krb5'
+fs            = require 'fs'
+http          = require 'http'
+https         = require 'https'
+
+
+
+server_options = {
+key: fs.readFileSync('./cert/server.key'),
+cert: fs.readFileSync('./cert/server.crt'),
+requestCert: true
+}
+
+
 
 app = express()
 
-PORT = 5278
+HTTP_PORT  = 8080
+HTTPS_PORT = 5278
 
 app.use express.compress()
 app.use express.bodyParser()
@@ -59,7 +71,6 @@ getEventById =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("eventId"), swagger.errors.notFound("event")]
     nickname: "getNodeById"
-
   action: (req, res) ->
     throw swagger.errors.invalid("eventId") unless req.params.eventId
     id = parseInt(req.params.eventId)
@@ -153,10 +164,16 @@ swagger.addGet getEventsInRange
 swagger.addGet getEventById
 swagger.configure "http://superawesome.swagger.imperialEvents.com", "0.1"
 
+httpapp  = app
 
 
+httpapp.get '/user/*',(req,res) ->
+  res.redirect "https://127.0.0.1:#{HTTPS_PORT}#{req.url}"
 
-app.listen PORT, ->
-  console.log "running! on port #{PORT}"
 
+http.createServer(httpapp).listen HTTP_PORT, ->
+  console.log "http running! on port #{HTTP_PORT}"
+
+https.createServer(server_options, app).listen HTTPS_PORT, ->
+  console.log "https running! on port #{HTTPS_PORT}"
 
