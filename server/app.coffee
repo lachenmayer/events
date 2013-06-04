@@ -20,8 +20,8 @@ requestCert: true
 
 app = express()
 
-HTTP_PORT  = 8080
-HTTPS_PORT = 5278
+HTTP_PORT  = 5278
+HTTPS_PORT = 5279
 
 app.use express.compress()
 app.use express.bodyParser()
