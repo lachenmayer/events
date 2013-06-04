@@ -3,8 +3,8 @@ Backbone  = require '../solutionio-backbone'
 List      = require '../cayasso-list'
 moment    = require '../moment'
 _         = require '../underscore'
+jade      = require '../monstercat-jade-runtime'
 
-Main      = require '../main'
 Model     = require '../model'
 eventView = require '../event-view'
 
@@ -26,6 +26,7 @@ exports.EventsListView = Backbone.View.extend
       @openEvent +e.currentTarget.className
 
   initialize: ->
+    console.log @$el
     @eventsList = new Model.Events()
     @dayLists = []
     @eventsList.bind 'reset', =>

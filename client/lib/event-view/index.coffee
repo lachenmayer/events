@@ -12,7 +12,6 @@ exports.EventView = EventView = Backbone.View.extend
   mainTemplate: require './event-view'
 
   initialize: ->
-    debugger
     @model.bind 'change', =>
       @render()
 

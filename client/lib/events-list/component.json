@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "solutionio/backbone": "*",
-    "component/moment": "*"
+    "component/moment": "*",
+    "monstercat/jade-runtime": "*"
   },
   "scripts": [
     "index.coffee"
