@@ -19,12 +19,6 @@ $ ->
     el: $('#content')
   App.MainView.render()
 
-  # Set the Events List as the content view
-  App.EventsListView = new EventsListView()
-  App.MainView.setContentViewObject
-    view: App.EventsListView
-    title: 'Upcoming Events'
-
   App.Router = new Router
   Backbone.history.start
     pushState: true
