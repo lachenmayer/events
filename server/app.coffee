@@ -3,20 +3,16 @@ swagger       = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
-krb5          = require 'node-krb5'
+auth          = require './authenticate'
 fs            = require 'fs'
 http          = require 'http'
 https         = require 'https'
-
-
 
 server_options = {
 key: fs.readFileSync('./cert/server.key'),
 cert: fs.readFileSync('./cert/server.crt'),
 requestCert: true
 }
-
-
 
 app = express()
 
@@ -142,7 +138,7 @@ userLogin =
       throw swagger.errors.invalid "header"
     # Uncrypt the password
     # Authenticate the username Password Combo
-    krb5.authenticate username + '@IC.AC.UK', password, (err) ->
+    auth.authenticate username + '@IC.AC.UK', password, (err) ->
       if err
         console.log "There was an error logging in: " + username
         console.log "Error: #{err}"

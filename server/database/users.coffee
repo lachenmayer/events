@@ -13,8 +13,31 @@ db = database.db
 
 WE_ARE_NOT_RELATED = -1
 
+# Sets up the new user
 createUser = (data, callback) ->
-  database.createNode "USERS", data, "USER", callback
+  database.createNode "USERS", data, "USER", database.handle callback, (userNode) ->
+    keyNode = db.createNode({ 'key': '', 'timestamp': '' })
+    keyNode.save database.handle callback, (api_node) ->
+      db.createRelationship userNode, api_node, "API_KEY"
+
+# Defines a user node for a new username
+userNode = (username) ->
+  return {
+    username: username
+    joinDate: moment().unix()
+  }
+
+# Creates a new user and creates the default data for it
+newUser = (username, callback) ->
+  createUser (userNode username), callback
+
+# Tries to find a user. If one does not exist sets up a new node
+findOrCreateUserNode = (username, callback) ->
+  findMatchingUsers username, database.handle callback, (users) ->
+    if (users.length == 0)
+      newUser username, callback
+    else
+      return users[0].user
 
 # How to treat the permissions??
 getUserById = (id, callback) ->
@@ -22,22 +45,16 @@ getUserById = (id, callback) ->
     database.returnValue err, user, ((node) -> database.returnDataWithId node), callback
 
 generateNewAPIKey = (username, callback) ->
-  findUserNode username, (err, userNode) ->
+  findOrCreateUserNode username, (err, userNode) ->
     if (err)
       callback err, null
     else
       new_key = uuid.v1()
-      timestamp = moment().unix()
+      timestamp = moment().add('d', 1).unix()
       # Traverse to userNode-[:API_KEY]->KEY
       userNode.getRelationshipNodes "API_KEY", (err, nodes) ->
         if (err)
-          console.log "Error: #{err}"
-          # Make it
-          db.createNode({ 'key': new_key, 'timestamp': timestamp }).save (err, api_node) ->
-            if (err)
-              console.log "Error: #{err}"
-            else
-              db.createRelationship(userNode, api_node, "API_KEY")
+          callback err, null
         else
           console.log "Check #{nodes[0]}"
           nodes[0].key = new_key
@@ -46,10 +63,12 @@ generateNewAPIKey = (username, callback) ->
             if err
               console.log "Err: #{err}"
 
-
-
-
-
+# Verifies the key and returns whether the USERNAME, KEYAPI combination is valid
+verifyKey = (username, keyAPI, callback) ->
+  findUserNode username, database.handle callback, (userNode) ->
+    userNode.getRelationshipNodes 'API_KEY', database.handle callback, (nodes) ->
+      validated = nodes[0].data.key == keyAPI && nodes[0].data.timestamp > moment().unix()
+      callback null, validated
 
 # Returns the list of events a given user has subscribed to
 getUserEvents = (id, callback) ->
@@ -94,13 +113,8 @@ findFriendDistance = (me, friendId, callback) ->
 
 # Finds and returns a user with specific username
 findUserNode = (username, callback) ->
-  query = "START r=Node({rootId})
-           MATCH r-[:USERS]->u-->user
-           WHERE user.username = {username}
-           RETURN user"
-  db.query query, {rootId: database.rootNodeId, username: username}, (err, users) ->
+  findMatchingUsers username, (err, users) ->
     if err
-      console.log "Could not find the user #{username}: #{err}"
       callback err, null
     else if (users.length == 0)
       console.log "Could not find the user #{username}"
@@ -108,6 +122,23 @@ findUserNode = (username, callback) ->
     else
       callback err, users[0].user
 
+# Finds and returns the list of matching users
+findMatchingUsers = (username, callback) ->
+  query = "START r=Node({rootId})
+             MATCH r-[:USERS]->u-->user
+             WHERE user.username = {username}
+             RETURN user"
+  db.query query, {rootId: database.rootNodeId, username: username}, (err, users) ->
+    if err
+      console.log "Could not find the user #{username}: #{err}"
+      callback err, null
+    else
+      callback err, users
+
+# Finds a user
+# Assumes that the user exists
+# If the user might not exist use findMatchingUsers instead
+# username <string> username
 findUser = (username, callback) ->
   findUserNode username, (err, user) ->
     if err
