@@ -3,6 +3,9 @@ Backbone       = require 'solutionio-backbone'
 EventsListView = require('events-list').EventsListView
 _              = require 'component-underscore'
 
+Main = require 'main'
+Router = require('routes').Router
+
 # Store our stuff in a global app object.
 window.App =
   dispatcher: _.clone Backbone.Events
@@ -12,7 +15,9 @@ $ ->
   # hide iOS browser chrome
   window.top.scrollTo(0, 1)
 
-  Main = require 'main'
+  App.Router = new Router
+  Backbone.history.start
+    pushState: true
 
   App.MainView = new Main.MainView
     el: $('#content')
