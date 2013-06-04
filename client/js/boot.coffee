@@ -21,7 +21,7 @@ $ ->
     accessoryButton: '#navbar a#accessory-button'
     container: '#main-view .inner'
 
-  App.NavBar.setElement $('#app')
+  App.NavBar.setElement $('#content')
   App.NavBar.render()
 
   App.EventsListView = new EventsListView()

@@ -47,7 +47,7 @@ exports.NavBar = Backbone.View.extend
     @$container = @$el.find @options.container
     @$accessoryButton = @$el.find @options.accessoryButton
 
-  setElement: (el)->
+  setElement: (el) ->
     Backbone.View.prototype.setElement.call(this, el)
     @updateElements()
 
