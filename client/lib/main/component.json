@@ -18,8 +18,5 @@
   ],
   "styles": [
     "main.styl"
-  ],
-  "templates": [
-    "main.jade"
   ]
 }
