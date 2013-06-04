@@ -5,7 +5,14 @@ exports.NavBar = Backbone.View.extend
   viewObjects: []
 
   initialize: ->
-    @updateElements()
+    @$titleElement = @$el.find @options.title
+    @$container = @$el.find @options.container
+    @$accessoryButton = @$el.find @options.accessoryButton
+    @$accessoryButton.on 'click', =>
+      App.dispatcher.trigger 'navbar:accessoryButton'
+    @$backButton = @$el.find @options.backButton
+    @$backButton.on 'click', =>
+      App.dispatcher.trigger 'navbar:backButton'
 
   # Returns the visible view object (at the top of the stack)
   currentViewObject: ->
@@ -13,9 +20,6 @@ exports.NavBar = Backbone.View.extend
       @viewObjects[@viewObjects.length - 1]
     else
       null
-
-  numberOfViewObjects: ->
-    @viewObjects.length
 
   setRootViewObject: (viewObject) ->
     # Unbind the old view from .inner
@@ -31,30 +35,23 @@ exports.NavBar = Backbone.View.extend
     @render()
 
   popViewObject: ->
-    return if @numberOfViewObjects() <= 1
+    return if @viewObjects.length <= 1
     @viewObjects.pop()
+    @render()
+
+  popToRootViewObject: ->
+    return if @viewObjects.length <= 1
+    @viewObjects.splice 0, 1
     @render()
 
   updateContentView: ->
     if @$container and @currentViewObject()? and @currentViewObject().view?
       @currentViewObject().view.setElement(@$container).render()
 
-  updateElements: ->
-    @$titleElement = @$el.find @options.title
-    @$backButton = @$el.find @options.backButton
-    @$backButton.on 'click', =>
-      @popViewObject()
-    @$container = @$el.find @options.container
-    @$accessoryButton = @$el.find @options.accessoryButton
-
-  setElement: (el) ->
-    Backbone.View.prototype.setElement.call(this, el)
-    @updateElements()
-
   render: ->
     @$accessoryButton.hide()
 
-    if @numberOfViewObjects() > 1
+    if @viewObjects.length > 1
       @$backButton.html @viewObjects[@viewObjects.length - 2].title
       @$backButton.show()
     else

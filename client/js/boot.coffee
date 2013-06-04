@@ -21,8 +21,7 @@ $ ->
     backButton: '#navbar a#back'
     accessoryButton: '#navbar a#accessory-button'
     container: '#main-view .inner'
-
-  App.NavBar.setElement $('#content')
+    el: $('#content')
   App.NavBar.render()
 
   App.EventsList = new Events
@@ -33,6 +32,9 @@ $ ->
   App.NavBar.setRootViewObject
     view: App.EventsListView
     title: 'Upcoming Events'
+
+  App.dispatcher.on 'navbar:backButton', =>
+    App.Router.navigate '/', true
 
   App.Router = new Router
   Backbone.history.start
