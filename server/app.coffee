@@ -4,6 +4,9 @@ everyauth     = require 'everyauth'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
+passport      = require 'passport'
+localpassport = require 'passport-local'
+krb5          = require 'node-krb5'
 
 app = express()
 
@@ -18,15 +21,6 @@ app.use express.session secret: 'alex is cool'
 app.use express.logger 'dev'
 
 swagger.setAppHandler app
-
-# swagger.addValidator validate = (req, path, httpMethod) ->  
-#   #  example, only allow POST for api_key="special-key"
-#   if "POST" is httpMethod or "DELETE" is httpMethod or "PUT" is httpMethod
-#     apiKey = req.headers["api_key"]
-#     apiKey = url.parse(req.url, true).query["api_key"]  unless apiKey
-#     return true  if "special-key" is apiKey
-#     return false
-#   true
 
 swagger.addModels swaggerModels
 
@@ -114,13 +108,56 @@ getAllEvents =
       else
         throw swagger.errors.notFound("events")
 
+userLogin =
+  spec:
+    description: "Check user is valid, provide a time-limited key to the user for authentication, key to user is 1->1 mapping"
+    path: "/user/login"
+    notes: "Login the user"
+    method: "POST"
+    params: []
+    responseClass: "user"
+    errorResponses: [swagger.errors.invalid("header"), swagger.errors.invalid("login")]
+    nickname: "loginUser"
+  action: (req, res) ->
+    # Check what we exect is in the headers
+    username = ""
+    password = ""
+    if (req.headers["user"])
+      username = req.headers["user"]
+    else
+      throw swagger.errors.invalid "header"
+    if (req.headers["password"])
+      password = req.headers["password"]
+    else
+      throw swagger.errors.invalid "header"
+    # Uncrypt the password
+    # Authenticate the username Password Combo
+    krb5.authenticate username + '@IC.AC.UK', password, (err) ->
+      if err
+        console.log "There was an error logging in: " + username
+        console.log "Error: #{err}"
+        res.send "Error in username/password combo"
+      else
+        console.log "Success! with #{username}"
+        # Pass on to database library
+        userData.generateNewAPIKey username, (err, key) ->
+          if (err)
+            res.send "{}"
+          else
+            res.send JSON.stringify {"key": key}
 
+
+swagger.addPost userLogin
 swagger.addGet getUserByUsername
 swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventById
-swagger.configure "http://petstore.swagger.wordnik.com", "0.1"
+swagger.configure "http://superawesome.swagger.imperialEvents.com", "0.1"
+
+
+
 
 app.listen PORT, ->
   console.log "running! on port #{PORT}"
+
 

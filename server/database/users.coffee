@@ -6,6 +6,8 @@
 ###
 database = require './database'
 async    = require 'async'
+uuid     = require 'node-uuid'
+moment   =  require 'moment'
 
 db = database.db
 
@@ -18,6 +20,36 @@ createUser = (data, callback) ->
 getUserById = (id, callback) ->
   database.getTableNodeById "USERS", id, (err, user) ->
     database.returnValue err, user, ((node) -> database.returnDataWithId node), callback
+
+generateNewAPIKey = (username, callback) ->
+  findUserNode username, (err, userNode) ->
+    if (err)
+      callback err, null
+    else
+      new_key = uuid.v1()
+      timestamp = moment().unix()
+      # Traverse to userNode-[:API_KEY]->KEY
+      userNode.getRelationshipNodes "API_KEY", (err, nodes) ->
+        if (err)
+          console.log "Error: #{err}"
+          # Make it
+          db.createNode({ 'key': new_key, 'timestamp': timestamp }).save (err, api_node) ->
+            if (err)
+              console.log "Error: #{err}"
+            else
+              db.createRelationship(userNode, api_node, "API_KEY")
+        else
+          console.log "Check #{nodes[0]}"
+          nodes[0].key = new_key
+          nodes[0].timestamp = timestamp
+          nodes[0].save (err...) ->
+            if err
+              console.log "Err: #{err}"
+
+
+
+
+
 
 # Returns the list of events a given user has subscribed to
 getUserEvents = (id, callback) ->
@@ -154,6 +186,7 @@ removeFromFriends = (username1, username2, callback) ->
 
 # Exporting the functions globally
 exports.createUser  = createUser
+exports.generateNewAPIKey = generateNewAPIKey
 exports.getUserById = getUserById
 exports.getUserFriends = getUserFriends
 exports.getUserEvents  = getUserEvents
