@@ -12,7 +12,7 @@ exports.MainView = Backbone.View.extend
         @title = title
         @render()
     App.NavBar = new NavBar
-      title: '#navbar h1'     # Selector for the title element
+      title: '#navbar h1 .inner'     # Selector for the title element
       backButton: '#navbar a'
       container: '#main-view .inner'
 
@@ -23,6 +23,7 @@ exports.MainView = Backbone.View.extend
     # Render the main template
     @$el.html @mainTemplate
       title: @title
+    
     App.NavBar.setElement $('#app')
     App.NavBar.render()
     this

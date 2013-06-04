@@ -7,6 +7,12 @@ body
 
 $nav_height = 44px
 
+ellipsis()
+  white-space: nowrap
+  overflow: hidden
+  -o-text-overflow: ellipsis
+  text-overflow: ellipsis    
+
 nav
   text-align: center
   background-color: #bbb
@@ -28,6 +34,15 @@ nav
     left: 0
     z-index: 10000
     display: none
+    font-size: 14px
+    background-color: #888;
+    padding: 0 5px;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 #ccc;
+    border: 1px solid #666;
+    line-height: 25px;
+    max-width: 20%
+    ellipsis()
 
   h1
     margin: 0
@@ -39,6 +54,11 @@ nav
     z-index: 1000
     top: 0
     left: 0
+    
+    .inner
+      ellipsis()
+      width: 40%
+      margin: 0 auto
 
 #main-view
   background-color: #eee
