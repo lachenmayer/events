@@ -27,7 +27,6 @@
     "async": "~0.2.9"
   },
   "devDependencies": {
-    "supervisor": "~0.5.2",
-    "everyauth": "~0.3.1"
+    "supervisor": "~0.5.2"
   }
 }

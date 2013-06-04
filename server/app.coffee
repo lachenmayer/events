@@ -1,6 +1,5 @@
 express       = require 'express'
 swagger       = require 'swagger-node-express'
-everyauth     = require 'everyauth'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
