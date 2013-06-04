@@ -4,19 +4,19 @@ jade      = require '../jade-runtime'
 NavBar    = require('../navbar').NavBar
 
 exports.MainView = Backbone.View.extend
-  title: "Events"
-  mainTemplate: require('./main')
+  title: 'Events'
+  mainTemplate: require './main'
 
   initialize: ->
     App.dispatcher.on 'setTitle', (title) =>
         @title = title
-        @.render()
+        @render()
     App.NavBar = new NavBar
       title: '#navbar h1 .inner'     # Selector for the title element
       backButton: '#navbar a#back'
       accessoryButton: '#navbar a#accessory-button'
       container: '#main-view .inner'
-      
+
   setContentViewObject: (viewObject)->
     App.NavBar.setRootViewObject viewObject
 
@@ -24,9 +24,8 @@ exports.MainView = Backbone.View.extend
     # Render the main template
     @$el.html @mainTemplate
       title: @title
-    
+
     App.NavBar.setElement $('#app')
     App.NavBar.render()
-    
     this
 
