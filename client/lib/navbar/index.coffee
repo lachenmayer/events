@@ -46,6 +46,7 @@ exports.NavBar = Backbone.View.extend
     @$backButton.on 'click', =>
       @popViewObject()
     @$container = @$el.find @options.container
+    @$accessoryButton = @$el.find @options.accessoryButton
     
   setElement: (el)->
     Backbone.View.prototype.setElement.call(this, el)
@@ -53,6 +54,8 @@ exports.NavBar = Backbone.View.extend
     @updateElements()
 
   render: ->
+    @$accessoryButton.hide()
+  
     if @numberOfViewObjects() > 1
       @$backButton.html @viewObjects[@viewObjects.length - 2].title
       @$backButton.show()

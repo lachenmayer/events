@@ -15,17 +15,11 @@ $ ->
   # hide iOS browser chrome
   window.top.scrollTo(0, 1)
 
-  App.Router = new Router
-  Backbone.history.start
-    pushState: true
-
   App.MainView = new Main.MainView
     el: $('#content')
   App.MainView.render()
 
-  # Set the Events List as the content view
-  App.EventsListView = new EventsListView()
-  App.MainView.setContentViewObject
-    view: App.EventsListView
-    title: 'Upcoming Events'
+  App.Router = new Router
+  Backbone.history.start
+    pushState: true
 

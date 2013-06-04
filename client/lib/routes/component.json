@@ -1,0 +1,13 @@
+{
+  "name": "routes",
+  "description": "Backbone router",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.coffee",
+  "scripts": [
+    "index.coffee"
+  ]
+}
