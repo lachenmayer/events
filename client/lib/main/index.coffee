@@ -23,7 +23,7 @@ exports.MainView = Backbone.View.extend
     # Render the main template
     @$el.html @mainTemplate
       title: @title
-    
+
     App.NavBar.setElement $('#app')
     App.NavBar.render()
     this
