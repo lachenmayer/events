@@ -1,0 +1,15 @@
+#tagsort
+  p Sort
+    ul
+      li.alphabetically
+        a.selected(href='#') Alphabetically
+      li.popularity
+        a(href='#') By Popularity
+
+#taglist
+  ul.list
+    for tag in tags
+      li
+        input.checked(type='checkbox', name=tag.name)
+        label.name(for=tag.name)= tag.name
+        span.numEvents= tag.numEvents
