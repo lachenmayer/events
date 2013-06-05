@@ -17,7 +17,7 @@ createUser = (data, callback) ->
   database.createNode "USERS", data, "USER", callback
 
 createUserSimple = (username, callback) ->
-  database.createNode "USERS", {"username": username, "joinTimestamp": moment().unix() }, "USER", (err, userNode) ->
+  createUser {"username": username, "joinTimestamp": moment().unix() }, (err, userNode) ->
     if err
       callback err, null
     else
@@ -58,9 +58,6 @@ generateNewAPIKey = (username, callback) ->
               callback err, null
             else
               callback err, {"key": new_key, "id": new_node.id}
-
-
-
 
 
 
