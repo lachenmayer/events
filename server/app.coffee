@@ -106,17 +106,17 @@ getAllEvents =
     method: "GET"
     params: []
     responseClass: "event"
-    errorResponses: [swagger.errors.notFound("events")]
+    errorResponses: [swagger.errors.notFound("event")]
     nickname: "getAllEvents"
   action: (req, res) ->
     eventData.getAllEvents (err, events) ->
       if err
         console.log "Error #{err}"
-        throw swagger.errors.notFound("events")
+        res.send {}
       else if events
         res.send JSON.stringify(events)
       else
-        throw swagger.errors.notFound("events")
+        throw swagger.errors.notFound("event")
 
 userLogin =
   spec:
@@ -150,11 +150,14 @@ userLogin =
       else
         console.log "Success! with #{username}"
         # Pass on to database library
-        userData.generateNewAPIKey username, (err, key) ->
+        userData.generateNewAPIKey username, (err, keyJSON) ->
           if (err)
+            console.log "Error: #{err}"
             res.send "{}"
           else
-            res.send JSON.stringify {"key": key}
+            res.send JSON.stringify keyJSON
+
+
 
 
 swagger.addPost userLogin

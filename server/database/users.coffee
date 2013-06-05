@@ -16,13 +16,28 @@ WE_ARE_NOT_RELATED = -1
 createUser = (data, callback) ->
   database.createNode "USERS", data, "USER", callback
 
+createUserSimple = (username, callback) ->
+  database.createNode "USERS", {"username": username, "joinTimestamp": moment().unix() }, "USER", (err, userNode) ->
+    if err
+      callback err, null
+    else
+      createAPIKeyNode userNode, callback
+
+createAPIKeyNode = (userNode, callback) ->
+  db.createNode({ 'key': '', 'timestamp': ''}).save (err, api_node) ->
+    if (err)
+      callback err, null
+    else
+      database.makeRelationship userNode, api_node, "API_KEY", (err...) ->
+        callback err, userNode
+
 # How to treat the permissions??
 getUserById = (id, callback) ->
   database.getTableNodeById "USERS", id, (err, user) ->
     database.returnValue err, user, ((node) -> database.returnDataWithId node), callback
 
 generateNewAPIKey = (username, callback) ->
-  findUserNode username, (err, userNode) ->
+  findOrCreateUserNode username, (err, userNode) ->
     if (err)
       callback err, null
     else
@@ -31,20 +46,18 @@ generateNewAPIKey = (username, callback) ->
       # Traverse to userNode-[:API_KEY]->KEY
       userNode.getRelationshipNodes "API_KEY", (err, nodes) ->
         if (err)
-          console.log "Error: #{err}"
-          # Make it
-          db.createNode({ 'key': new_key, 'timestamp': timestamp }).save (err, api_node) ->
-            if (err)
-              console.log "Error: #{err}"
-            else
-              db.createRelationship(userNode, api_node, "API_KEY")
+          callback err, null
+        else if not nodes or not nodes[0]
+          createAPIKeyNode userNode, ()->
+            callback "User #{username} corrupted, no API_KEY node. Recovery Attempted", null
         else
-          console.log "Check #{nodes[0]}"
-          nodes[0].key = new_key
-          nodes[0].timestamp = timestamp
-          nodes[0].save (err...) ->
+          nodes[0].data.key = new_key
+          nodes[0].data.timestamp = timestamp
+          nodes[0].save (err, new_node) ->
             if err
-              console.log "Err: #{err}"
+              callback err, null
+            else
+              callback err, {"key": new_key, "id": new_node.id}
 
 
 
@@ -107,6 +120,15 @@ findUserNode = (username, callback) ->
       callback err, null
     else
       callback err, users[0].user
+
+findOrCreateUserNode = (username, callback) ->
+  findUserNode username, (err, node) ->
+    if (err)
+      createUserSimple username, (err, node) ->
+        callback err, node
+    else
+      callback null, node
+
 
 findUser = (username, callback) ->
   findUserNode username, (err, user) ->
