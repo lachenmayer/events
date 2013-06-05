@@ -21,14 +21,24 @@ returnDataWithId = (value) ->
 returnListWithId = (values) ->
   return (returnDataWithId(value) for value in values)
 
+handler = (callback, handlerWithNoErrors) -> (err, data) ->
+  if err
+    callback err, null
+  else
+    handlerWithNoErrors data
+
+handleWithError = (callback, errorMessage, handlerWithNoErrors) -> (err, data) ->
+  if err
+    console.log "Error: #{errorMessage}\n#{err}"
+    callback err, null
+  else
+    handlerWithNoErrors data
+
 # Filters the result of a callback
 # If an error occurs then propagates the error
 # Otherwise maps the result using the f function
 returnValue = (err, data, f, callback) ->
-  if err
-    callback err, null
-  else
-    callback err, (f data)
+  handler(callback, (data) -> callback null, f data)(err, data)
 
 getRootNode = (callback) ->
   db.getNodeById(ROOT_NODE_ID) callback
@@ -84,16 +94,10 @@ makeRelationship = (node1, node2, type, callback) ->
 # Function to be called in order to create the nodes
 # db.createNode should not be called on its own
 createNode = (tableName, data, relationship, callback) ->
-  getTable tableName, (err, table) ->
-    if err
-      console.log "Could not get the table #{tableName}: #{err}"
-    else
-      newNode = db.createNode data
-      newNode.save (err, node) ->
-        if err
-          console.log "Could not create the node: #{err}"
-        else
-          makeRelationship table, node, relationship, (err, relationship) -> callback err, node, relationship
+  getTable tableName, handleWithError callback, "Could not create the table #{tableName}", (table) ->
+    newNode = db.createNode data
+    newNode.save handleWithError callback, "Could not create the node", (node) ->
+      makeRelationship table, node, relationship, (err, relationship) -> callback err, node, relationship
 
 # Sets up the initial nodes in the database
 setup = ->
@@ -104,12 +108,8 @@ setup = ->
     else
       f = (table) -> (callback) -> createTable rootNode, table, callback
       queries = ((f table) for table in TABLES)
-      async.parallel queries, (err, nodes) ->
-        if err
-          console.log "Failed creating the nodes #{err}"
-          callback err, null
-        else
-          console.log "Database setup successfully"
+      async.parallel queries, handleWithError callback, "Failed creating the nodes", ->
+        console.log "Database setup successfully"
 
 # Function that looks for the table with a given name
 getTable = (fieldName, handler) ->
@@ -128,6 +128,8 @@ exports.getTableNodeById = getTableNodeById
 exports.returnValue      = returnValue
 exports.returnDataWithId = returnDataWithId
 exports.returnListWithId = returnListWithId
+exports.handle           = handler
+exports.handleErr        = handleWithError
 
 # Running the script sets up the database
 if (!module.parent)

@@ -3,20 +3,16 @@ swagger       = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
-krb5          = require 'node-krb5'
+auth          = require './authenticate'
 fs            = require 'fs'
 http          = require 'http'
 https         = require 'https'
-
-
 
 server_options = {
 key: fs.readFileSync('./cert/server.key'),
 cert: fs.readFileSync('./cert/server.crt'),
 requestCert: true
 }
-
-
 
 app = express()
 
@@ -35,7 +31,10 @@ swagger.setAppHandler app
 
 swagger.addModels swaggerModels
 
-returnJson = (res) -> (value) ->
+returnJson = (res, field) -> (err, value) ->
+  if err
+    console.log "Error #{err}"
+    throw swagger.errors.notFound(field)
   value = {} unless value?
   res.send JSON.stringify value
 
@@ -74,7 +73,7 @@ getEventById =
   action: (req, res) ->
     throw swagger.errors.invalid("eventId") unless req.params.eventId
     id = parseInt(req.params.eventId)
-    eventData.getEventById id, returnJson(res)
+    eventData.getEventById id, returnJson(res, "event")
 
 getEventsInRange =
   spec:
@@ -87,7 +86,7 @@ getEventsInRange =
       swagger.params.query("eventRangeRequestHeader", "Event Range Request Header", "eventRangeRequestHeader", true, true, true, {})
       ]
     responseClass: "List[event]"
-    errorResponses: [swagger.errors.invalid("eventRangeRequestHeader")]
+    errorResponses: [swagger.errors.invalid("eventRangeRequestHeader"), swagger.errors.notFound("events")]
     nickname: "getEventInRange"
   action: (req, res) ->
     console.log "Request Query", req.query
@@ -96,7 +95,7 @@ getEventsInRange =
       and req.query.to\
       and req.query.max\
       and req.query.offset)
-    eventData.getEventsInRange req.query, returnJson(res)
+    eventData.getEventsInRange req.query, returnJson(res, "events")
 
 getAllEvents =
   spec:
@@ -109,14 +108,7 @@ getAllEvents =
     errorResponses: [swagger.errors.notFound("events")]
     nickname: "getAllEvents"
   action: (req, res) ->
-    eventData.getAllEvents (err, events) ->
-      if err
-        console.log "Error #{err}"
-        throw swagger.errors.notFound("events")
-      else if events
-        res.send JSON.stringify(events)
-      else
-        throw swagger.errors.notFound("events")
+    eventData.getAllEvents returnJson(res, "events")
 
 userLogin =
   spec:
@@ -132,8 +124,8 @@ userLogin =
     # Check what we exect is in the headers
     username = ""
     password = ""
-    if (req.headers["user"])
-      username = req.headers["user"]
+    if (req.headers["username"])
+      username = req.headers["username"]
     else
       throw swagger.errors.invalid "header"
     if (req.headers["password"])
@@ -142,7 +134,7 @@ userLogin =
       throw swagger.errors.invalid "header"
     # Uncrypt the password
     # Authenticate the username Password Combo
-    krb5.authenticate username + '@IC.AC.UK', password, (err) ->
+    auth.authenticate username , password, (err) ->
       if err
         console.log "There was an error logging in: " + username
         console.log "Error: #{err}"
@@ -150,11 +142,12 @@ userLogin =
       else
         console.log "Success! with #{username}"
         # Pass on to database library
-        userData.generateNewAPIKey username, (err, key) ->
+        userData.generateNewAPIKey username, (err, keyJSON) ->
           if (err)
+            console.log "Error: #{err}"
             res.send "{}"
           else
-            res.send JSON.stringify {"key": key}
+            res.send JSON.stringify keyJSON
 
 
 swagger.addPost userLogin
