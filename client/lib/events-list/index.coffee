@@ -1,12 +1,10 @@
 # Dependencies
 Backbone  = require '../solutionio-backbone'
-List      = require '../cayasso-list'
 moment    = require '../moment'
 _         = require '../underscore'
 jade      = require '../monstercat-jade-runtime'
 
 Model     = require '../model'
-eventView = require '../event-view'
 
 moment.lang 'en',
   calendar:
