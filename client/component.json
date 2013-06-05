@@ -14,7 +14,8 @@
     "event-view",
     "navbar",
     "model",
-    "routes"
+    "routes",
+    "tag-list"
   ],
   "paths": [
     "lib"
