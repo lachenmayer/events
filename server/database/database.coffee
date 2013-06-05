@@ -108,8 +108,11 @@ setup = ->
     else
       f = (table) -> (callback) -> createTable rootNode, table, callback
       queries = ((f table) for table in TABLES)
-      async.parallel queries, handleWithError callback, "Failed creating the nodes", ->
-        console.log "Database setup successfully"
+      async.parallel queries, (err) ->
+        if err
+          console.log "Failed creating the nodes"
+        else
+          console.log "Database setup successfully"
 
 # Function that looks for the table with a given name
 getTable = (fieldName, handler) ->
