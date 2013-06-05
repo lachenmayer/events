@@ -10,12 +10,12 @@
     "ianstormtaylor/reset": "*"
   },
   "local": [
-    "main",
     "events-list",
     "event-view",
     "navbar",
     "model",
-    "routes"
+    "routes",
+    "tag-list"
   ],
   "paths": [
     "lib"

@@ -1,0 +1,47 @@
+$horizontal_margin = 15px
+$tagsort_height = 40px
+
+#tagsort
+  border-bottom: 1px solid #777
+  background-color: #999
+  height: $tagsort_height
+  padding: 0 $horizontal_margin
+  margin-bottom: $horizontal_margin
+  font-size: 85%
+  line-height: 20px
+  
+  p
+    font-weight: 500
+    margin-right: 5px
+  
+  p, ul
+    float: left
+    margin-top: 1px
+    
+  p, li
+    line-height: $tagsort_height
+  
+  li 
+    display: inline
+    margin-left: 5px
+    
+    a
+      padding: 4px 10px
+    
+    a.selected
+      box-shadow: 0 1px 0 #aaa
+      background-color: #666
+      border-radius: 12px
+
+#taglist
+  ul
+    margin: 0 $horizontal_margin
+    
+    li
+      line-height: 30px
+      
+      label
+        margin-left: 10px
+        
+      .numEvents
+        float: right

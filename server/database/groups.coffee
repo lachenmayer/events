@@ -9,14 +9,11 @@ db = database.db
 # Creates the group with DATA
 # The owner of the group is assigned to USERID
 createGroup = (userId, data, callback) ->
-  database.createNode "GROUP", data, "GROUP", (err, groupNode) ->
-    if err
-      callback err, null
-    else
-      query = "START r=node({rootId}), u=({userId}), g=({groupId})
-               MATCH r-[:USERS]->users-->u
-               CREATE g-[:OWNER]->u, u-[:MEMBER_OF]->g"
-      db.query query, {rootId: database.rootNodeId, userId: userId, groupId: groupNode.id}, callback
+  database.createNode "GROUP", data, "GROUP", database.handle callback, (groupNode) ->
+    query = "START r=node({rootId}), u=({userId}), g=({groupId})
+             MATCH r-[:USERS]->users-->u
+             CREATE g-[:OWNER]->u, u-[:MEMBER_OF]->g"
+    db.query query, {rootId: database.rootNodeId, userId: userId, groupId: groupNode.id}, callback
 
 # Makes a user join the group
 joinGroup = (userId, groupId, callback) ->
@@ -41,10 +38,8 @@ removeGroupMember = (userId, groupId, callback) ->
 
 # Makes the user leave the group
 leaveGroup = (userId, groupId, callback) ->
-  getGroupLeader groupId, (err, leader) ->
-    if err
-      callback err, null
-    else if (leader.id == userId)
+  getGroupLeader groupId, database.handle callback, (leader) ->
+    if (leader.id == userId)
       callback "Leader cannot leave the group", null
     else
       removeGroupUser userId, groupId, callback
@@ -54,10 +49,8 @@ removeFromGroup = (myId, userId, groupId, callback) ->
   if (myId == userId)
     callback "Cannot remove myself. Use leaveGroup instead", null
   else
-    getGroupLeader groupId, (err, leader) ->
-      if err
-        callback err, null
-      else if (leader.id != myId)
+    getGroupLeader groupId, database.handle callback, (leader) ->
+      if (leader.id != myId)
         callback "Only the leader can remove someone from the group"
       else
         removeGroupUser userId, groupId, callback
@@ -76,14 +69,11 @@ deleteGroupEvents = (groupId, callback) ->
 # It cleans up any of the group's data such as events
 # Pre: the user is already authenticated to remove the group
 deleteGroup = (groupId, callback) ->
-  deleteGroupEvents groupId, (err) ->
-    if err
-      callback err, null
-    else
-      query = "START g=node({groupId})
-               MATCH g-[r]-()
-               DELETE g, r"
-      db.query query, {groupId: groupId}, callback
+  deleteGroupEvents groupId, database.handle callback, ->
+    query = "START g=node({groupId})
+             MATCH g-[r]-()
+             DELETE g, r"
+    db.query query, {groupId: groupId}, callback
 
 # Returns all currently existing groups
 getAllGroups = (callback) ->
