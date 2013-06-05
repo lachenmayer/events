@@ -3,9 +3,9 @@ swagger       = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
-passport      = require 'passport'
-localpassport = require 'passport-local'
-krb5          = require 'node-krb5'
+#passport      = require 'passport'
+#localpassport = require 'passport-local'
+#krb5          = require 'node-krb5'
 
 app = express()
 

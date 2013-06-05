@@ -6,7 +6,7 @@
 ###
 database = require './database'
 async    = require 'async'
-uuid     = require 'node-uuid'
+#uuid     = require 'node-uuid'
 moment   =  require 'moment'
 
 db = database.db

@@ -1,7 +1,8 @@
 Backbone = require '../solutionio-backbone'
 
 exports.EventView = EventView = Backbone.View.extend
-  mainTemplate: require './event-view'
+
+  template: require './event-view'
 
   initialize: ->
     @model.bind 'change', =>
@@ -9,6 +10,6 @@ exports.EventView = EventView = Backbone.View.extend
 
   render: ->
     return unless @model.get('name')?
-    @$el.html @mainTemplate
+    @$el.html @template
       model: @model
 
