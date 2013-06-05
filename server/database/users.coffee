@@ -31,13 +31,14 @@ userNode = (username) ->
 newUser = (username, callback) ->
   createUser (userNode username), callback
 
-# Tries to find a user. If one does not exist sets up a new node
-findOrCreateUserNode = (username, callback) ->
-  findMatchingUsers username, database.handle callback, (users) ->
-    if (users.length == 0)
-      newUser username, callback
-    else
-      return users[0].user
+createUserSimple = (username, callback) ->
+  createUser {"username": username, "joinTimestamp": moment().unix() }, database.handle callback, (userNode) ->
+    createAPIKeyNode userNode, callback
+
+createAPIKeyNode = (userNode, callback) ->
+  db.createNode({ 'key': '', 'timestamp': ''}).save database.handle callback, (api_node) ->
+    database.makeRelationship userNode, api_node, "API_KEY", (err...) ->
+      callback err, userNode
 
 # How to treat the permissions??
 getUserById = (id, callback) ->
@@ -46,15 +47,18 @@ getUserById = (id, callback) ->
 
 generateNewAPIKey = (username, callback) ->
   findOrCreateUserNode username, database.handle callback, (userNode) ->
-    newKey = uuid.v1()
-    timestamp = moment().add('d', 1).unix()
+    new_key = uuid.v1()
+    timestamp = moment().unix()
     # Traverse to userNode-[:API_KEY]->KEY
     userNode.getRelationshipNodes "API_KEY", database.handle callback, (nodes) ->
-      console.log "Check #{nodes[0]}"
-      nodes[0].key = newKey
-      nodes[0].timestamp = timestamp
-      nodes[0].save database.handle callback, ->
-        callback null, newKey
+      if not nodes or not nodes[0]
+        createAPIKeyNode userNode, ()->
+          callback "User #{username} corrupted, no API_KEY node. Recovery Attempted", null
+      else
+        nodes[0].data.key = new_key
+        nodes[0].data.timestamp = timestamp
+        nodes[0].save database.handle callback, (new_node) ->
+          callback null, {"key": new_key, "id": new_node.id}
 
 # Verifies the key and returns whether the USERNAME, KEYAPI combination is valid
 verifyKey = (username, keyAPI, callback) ->
@@ -120,6 +124,14 @@ findMatchingUsers = (username, callback) ->
   db.query query, {rootId: database.rootNodeId, username: username},
     database.handleErr callback, "Could not find the user #{username}", (users) ->
       callback null, users
+
+# Tries to find a user. If one does not exist sets up a new node
+findOrCreateUserNode = (username, callback) ->
+  findMatchingUsers username, database.handle callback, (users) ->
+    if (users.length == 0)
+      newUser username, callback
+    else
+    return users[0].user
 
 # Finds a user
 # Assumes that the user exists

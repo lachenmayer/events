@@ -142,11 +142,12 @@ userLogin =
       else
         console.log "Success! with #{username}"
         # Pass on to database library
-        userData.generateNewAPIKey username, (err, key) ->
+        userData.generateNewAPIKey username, (err, keyJSON) ->
           if (err)
+            console.log "Error: #{err}"
             res.send "{}"
           else
-            res.send JSON.stringify {"key": key}
+            res.send JSON.stringify keyJSON
 
 
 swagger.addPost userLogin
