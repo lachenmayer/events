@@ -13,13 +13,6 @@ db = database.db
 
 WE_ARE_NOT_RELATED = -1
 
-# Sets up the new user
-createUser = (data, callback) ->
-  database.createNode "USERS", data, "USER", database.handle callback, (userNode) ->
-    keyNode = db.createNode({ 'key': '', 'timestamp': '' })
-    keyNode.save database.handle callback, (api_node) ->
-      db.createRelationship userNode, api_node, "API_KEY"
-
 # Defines a user node for a new username
 userNode = (username) ->
   return {
@@ -36,9 +29,37 @@ createUserSimple = (username, callback) ->
     createAPIKeyNode userNode, callback
 
 createAPIKeyNode = (userNode, callback) ->
-  db.createNode({ 'key': '', 'timestamp': ''}).save database.handle callback, (api_node) ->
-    database.makeRelationship userNode, api_node, "API_KEY", (err...) ->
-      callback err, userNode
+  db.createNode({ 'key': '', 'timestamp': ''}).save database.handle callback, (apiNode) ->
+    database.makeRelationship userNode, apiNode, "API_KEY", database.handle callback, ->
+      callback null, userNode
+
+# Sets up the new user
+createUser = (data, callback) ->
+  database.createNode "USERS", data, "USER", database.handle callback, (userNode) ->
+    createAPIKeyNode userNode, callback
+
+# Removes the API key for the given user from the database
+removeAPIKey = (username, callback) ->
+  query = "START r=node({rootId})
+             MATCH r-[:USERS]->users-->u-[rAPI:API_KEY]->ap
+             WHERE u.username = {username}
+             DELETE ap, rAPI"
+  db.query query, {rootId: database.rootNodeId, username: username}, callback
+
+# Removes a user with a given username from the database
+removeUser = (username, callback) ->
+  async.parallel [
+    (callback) -> removeAPIKey username, callback
+  ], database.handle callback, ->
+    # Might need to remove the friends edges as well
+    query = "START r=node({rootId})
+                 MATCH r-[:USERS]->users-[field]->u
+                 WHERE u.username = {username}
+                 DELETE field, u"
+    db.query query, {rootId: database.rootNodeId, username: username}, database.handle callback, ->
+      console.log "User removed #{username}"
+      callback null, null
+
 
 # How to treat the permissions??
 getUserById = (id, callback) ->
@@ -209,11 +230,12 @@ removeFromFriends = (username1, username2, callback) ->
 
 
 # Exporting the functions globally
-exports.createUser  = createUser
+exports.newUser     = newUser
 exports.generateNewAPIKey = generateNewAPIKey
 exports.getUserById = getUserById
 exports.getUserFriends = getUserFriends
 exports.getUserEvents  = getUserEvents
+exports.removeUser         = removeUser
 exports.getUserInvited     = getUserInvited
 exports.getUserInvitations = getUserInvitations
 exports.findFriendDistance = findFriendDistance
