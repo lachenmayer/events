@@ -1,0 +1,10 @@
+{
+  "name": "strings",
+  "description": "UI strings",
+  "dependencies": {},
+  "development": {},
+  "main": "index.coffee",
+  "scripts": [
+    "index.coffee"
+  ]
+}

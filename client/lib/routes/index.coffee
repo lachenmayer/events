@@ -4,6 +4,7 @@ Model           = require '../model'
 EventView       = require('../event-view').EventView
 EventsListView  = require('../events-list').EventsListView
 CreateEventView = require('../create-event-view').CreateEventView
+Strings         = require('../strings').lang 'en'
 
 exports.Router = Backbone.Router.extend
 
@@ -30,7 +31,7 @@ exports.Router = Backbone.Router.extend
 
   createEvent: ->
     createEventView = new CreateEventView()
-    @loadView createEventView, 'New Event'
+    @loadView createEventView, Strings.newEvent
 
   loadEventView: (event) ->
     eventView = new EventView

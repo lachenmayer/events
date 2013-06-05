@@ -3,13 +3,15 @@ Backbone       = require 'solutionio-backbone'
 _              = require 'component-underscore'
 
 EventsListView = require('events-list').EventsListView
-Router = require('routes').Router
-NavBar = require('navbar').NavBar
-Events = require('model').Events
+Router         = require('routes').Router
+NavBar         = require('navbar').NavBar
+Events         = require('model').Events
+Strings        = require('strings').lang 'en'
 
 # Store our stuff in a global app object.
 window.App =
   dispatcher: _.clone Backbone.Events
+  language: 'en'
 
 # Set up the main view
 $ ->
@@ -31,7 +33,7 @@ $ ->
 
   App.NavBar.setRootViewObject
     view: App.EventsListView
-    title: 'Upcoming Events'
+    title: Strings.upcomingEvents
 
   App.dispatcher.on 'navbar:backButton', =>
     App.Router.navigate '/', true

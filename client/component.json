@@ -16,7 +16,8 @@
     "create-event-view",
     "navbar",
     "model",
-    "routes"
+    "routes",
+    "strings"
   ],
   "paths": [
     "lib"
