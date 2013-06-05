@@ -97,21 +97,25 @@ getUserEvents = (id, callback) ->
     database.returnValue err, events, ((data) -> database.returnListWithId (value.event for value in data)), callback
 
 # Returns the list of friends a given user has
-getUserRelations = (id, relation, callback) ->
-  query = "START r=Node({rootId}), m=Node({myId})
+getUserRelations = (username, relation, callback) ->
+  query = "START r=Node({rootId})
            MATCH r-[:USERS]->u-->m-[:#{relation}]->f
+           WHERE m.username = {username}
            RETURN f"
-  db.query query, {rootId: database.rootNodeId, myId: id}, (err, friends) ->
+  db.query query, {rootId: database.rootNodeId, username: username}, (err, friends) ->
     database.returnValue err, friends, ((data) -> (value.f.data for value in data)), callback
 
-getUserFriends = (id, callback) ->
-  getUserRelations id, "FRIEND", callback
+getUserFollowing = (username, callback) ->
+  getUserRelations username, "FOLLOWING", callback
 
-getUserInvited = (id, callback) ->
-  getUserRelations id, "INVITED", callback
+getUserFriends = (username, callback) ->
+  getUserRelations username, "FRIEND", callback
 
-getUserInvitations = (id, callback) ->
-  getUserRelations id, "INVITED_BY", callback
+getUserInvited = (username, callback) ->
+  getUserRelations username, "INVITED", callback
+
+getUserInvitations = (username, callback) ->
+  getUserRelations username, "INVITED_BY", callback
 
 # Determines the distance from me to a possible friend.
 # Can be used to determine the access permissions
@@ -177,7 +181,7 @@ checkLogIn = (username, password, callback) ->
 invite = (user1, user2, callback) ->
   async.series [
     (callback) -> database.makeRelationship user1, user2, "INVITED", callback
-    (callback) -> database.makeRelationship user1, user2, "INVITED_BY", callback
+    (callback) -> database.makeRelationship user2, user1, "INVITED_BY", callback
   ], callback
 
 # Accepts the invitation userId2 sent to userId1
@@ -187,16 +191,20 @@ invite = (user1, user2, callback) ->
 accept_invitation = (userId1, userId2, callback) ->
   query = "START u1=node({userId1}), u2=node({userId2})
            MATCH u1-[r1:INVITED_BY]->u2, u2-[r2:INVITED]->u1
-           CREATE u1-[:FRIEND]->u2<-[:FRIEND]-u1
+           CREATE u1-[:FRIEND]->u2-[:FRIEND]->u1
            DELETE r1, r2"
   db.query query, {userId1: userId1, userId2: userId2}, callback
 
-getUsers = (username1, username2, f, callback) ->
+followAPerson = (user1, user2, callback) ->
+  async.series [
+    (callback) -> database.makeRelationship user1, user2, "FOLLOWING", callback
+  ], callback
+
+getUsers = (username1, username2, callback) ->
   async.parallel [
     (callback) -> findUserNode username1, callback
     (callback) -> findUserNode username2, callback
-  ], (err, users) ->
-    database.returnValue err, users, f, callback
+  ], callback
 
 # Unfriends both people from each other
 # userId1 <integer> id of the node for the first user
@@ -211,23 +219,32 @@ unfriend = (userId1, userId2, callback) ->
 # username1 <string> name of the first user
 # username2 <string> name of the second user
 addToFriends = (username1, username2, callback) ->
-  f = (users,callback) -> accept_invitation users[0].id, users[1].id, callback
-  getUsers username1, username2, f, callback
+  getUsers username1, username2, database.handle callback, (users) ->
+    accept_invitation users[0].id, users[1].id, callback
 
 # Makes the USERNAME1 send a friend invitation to USERNAME2
 # username1 <string> name of the first user
 # username2 <string> name of the second user
 send_invite = (username1, username2, callback) ->
-  f = (users, callback) -> invite users[0], users[1], callback
-  getUsers username1, username2, f, callback
+  getUsers username1, username2, database.handle callback, (users) ->
+    invite users[0], users[1], callback
 
 # Unfriends both people from each other.
 # username1 <string> name of the first user
 # username2 <string> name of the second user
 removeFromFriends = (username1, username2, callback) ->
-  f = (users, callback) -> unfriend users[0], users[1], callback
-  getUsers username1, username2, f, callback
+  getUsers username1, username2, database.handle callback, (users) ->
+    unfriend users[0].id, users[1].id, callback
 
+unfollowAPerson = (username1, username2, callback) ->
+  getUsers username1, username2, database.handle callback, (users) ->
+    async.series [
+      (callback) -> database.removeRelationship users[0], users[1], "FOLLOWING", callback
+    ], callback
+
+stalkAPerson = (username1, username2, callback) ->
+  getUsers username1, username2, database.handle callback, (users) ->
+    followAPerson users[0], users[1], callback
 
 # Exporting the functions globally
 exports.newUser     = newUser
@@ -238,9 +255,12 @@ exports.getUserEvents  = getUserEvents
 exports.removeUser         = removeUser
 exports.getUserInvited     = getUserInvited
 exports.getUserInvitations = getUserInvitations
+exports.getUserFollowing   = getUserFollowing
 exports.findFriendDistance = findFriendDistance
 exports.findUserByUsername = findUser
 exports.checkLogIn         = checkLogIn
 exports.addToFriends       = addToFriends
 exports.send_invite        = send_invite
 exports.removeFromFriends  = removeFromFriends
+exports.followAPerson      = stalkAPerson
+exports.unfollowAPerson    = unfollowAPerson

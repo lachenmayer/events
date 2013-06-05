@@ -91,6 +91,14 @@ makeRelationship = (node1, node2, type, callback) ->
       else
         node1.createRelationshipTo(node2, type)(callback)
 
+removeRelationship = (node1, node2, type, callback) ->
+  node1.outgoing type, handler callback, (relationships) ->
+    matches = (rel for rel in relationships when rel.end.id == node2.id)
+    if (matches.length > 0)
+      matches[0].delete callback
+    else
+      callback "Relationship #{type} does not exist", null
+
 # Function to be called in order to create the nodes
 # db.createNode should not be called on its own
 createNode = (tableName, data, relationship, callback) ->
@@ -133,6 +141,7 @@ exports.returnDataWithId = returnDataWithId
 exports.returnListWithId = returnListWithId
 exports.handle           = handler
 exports.handleErr        = handleWithError
+exports.removeRelationship = removeRelationship
 
 # Running the script sets up the database
 if (!module.parent)
