@@ -124,8 +124,8 @@ userLogin =
     # Check what we exect is in the headers
     username = ""
     password = ""
-    if (req.headers["user"])
-      username = req.headers["user"]
+    if (req.headers["username"])
+      username = req.headers["username"]
     else
       throw swagger.errors.invalid "header"
     if (req.headers["password"])
