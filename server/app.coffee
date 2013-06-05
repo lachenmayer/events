@@ -3,6 +3,7 @@ swagger       = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
+tagData       = require './database/tags'
 auth          = require './authenticate'
 fs            = require 'fs'
 http          = require 'http'
@@ -149,9 +150,23 @@ userLogin =
           else
             res.send JSON.stringify keyJSON
 
+getAllTags =
+  spec:
+    description: "Get all of the tags"
+    path: "/tags/ALL"
+    notes: "Returns all of the tags saved in the database"
+    method: "GET"
+    params: []
+    responseClass: "List[tag]"
+    errorResponses: [swagger.errors.notFound("tag")]
+    nickname: "getAllTags"
+  action: (req, res) ->
+    tagData.getAllTags returnJson(res, "tags")
+
 
 swagger.addPost userLogin
 swagger.addGet getUserByUsername
+swagger.addGet getAllTags
 swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventById
