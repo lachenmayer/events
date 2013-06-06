@@ -1,30 +1,39 @@
 Backbone = require '../solutionio-backbone'
-List = require '../cayasso-list'
+_        = require '../underscore'
+List     = require '../cayasso-list'
 
 exports.TagListView = Backbone.View.extend
   mainTemplate: require './tag-list'
   
   initialize: ->
-    App.dispatcher.on 'sort_options:change', (id, index)=>
-      sort_options = $('#tagsort li a')
-      sort_options.removeClass('selected')
-      sort_options.eq(index).addClass('selected')
-
-      switch id
-        when "alphabetically"
-          @list.sort 'name',
-            asc: true
-        when "popularity"
-          @list.sort 'numEvents',
-            desc:true
+    @collection.bind 'reset', =>
+      @render()
+    
+    App.dispatcher.on 'sort_options:change', (index)=>
+      sortOptions = $('#tagsort li a')
+      sortOptions.removeClass('selected')
+      sortOptions.eq(index).addClass('selected')
+    
+      @sortTags()
+            
+  sortTags: ->
+    sortType = $('#tagsort li a.selected').parent().attr('class')
+    
+    switch sortType
+      when "alphabetically"
+        @list.sort 'name',
+          asc: true
+      when "popularity"
+        @list.sort 'numEvents',
+          desc:true
 
   render: ->
-    @$el.html @mainTemplate
+    @$el.html _.template @mainTemplate
       tags: @collection
     
     $('#tagsort li a').each (index, el)->
       $(el).click ->
-        App.dispatcher.trigger 'sort_options:change', $(el).parent().attr('class'), index
+        App.dispatcher.trigger 'sort_options:change', index
       
     @list = new List 'taglist',
       valueNames: [
@@ -32,3 +41,5 @@ exports.TagListView = Backbone.View.extend
         'checked'
         'numEvents'
       ]
+      
+    @sortTags()
