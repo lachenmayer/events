@@ -7,6 +7,7 @@ Router         = require('routes').Router
 NavBar         = require('navbar').NavBar
 Events         = require('model').Events
 Strings        = require('strings').lang 'en'
+Events         = require('model').Events
 
 # Store our stuff in a global app object.
 window.App =
@@ -30,6 +31,35 @@ $ ->
 
   App.EventsListView = new EventsListView
     collection: App.EventsList
+    
+  tags = [
+      "name": "Campaigns"
+      "numEvents": 20
+    ,
+      "name": "Entertainments"
+      "numEvents": 40
+    ,
+      "name": "Freshers' Events"
+      "numEvents": 15
+    ,
+      "name": "Social & Recreational"
+      "numEvents": 65
+    ,
+      "name": "Guest Lecture"
+      "numEvents": 10
+    ,
+      "name": "Union Meetings"
+      "numEvents": 25
+    ,
+      "name": "Music, Drama & Dance"
+      "numEvents": 17
+    ,
+      "name": "Sport"
+      "numEvents": 50
+  ]
+    
+  App.TagListView = new TagListView
+    collection: tags
 
   App.NavBar.setRootViewObject
     view: App.EventsListView
