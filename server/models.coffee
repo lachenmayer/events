@@ -31,7 +31,11 @@ exports.models =
         type: "long"
       offset:
         type: "long"
-
+  tag:
+    id: "tag"
+    properties:
+      tagName:
+        type: "string"
 
 
   # Pet:

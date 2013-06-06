@@ -1,20 +1,23 @@
-Backbone       = require '../solutionio-backbone'
+Backbone        = require '../solutionio-backbone'
 
-Model          = require '../model'
-EventView      = require('../event-view').EventView
-EventsListView = require('../events-list').EventsListView
+Model           = require '../model'
+EventView       = require('../event-view').EventView
+EventsListView  = require('../events-list').EventsListView
+CreateEventView = require('../create-event-view').CreateEventView
+Strings         = require('../strings').lang 'en'
 
 exports.Router = Backbone.Router.extend
 
   routes:
-    ''          : 'eventsList'
-    'event/:id' : 'eventView'
+    ''          : 'events'
+    'event/new' : 'createEvent'
+    'event/:id' : 'event'
 
-  eventsList: ->
+  events: ->
     App.EventsList.fetch()
     App.NavBar.popToRootViewObject()
 
-  eventView: (id) ->
+  event: (id) ->
     event = App.EventsList.get id
     if event?
       @loadEventView event
@@ -26,10 +29,17 @@ exports.Router = Backbone.Router.extend
           App.EventsList.add event
           @loadEventView event
 
+  createEvent: ->
+    createEventView = new CreateEventView()
+    @loadView createEventView, Strings.newEvent
+
   loadEventView: (event) ->
     eventView = new EventView
       model: event
+    @loadView eventView, event.get('name')
+
+  loadView: (view, title) ->
     App.NavBar.pushViewObject
-      view: eventView
-      title: event.get 'name'
+      view: view
+      title: title
 

@@ -1,0 +1,20 @@
+{
+  "name": "tag-list",
+  "repo": "tag-list/tag-list",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.coffee"
+  ],
+  "styles": [
+    "tag-list.styl"
+  ],
+  "templates": [
+    "tag-list.jade"
+  ]
+}

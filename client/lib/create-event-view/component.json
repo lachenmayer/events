@@ -1,0 +1,16 @@
+{
+  "name": "create-event-view",
+  "description": "View for creating/editing a new event",
+  "dependencies": {},
+  "development": {},
+  "main": "index.coffee",
+  "scripts": [
+    "index.coffee"
+  ],
+  "styles": [
+    "create-event-view.styl"
+  ],
+  "templates": [
+    "create-event-view.jade"
+  ]
+}

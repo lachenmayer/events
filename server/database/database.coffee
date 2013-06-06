@@ -12,6 +12,7 @@ TABLES = [
   "DATE"        # Table with events organized by dates
   "SCRAPEDDATA" # Table with all of the scraped events
   "GROUP"       # Table with groups/societies
+  "TAGS"        # Table with all the tags
 ]
 
 returnDataWithId = (value) ->
