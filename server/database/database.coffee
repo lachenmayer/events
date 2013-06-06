@@ -15,6 +15,11 @@ TABLES = [
   "TAGS"        # Table with all the tags
 ]
 
+serializeData = (data) ->
+  values = for key, value of data
+    "#{key}: \"#{value}\""
+  values.join(", ")
+
 returnDataWithId = (value) ->
   value.data['id'] = value.id
   return value.data
@@ -81,16 +86,12 @@ makeTableNode = (root, name, callback) ->
 
 # Creates a relationship if it hasn't been defined before
 makeRelationship = (node1, node2, type, callback) ->
-  node1.outgoing type, (err, relationships) ->
-    if (err)
-      console.log "failed #{err}"
-      callback(err, null)
+  node1.outgoing type, handler callback, (relationships) ->
+    matches = (rel for rel in relationships when rel.end.id == node2.id)
+    if (matches.length > 0)
+      callback null, matches[0]
     else
-      matches = (rel for rel in relationships when rel.end.id == node2.id)
-      if (matches.length > 0)
-        callback null, matches[0]
-      else
-        node1.createRelationshipTo(node2, type)(callback)
+      node1.createRelationshipTo(node2, type)(callback)
 
 removeRelationship = (node1, node2, type, callback) ->
   node1.outgoing type, handler callback, (relationships) ->
@@ -143,6 +144,7 @@ exports.returnListWithId = returnListWithId
 exports.handle           = handler
 exports.handleErr        = handleWithError
 exports.removeRelationship = removeRelationship
+exports.serializeData      = serializeData
 
 # Running the script sets up the database
 if (!module.parent)

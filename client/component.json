@@ -12,10 +12,13 @@
   "local": [
     "events-list",
     "event-view",
+    "create-event-view",
     "navbar",
     "model",
     "routes",
-    "tag-list"
+    "tag-list",
+    "routes",
+    "strings"
   ],
   "paths": [
     "lib"

@@ -35,13 +35,21 @@ $tagsort_height = 40px
 
 #taglist
   ul
-    margin: 0 $horizontal_margin
+    margin: 0
+    padding: 0 $horizontal_margin
     
     li
+      clear: both
       line-height: 30px
+      
+      input
+        float: left
+        margin-top: 8px
       
       label
         margin-left: 10px
+        float: left
+        width: 90%
         
       .numEvents
         float: right

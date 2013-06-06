@@ -1,18 +1,18 @@
 # Dependencies
 Backbone  = require '../solutionio-backbone'
-List      = require '../cayasso-list'
 moment    = require '../moment'
 _         = require '../underscore'
 jade      = require '../monstercat-jade-runtime'
 
 Model     = require '../model'
+Strings   = require('../strings').lang 'en'
 eventView = require '../event-view'
 
 moment.lang 'en',
   calendar:
-    lastDay  : '[Yesterday]'
-    sameDay  : '[Today]'
-    nextDay  : '[Tomorrow]'
+    lastDay  : "[#{Strings.yesterday}]"
+    sameDay  : "[#{Strings.today}]"
+    nextDay  : "[#{Strings.tomorrow}]"
     lastWeek : 'dddd, MMMM Do'
     nextWeek : 'dddd, MMMM Do'
     sameElse : 'dddd, MMMM Do'

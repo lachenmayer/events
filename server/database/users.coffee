@@ -166,7 +166,7 @@ findUser = (username, callback) ->
   findUserNode username, database.handle callback, (user) ->
     # Remove any fields that should not be exposed to the logged in user
     {username, email} = user.data
-    callback null, {username: username, email: email}
+    callback null, {id: user.id, username: username, email: email}
 
 checkLogIn = (username, password, callback) ->
   findUser username, database.handle callback, (user) ->
