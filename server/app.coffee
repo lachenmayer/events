@@ -116,25 +116,51 @@ getAllEvents =
 postGroupEvent =
   spec:
     description: "Creates a new group event"
-    path: "/new/event"
+    path: "/event"
     notes: "Creates a new event by the given group"
-    method: "POST"
+    method: "PUT"
     params: []
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
     nickname: "postGroupEvent"
   action: (req, res) ->
-    throw swagger.errors.invalid("event") unless (req.query.from and req.query.to)
-    # TODO: use the passport and key verification
-    # TODO: parse data and the user
-    data = {}
+    throw swagger.errors.invalid("event") unless (\
+      req.query.name \
+      and req.query.location \
+      and req.query.description \
+      and req.query.image \
+      and req.query.url)
+
+    # TODO: use the passport and key verification to get the current user
+    # Make sure to authorize the user
     user = 'newName'
-    eventData.createEvent user, data, returnJson(res, "event")
+
+    data =
+      name: req.query.name
+      location: req.query.location
+      image: req.query.image
+      url: req.query.url
+      description: req.query.description
+      host: user
+
+    userData.findUserByUsername user, (err, user) ->
+      if err
+        throw swagger.invalid("user")
+      else
+        eventData.createEvent user.id, data, returnJson(res, "event")
+
+# Checks for update instructions if the fields given by the user
+# are a subset of the fields that belong to the model
+usesKeys = (data, keys) ->
+  for key of data
+    if !(key in keys)
+      return false
+  return true
 
 postChangeEvent =
   spec:
     description: "Changes an existing event"
-    path: "/event/{id}/change"
+    path: "/event/{id}/edit"
     notes: "Modifies the currently existing event in the database"
     method: "POST"
     params: []
@@ -142,10 +168,12 @@ postChangeEvent =
     errorResponses: [swagger.errors.invalid("event")]
     nickname: "postChangeEvent"
   action: (req, res) ->
-    throw swagger.errors.invalid("event") unless (req.query.id and req.query.data)
-    # TODO: Validate the input POST query
-    id = parseInt req.query.id
-    data = {}
+    data = req.body
+    throw swagger.errors.invalid("event") unless (req.params.id and req.body \
+      and usesKeys data, (key for key of swaggerModels.models.event.properties))
+    id = parseInt req.params.id
+
+    # TODO: authorize the user
     eventData.updateEvent id, data, returnJson(res, "event")
 
 postDeleteEvent =
@@ -156,12 +184,15 @@ postDeleteEvent =
     method: "DELETE"
     params: []
     responseClass: "event"
-    errorResponses: []
+    errorResponses: [swagger.errors.invalid("event")]
     nickname: "postDeleteEvent"
   action: (req, res) ->
-    throw swagger.errors.invalid("event") unless (req.query.id)
-    id = parseInt req.query.id
-    eventData.removeEvent id, returnJson(res, "event")
+    throw swagger.errors.invalid("event") unless req.params.id
+    id = parseInt req.params.id
+
+    # TODO: authorize the user
+    eventData.removeEvent id, (err) ->
+      returnJson(res, "event")(null, {success: !err})
 
 userLogin =
   spec:
@@ -222,6 +253,9 @@ swagger.addGet getAllTags
 swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventById
+swagger.addPost postChangeEvent
+swagger.addPut postGroupEvent
+swagger.addDelete postDeleteEvent
 swagger.configure "http://superawesome.swagger.imperialEvents.com", "0.1"
 
 httpapp  = app
@@ -233,7 +267,7 @@ httpapp.get '/user/*',(req,res) ->
 
 http.createServer(httpapp).listen HTTP_PORT, ->
   console.log "http running! on port #{HTTP_PORT}"
-
-https.createServer(server_options, app).listen HTTPS_PORT, ->
-  console.log "https running! on port #{HTTPS_PORT}"
+#
+#https.createServer(server_options, app).listen HTTPS_PORT, ->
+#  console.log "https running! on port #{HTTPS_PORT}"
 

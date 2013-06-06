@@ -10,33 +10,42 @@ getEventById = (id, callback) ->
   getNodeById id, database.handle callback, (node) ->
     callback null, node.data
 
-updateEvent = (eventId, data, callback) ->
-  findEventNodeById eventId, database.handle callback, (eventNode) ->
-    for key, value of data
-      eventNode[key] = value
-    eventNode.save callback
-
 getOrganizedEvents = (ownerId, callback) ->
   query = "START owner=node({ownerId})
            MATCH owner-[:ORGANIZES]->e
            RETURN e"
-  db.query query, {ownerId: ownerId}, callback
+  db.query query, {ownerId: ownerId}, (err, events) ->
+    database.returnValue err, events, ((data) -> database.returnListWithId (event.e for event in data)), callback
 
+# Creates a new event and returns the id of the event
+# Adds the default relationships to denote the event
 createEvent = (ownerId, data, callback) ->
+  values = database.serializeData data
   query = "START owner=node({ownerId}), root=node({rootId})
-           CREATE (e {#{data}}), owner-[:ORGANIZES]->e, root-[:EVENT]->events-[:EVENT]->e"
-  db.query query, {ownerId: ownerId, rootId: database.rootNodeId}, callback
-
-# Removes the event node as well as all of the connections
-removeEvent = (eventId, callback) ->
-  findEventNodeById eventId, database.handle callback, (eventNode) ->
-    f = (((callback) -> relationship.delete(callback)) for relationship in eventNode.relationships)
-    async.parallel f, database.handle callback, -> eventNode.delete callback
+           CREATE (e {#{values}}), owner-[:ORGANIZES]->e, root-[:EVENT]->events-[:EVENT]->e
+           RETURN e"
+  db.query query, {ownerId: ownerId, rootId: database.rootNodeId}, database.handle callback, (event) ->
+    callback null, event[0].e.id
 
 findEventNodeById = (eventId, callback) ->
   query = "START e=node({eventId})
            MATCH owner-[:ORGANIZES]->e
            RETURN e"
+  db.query query, {eventId: eventId}, database.handle callback, (events) ->
+    callback null, events[0].e
+
+updateEvent = (eventId, data, callback) ->
+  findEventNodeById eventId, database.handle callback, (eventNode) ->
+    for key, value of data
+      eventNode.data[key] = value
+    eventNode.save database.handle callback, (savedNode) ->
+      callback null, savedNode.data
+
+# Removes the event node as well as all of the connections
+removeEvent = (eventId, callback) ->
+  query = "START event=node({eventId})
+           MATCH user-[r:ORGANIZES]->event, event-[rs]-()
+           DELETE event, rs, r"
   db.query query, {eventId: eventId}, callback
 
 # Returns all of the events
