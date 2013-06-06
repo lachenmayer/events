@@ -3,7 +3,9 @@ swagger       = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
+database      = require './database/database'
 auth          = require './authenticate'
+groups        = require './database/groups'
 fs            = require 'fs'
 http          = require 'http'
 https         = require 'https'
@@ -109,6 +111,56 @@ getAllEvents =
     nickname: "getAllEvents"
   action: (req, res) ->
     eventData.getAllEvents returnJson(res, "events")
+
+postGroupEvent =
+  spec:
+    description: "Creates a new group event"
+    path: "/new/event"
+    notes: "Creates a new event by the given group"
+    method: "POST"
+    params: []
+    responseClass: "event"
+    errorResponses: [swagger.errors.invalid("event")]
+    nickname: "postGroupEvent"
+  action: (req, res) ->
+    throw swagger.errors.invalid("event") unless (req.query.from and req.query.to)
+    # TODO: use the passport and key verification
+    # TODO: parse data and the user
+    data = {}
+    user = 'newName'
+    eventData.createEvent user, data, returnJson(res, "event")
+
+postChangeEvent =
+  spec:
+    description: "Changes an existing event"
+    path: "/event/{id}/change"
+    notes: "Modifies the currently existing event in the database"
+    method: "POST"
+    params: []
+    responseClass: "event"
+    errorResponses: [swagger.errors.invalid("event")]
+    nickname: "postChangeEvent"
+  action: (req, res) ->
+    throw swagger.errors.invalid("event") unless (req.query.id and req.query.data)
+    # TODO: Validate the input POST query
+    id = parseInt req.query.id
+    data = {}
+    eventData.updateEvent id, data, returnJson(res, "event")
+
+postDeleteEvent =
+  spec:
+    description: "Deletes an event"
+    path: "/event/{id}"
+    notes: "Removes the event from the list of existing events"
+    method: "DELETE"
+    params: []
+    responseClass: "event"
+    errorResponses: []
+    nickname: "postDeleteEvent"
+  action: (req, res) ->
+    throw swagger.errors.invalid("event") unless (req.query.id)
+    id = parseInt req.query.id
+    eventData.removeEvent id, returnJson(res, "event")
 
 userLogin =
   spec:

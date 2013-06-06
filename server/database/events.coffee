@@ -1,5 +1,6 @@
-database = require('./database.coffee')
+database = require './database'
 moment   = require 'moment'
+async    = require 'async'
 db = database.db
 
 getNodeById = (id, callback) ->
@@ -8,6 +9,35 @@ getNodeById = (id, callback) ->
 getEventById = (id, callback) ->
   getNodeById id, database.handle callback, (node) ->
     callback null, node.data
+
+updateEvent = (eventId, data, callback) ->
+  findEventNodeById eventId, database.handle callback, (eventNode) ->
+    for key, value of data
+      eventNode[key] = value
+    eventNode.save callback
+
+getOrganizedEvents = (ownerId, callback) ->
+  query = "START owner=node({ownerId})
+           MATCH owner-[:ORGANIZES]->e
+           RETURN e"
+  db.query query, {ownerId: ownerId}, callback
+
+createEvent = (ownerId, data, callback) ->
+  query = "START owner=node({ownerId}), root=node({rootId})
+           CREATE (e {#{data}}), owner-[:ORGANIZES]->e, root-[:EVENT]->events-[:EVENT]->e"
+  db.query query, {ownerId: ownerId, rootId: database.rootNodeId}, callback
+
+# Removes the event node as well as all of the connections
+removeEvent = (eventId, callback) ->
+  findEventNodeById eventId, database.handle callback, (eventNode) ->
+    f = (((callback) -> relationship.delete(callback)) for relationship in eventNode.relationships)
+    async.parallel f, database.handle callback, -> eventNode.delete callback
+
+findEventNodeById = (eventId, callback) ->
+  query = "START e=node({eventId})
+           MATCH owner-[:ORGANIZES]->e
+           RETURN e"
+  db.query query, {eventId: eventId}, callback
 
 # Returns all of the events
 # The events are sorted according to the date
@@ -48,9 +78,14 @@ getSubscribedUsers = (eventId, callback) ->
 
 makePublicEvent = (event, callback) ->
   database.getTable "EVENT", database.handleErr callback, "Failed getting the table event", (eventNode) ->
-    database.makeRelationship eventNode, event, "EVENT", callback
+    database.makeRelationship eventNode, event, "PUBLIC", callback
 
+exports.createEvent       = createEvent
+exports.removeEvent       = removeEvent
+exports.findEventNodeById = findEventNodeById
 exports.getEventById = getEventById
 exports.getAllEvents = getAllEvents
 exports.getEventsInRange = getEventsInRange
 exports.makePublicEvent  = makePublicEvent
+exports.updateEvent      = updateEvent
+exports.getOrganizedEvents = getOrganizedEvents
