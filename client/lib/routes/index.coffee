@@ -16,6 +16,10 @@ exports.Router = Backbone.Router.extend
   events: ->
     App.EventsList.fetch()
     App.NavBar.popToRootViewObject()
+    
+  tags: ->
+    App.TagList.fetch()
+    App.NavBar.popToRootViewObject()
 
   event: (id) ->
     event = App.EventsList.get id
