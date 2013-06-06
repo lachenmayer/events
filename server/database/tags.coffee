@@ -35,11 +35,11 @@ findOrCreateTag = (tag, callback) ->
 #  callback null, null
 
 getAllTags = (callback) ->
-  query =   "START r=node({rootId})
-             MATCH r-[:TAG]->tags-->e
-             RETURN e"
+  query = "START r=node({rootId})
+           MATCH r-[:TAGS]->tags-->t
+           RETURN t"
   db.query query, {rootId: database.rootNodeId}, database.handle callback, (tags) ->
-    callback null, database.returnListWithId(tags)
+    callback null, database.returnListWithId(t.t for t in tags)
 
 
 findPopularTags = (callback) ->
