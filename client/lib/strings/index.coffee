@@ -9,6 +9,8 @@ strings =
     en: 'Today'
   tomorrow:
     en: 'Tomorrow'
+  tags:
+    en: 'Tags'
 
 exports.lang = (language) ->
   return this if @language is language

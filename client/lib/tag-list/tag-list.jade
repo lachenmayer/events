@@ -2,14 +2,16 @@
   p Sort
     ul
       li.alphabetically
-        a.selected(href='#') Alphabetically
+        a(href='#') Alphabetically
       li.popularity
-        a(href='#') By Popularity
+        a.selected(href='#') By Popularity
 
 #taglist
   ul.list
-    for tag in tags
+    - tags.each(function(tag) {
+    - name = tag.get('tagName')
       li
-        input.checked(type='checkbox', name=tag.name)
-        label.name(for=tag.name)= tag.name
-        span.numEvents= tag.numEvents
+        input.checked(type='checkbox', name=name)
+        label.name(for=name)= name
+        span.numEvents= 5
+    - })
