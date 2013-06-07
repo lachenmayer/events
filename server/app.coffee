@@ -11,11 +11,10 @@ fs            = require 'fs'
 http          = require 'http'
 https         = require 'https'
 
-server_options = {
-key: fs.readFileSync('./cert/server.key'),
-cert: fs.readFileSync('./cert/server.crt'),
-requestCert: true
-}
+server_options =
+  key: fs.readFileSync "#{__dirname}/cert/server.key"
+  cert: fs.readFileSync "#{__dirname}/cert/server.crt"
+  requestCert: true
 
 app = express()
 
