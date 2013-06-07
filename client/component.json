@@ -7,7 +7,8 @@
     "monstercat/jade-runtime": "*",
     "component/underscore": "*",
     "component/moment": "*",
-    "ianstormtaylor/reset": "*"
+    "ianstormtaylor/reset": "*",
+    "lachenmayer/chrono": "*"
   },
   "local": [
     "events-list",
