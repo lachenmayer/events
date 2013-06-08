@@ -3,6 +3,7 @@ swagger       = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
+calendarData  = require './calendar'
 database      = require './database/database'
 tagData       = require './database/tags'
 auth          = require './authenticate'
@@ -20,6 +21,7 @@ app = express()
 
 HTTP_PORT  = 5278
 HTTPS_PORT = 5279
+LOGIN_URL  = '/user/login'
 
 app.use express.compress()
 app.use express.bodyParser()
@@ -35,10 +37,20 @@ swagger.addModels swaggerModels
 
 returnJson = (res, field) -> (err, value) ->
   if err
-    console.log "Error #{err}"
-    throw swagger.errors.notFound(field)
-  value = {} unless value?
-  res.send JSON.stringify value
+    res.status(404).send "404: invalid data. Cannot return #{field}"
+  else
+    value = {} unless value?
+    res.send JSON.stringify value
+
+# TODO: get the logged in user id
+# If cannot log on should throw an error
+getLoggedInUser = (callback) -> (req, res) ->
+  userId = 15469
+  userData.getUserById userId, (err, user) ->
+    if err
+      res.redirect LOGIN_URL
+    else
+      callback req, res, { id: userId, username: user.username }
 
 getUserByUsername =
   spec:
@@ -122,7 +134,7 @@ postGroupEvent =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
     nickname: "postGroupEvent"
-  action: (req, res) ->
+  action: getLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("event") unless (\
       req.query.name \
       and req.query.location \
@@ -130,19 +142,15 @@ postGroupEvent =
       and req.query.image \
       and req.query.url)
 
-    # TODO: use the passport and key verification to get the current user
-    # Make sure to authorize the user
-    user = 'newName'
-
     data =
       name: req.query.name
       location: req.query.location
       image: req.query.image
       url: req.query.url
       description: req.query.description
-      host: user
+      host: user.username
 
-    userData.findUserByUsername user, (err, user) ->
+    userData.findUserByUsername user.username, (err, user) ->
       if err
         throw swagger.invalid("user")
       else
@@ -166,7 +174,7 @@ postChangeEvent =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
     nickname: "postChangeEvent"
-  action: (req, res) ->
+  action: getLoggedInUser (req, res) ->
     data = req.body
     throw swagger.errors.invalid("event") unless (req.params.id and req.body \
       and usesKeys data, (key for key of swaggerModels.models.event.properties))
@@ -185,7 +193,7 @@ postDeleteEvent =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
     nickname: "postDeleteEvent"
-  action: (req, res) ->
+  action: getLoggedInUser (req, res) ->
     throw swagger.errors.invalid("event") unless req.params.id
     id = parseInt req.params.id
 
@@ -232,6 +240,59 @@ userLogin =
           else
             res.send JSON.stringify keyJSON
 
+createICalURL =
+  spec:
+    description: "Creates a new ICal URL for the logged in user"
+    path: "/calendar/new"
+    notes: "If the URL is already defined deletes the old one and creates a new one"
+    method: "GET"
+    params: []
+    responseClass: "integer"
+    errorResponses: []
+    nickname: "createICalURL"
+  action: getLoggedInUser (req, res, user) ->
+    calendarData.createICalURL user.id, returnJson(res, "icalURL")
+
+getICalURL =
+  spec:
+    description: "Gets the ICal URL for the currently logged in user"
+    path: "/calendar/URL"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("icalURL")]
+    nickname: "getICalURL"
+  action: getLoggedInUser (req, res, user) ->
+    calendarData.getICalURL user.id, returnJson(res, "icalURL")
+
+getICal =
+  spec:
+    description: "Returns the ical using the ical token"
+    path: "/calendar/{id}"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("id"), swagger.errors.notFound("calendar")]
+    nickname: "getICal"
+  action: (req, res) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    calendarData.getICal req.params.id, returnJson(res, "userId")
+
+deleteICalURL =
+  spec:
+    description: "Makes the current user remove his ical url"
+    path: "/calendar"
+    notes: ""
+    method: "DELETE"
+    params: []
+    responseClass: "string"
+    errorResponses: []
+    nickname: "deleteICalURL"
+  action: getLoggedInUser (req, res, user) ->
+    calendarData.removeICalURL user.id, returnJson(res, "icalURL")
+
 getAllTags =
   spec:
     description: "Get all of the tags"
@@ -255,6 +316,10 @@ swagger.addGet getEventById
 swagger.addPost postChangeEvent
 swagger.addPut postGroupEvent
 swagger.addDelete postDeleteEvent
+swagger.addGet getICalURL
+swagger.addGet createICalURL
+swagger.addDelete deleteICalURL
+swagger.addGet getICal
 swagger.configure "http://superawesome.swagger.imperialEvents.com", "0.1"
 
 httpapp  = app
