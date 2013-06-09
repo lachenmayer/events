@@ -46,7 +46,7 @@ followEvent = (details, u, handler) ->
     details["description"] = description
     details["image"]       = imageAbsolute
     details["source"]      = "scrapedData"
-    details["tag"]         = [tag1, tag2]
+    details["tags"]         = [tag1, tag2]
     handler details
 
 
