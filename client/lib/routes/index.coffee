@@ -25,8 +25,6 @@ exports.Router = Backbone.Router.extend
     App.NavBar.popToRootViewObject()
 
   event: (id) ->
-    @initialiseRootViewIfEmpty()
-    
     event = App.EventsList.get id
     if event?
       @loadEventView event
