@@ -12,19 +12,23 @@ createGroup = (userId, data, callback) ->
   database.createNode "GROUP", data, "GROUP", database.handle callback, (groupNode) ->
     query = "START r=node({rootId}), u=({userId}), g=({groupId})
              MATCH r-[:USERS]->users-->u
-             CREATE g-[:OWNER]->u, u-[:MEMBER_OF]->g"
-    db.query query, {rootId: database.rootNodeId, userId: userId, groupId: groupNode.id}, callback
+             CREATE g-[:OWNER]->u, u-[:MEMBER_OF]->g
+             RETURN g"
+    params = {rootId: database.rootNodeId, userId: userId, groupId: groupNode.id}
+    db.query query, params, database.handle callback, (users) ->
+      callback null, {id: users[0].g.id}
 
 # Makes a user join the group
 joinGroup = (userId, groupId, callback) ->
   query = "START u=node({userId}), g=node({groupId})
            CREATE u-[:MEMBER_OF]->g, g-[:IS_MEMBER]->u"
-  db.query query, {userId: userId, groupId: groupId}, callback
+  db.query query, {userId: userId, groupId: groupId}, database.handle callback, ->
+    callback null, {success: true}
 
 # Return's the group's leader
 getGroupLeader = (groupId, callback) ->
   query = "START g=node({groupId})
-           MATCH g-[:LEADER]->leader
+           MATCH leader-[:OWNER]->g
            RETURN leader"
   db.query query, {groupId: groupId}, (err, leader) ->
     database.returnValue err, leader, ((value) -> value[0].leader), callback

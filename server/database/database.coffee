@@ -13,6 +13,7 @@ TABLES = [
   "SCRAPEDDATA" # Table with all of the scraped events
   "GROUP"       # Table with groups/societies
   "TAGS"        # Table with all the tags
+  "ICAL"        # Table with ical urls
 ]
 
 serializeData = (data) ->
