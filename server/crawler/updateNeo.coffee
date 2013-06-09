@@ -7,8 +7,8 @@ db = database.db
 
 pushToNeo = (config) ->
   # Lookup tags, and add them as relationships to tag nodes
-  tags = config["tag"]
-  delete config["tag"]
+  tags = config["tags"]
+  # delete config["tags"] # Replicating Data for now to ease speed
   database.createNode "SCRAPEDDATA", config, "ORGANIZES", (err, scrapedEvent) ->
     if err
       console.log "Failed creating the event: #{err}"
