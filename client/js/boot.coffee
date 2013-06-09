@@ -24,7 +24,7 @@ $ ->
     title: '#navbar h1 .inner'
     backButton: '#navbar a#back'
     accessoryButton: '#navbar a#accessory-button'
-    container: '#main-view .inner'
+    container: '#main-view'
     el: $('#content')
   App.NavBar.render()
 
