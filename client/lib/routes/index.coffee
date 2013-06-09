@@ -40,7 +40,7 @@ exports.Router = Backbone.Router.extend
   loadEventView: (event) ->
     eventView = new EventView
       model: event
-    @loadView eventView, event.get('name')
+    @loadView eventView, Strings.eventViewTitle
 
   loadView: (view, title) ->
     App.NavBar.pushViewObject

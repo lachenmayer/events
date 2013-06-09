@@ -11,6 +11,8 @@ strings =
     en: 'Tomorrow'
   tags:
     en: 'Tags'
+  eventViewTitle:
+    en: 'Event Details'
 
 exports.lang = (language) ->
   return this if @language is language
