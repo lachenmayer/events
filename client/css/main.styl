@@ -34,13 +34,14 @@ nav
     z-index 10000
     display none
     font-size 14px
-    background-color #888
+    background-color #5e8bb6
     border-radius 4px
-    box-shadow 0 1px 0 #ccc
-    border 1px solid #666
     line-height 25px
     max-width 20%
+    color #34495e
+    text-shadow 0 1px #91afcb
     ellipsis()
+    box-shadow 0 1px 0 #18222b
 
   h1
     margin 0
@@ -49,9 +50,12 @@ nav
     width 60%
     margin 0 auto
     font-weight: 600
-    ellipsis()
     text-transform: uppercase
     letter-spacing: 0.1em
+    text-shadow 0 2px 1px #253544
+    
+    .inner
+      ellipsis()
 
   #accessory-button
     floatright
@@ -72,12 +76,12 @@ nav
   background-color #eee
   position fixed
   left 0
-  top 0
+  top $nav_height
   z-index 100                  // Position it below the navbar.
   width 100%
   height 100%
   overflow scroll
-
+  
   .inner
-    margin-top $nav_height     // Account for the navbar which is above everything else.
+    margin-bottom: $nav_height
 

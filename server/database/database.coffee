@@ -150,4 +150,4 @@ exports.serializeData      = serializeData
 
 # Running the script sets up the database
 if (!module.parent)
-  setup()                     s
+  setup()

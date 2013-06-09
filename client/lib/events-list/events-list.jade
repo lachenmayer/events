@@ -1,4 +1,8 @@
 #events-list
+  - if (typeof days[0] === 'undefined') {
+  #loading
+    h2 Loading Events...
+  - }
   for day in days
     .day
       .day-header

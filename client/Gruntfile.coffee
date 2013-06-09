@@ -68,23 +68,34 @@ module.exports = (grunt) ->
       app_js:
         src: 'build/app.js'
         dest: 'public/js/app.js'
+      app_images:
+        src: 'images/*'
+        dest: 'public/'
+        filter: 'isFile'
+        flatten: true
 
     # Watch config
     watch:
       jade:
         files: ['templates/*.jade']
-        tasks: 'jade'
+        tasks: ['jade', 'component_private']
       coffee:
         files: ['js/*.coffee']
-        tasks: 'coffee'
+        tasks: ['coffee', 'component_private']
       stylus:
         files: ['css/*.styl']
-        tasks: 'stylus'
-      lib:
-        files: ['lib/**/*.jade', 'lib/**/*.styl', 'lib/**/*.coffee']
-        tasks: ['component_private']
+        tasks: ['stylus', 'component_private']
+      lib_coffee:
+        files: 'lib/**/*.coffee'
+        tasks: 'component_private'
+      lib_jade:
+        files: 'lib/**/*.jade'
+        tasks: 'component_private'
+      lib_stylus:
+        files: 'lib/**/*.styl'
+        tasks: 'component_private'
       component:
-        files: 'component.json'
+        files: '**/component.json'
         tasks: 'component_update'
 
   # Load dependencies

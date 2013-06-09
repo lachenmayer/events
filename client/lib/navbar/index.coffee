@@ -2,6 +2,7 @@ _         = require '../component-underscore'
 Backbone  = require '../solutionio-backbone'
 
 exports.NavBar = Backbone.View.extend
+
   viewObjects: []
 
   initialize: ->
@@ -13,13 +14,12 @@ exports.NavBar = Backbone.View.extend
     @$backButton = @$el.find @options.backButton
     @$backButton.on 'click', =>
       App.dispatcher.trigger 'navbar:backButton'
+      @popViewObject()
 
   # Returns the visible view object (at the top of the stack)
   currentViewObject: ->
-    if @viewObjects.length > 0
-      @viewObjects[@viewObjects.length - 1]
-    else
-      null
+    return null unless @hasViews()
+    @viewObjects[@viewObjects.length - 1]
 
   setRootViewObject: (viewObject) ->
     # Unbind the old view from .inner
@@ -30,17 +30,22 @@ exports.NavBar = Backbone.View.extend
     @viewObjects = [viewObject]
     @render()
 
+  hasViews: ->
+    @viewObjects.length > 0
+
   pushViewObject: (viewObject) ->
     @viewObjects.push(viewObject)
     @render()
 
   popViewObject: ->
-    return if @viewObjects.length <= 1
+    return unless @hasViews()
     @viewObjects.pop()
+    App.Router.navigate @currentViewObject().url,
+      trigger: false
     @render()
 
   popToRootViewObject: ->
-    return if @viewObjects.length <= 1
+    return unless @hasViews()
     @viewObjects.splice 0, 1
     @render()
 
@@ -52,7 +57,7 @@ exports.NavBar = Backbone.View.extend
     @$accessoryButton.hide()
 
     if @viewObjects.length > 1
-      @$backButton.html '&larr;' #@viewObjects[@viewObjects.length - 2].title
+      @$backButton.html '&larr;'
       @$backButton.show()
     else
       @$backButton.hide()

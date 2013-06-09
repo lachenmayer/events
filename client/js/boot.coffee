@@ -33,16 +33,14 @@ $ ->
 
   App.EventsListView = new EventsListView
     collection: App.EventsList
-    
-  App.TagListView = new TagListView
-    collection: App.TagList
 
   App.NavBar.setRootViewObject
     view: App.EventsListView
     title: Strings.upcomingEvents
+    url: '/'
 
-  App.dispatcher.on 'navbar:backButton', =>
-    App.Router.navigate '/', true
+  App.TagListView = new TagListView
+    collection: App.TagList
 
   App.Router = new Router
   Backbone.history.start

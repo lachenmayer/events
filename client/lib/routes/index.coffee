@@ -4,6 +4,7 @@ Model           = require '../model'
 EventView       = require('../event-view').EventView
 EventsListView  = require('../events-list').EventsListView
 CreateEventView = require('../create-event-view').CreateEventView
+LoginView       = require('../login-view').LoginView
 Strings         = require('../strings').lang 'en'
 
 exports.Router = Backbone.Router.extend
@@ -12,14 +13,16 @@ exports.Router = Backbone.Router.extend
     ''          : 'events'
     'event/new' : 'createEvent'
     'event/:id' : 'event'
+    'tags'      : 'tags'
+    'login'     : 'login'
+    '*default'  : 'default'
 
   events: ->
     App.EventsList.fetch()
-    App.NavBar.popToRootViewObject()
-    
+
   tags: ->
     App.TagList.fetch()
-    App.NavBar.popToRootViewObject()
+    @loadView App.TagListView, Strings.tags
 
   event: (id) ->
     event = App.EventsList.get id
@@ -33,17 +36,35 @@ exports.Router = Backbone.Router.extend
           App.EventsList.add event
           @loadEventView event
 
+  login: ->
+    App.LoginView ?= new LoginView
+    @loadView App.LoginView, Strings.loginViewTitle
+
   createEvent: ->
     createEventView = new CreateEventView()
     @loadView createEventView, Strings.newEvent
 
+  default: (route) ->
+    return if @removeTrailingSlash route
+    # TODO
+    console.log 'not found'
+
+  removeTrailingSlash: (route) ->
+    hasTrailingSlash = route[route.length-1] is '/'
+    if hasTrailingSlash
+      @navigate route[0...route.length-1],
+        trigger: true
+        replace: true
+    hasTrailingSlash
+
   loadEventView: (event) ->
     eventView = new EventView
       model: event
-    @loadView eventView, event.get('name')
+    @loadView eventView, Strings.eventViewTitle
 
   loadView: (view, title) ->
     App.NavBar.pushViewObject
       view: view
       title: title
+      url: window.location.pathname
 
