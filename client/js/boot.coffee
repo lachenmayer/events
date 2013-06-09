@@ -18,7 +18,8 @@ window.App =
 # Set up the main view
 $ ->
   # hide iOS browser chrome
-  window.top.scrollTo(0, 1)
+  $('body').animate
+    'scrollTop': 0
 
   App.NavBar = new NavBar
     title: '#navbar h1 .inner'
