@@ -4,6 +4,7 @@ Model           = require '../model'
 EventView       = require('../event-view').EventView
 EventsListView  = require('../events-list').EventsListView
 CreateEventView = require('../create-event-view').CreateEventView
+LoginView       = require('../login-view').LoginView
 Strings         = require('../strings').lang 'en'
 
 exports.Router = Backbone.Router.extend
@@ -13,6 +14,7 @@ exports.Router = Backbone.Router.extend
     'event/new' : 'createEvent'
     'event/:id' : 'event'
     'tags'      : 'tags'
+    'login'     : 'login'
 
   events: ->
     App.EventsList.fetch()
@@ -35,6 +37,12 @@ exports.Router = Backbone.Router.extend
         success: (event) =>
           App.EventsList.add event
           @loadEventView event
+          
+  login: ->
+    App.LoginView ?= new LoginView
+    App.NavBar.setRootViewObject
+      view: App.LoginView
+      title: Strings.loginViewTitle
 
   createEvent: ->
     createEventView = new CreateEventView()
