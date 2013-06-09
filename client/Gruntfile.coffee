@@ -73,13 +73,13 @@ module.exports = (grunt) ->
     watch:
       jade:
         files: ['templates/*.jade']
-        tasks: 'jade'
+        tasks: ['jade', 'component_private']
       coffee:
         files: ['js/*.coffee']
-        tasks: 'coffee'
+        tasks: ['coffee', 'component_private']
       stylus:
         files: ['css/*.styl']
-        tasks: 'stylus'
+        tasks: ['stylus', 'component_private']
       lib:
         files: ['lib/**/*.jade', 'lib/**/*.styl', 'lib/**/*.coffee']
         tasks: ['component_private']
