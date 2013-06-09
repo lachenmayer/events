@@ -1,11 +1,11 @@
 body
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+  font-family: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif
   font-size: 100%
   line-height: 1.5
   margin: 0
   padding: 0
 
-$nav_height = 44px
+$nav_height = 46px
 
 ellipsis()
   white-space nowrap
@@ -15,15 +15,13 @@ ellipsis()
 
 nav
   text-align center
-  background-color #bbb
+  background-color #34495e
   height $nav_height
   position fixed
   top 0
   left 0
   width 100%
   z-index 1000                 // We want the navbar to always show.
-  border-bottom 1px solid #888
-  box-shadow 0 3px 5px rgba(0,0,0,0.2)
 
   #back
     margin-left 10px
@@ -47,11 +45,13 @@ nav
   h1
     margin 0
     line-height $nav_height
-    color #444
-    text-shadow 0 1px #ddd
+    color #d8e2ec
     width 60%
     margin 0 auto
+    font-weight: 600
     ellipsis()
+    text-transform: uppercase
+    letter-spacing: 0.1em
 
   #accessory-button
     floatright

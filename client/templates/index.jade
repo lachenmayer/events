@@ -4,6 +4,10 @@ head
   link(rel='stylesheet', href='css/app.css', type='text/css')
   meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
   meta(name="apple-mobile-web-app-capable", content="yes")
+  
+  script(type='text/javascript', src='http://use.typekit.net/otn2arw.js')
+  script(type='text/javascript')
+    try{Typekit.load();}catch(e){}
 
 body
   #content
@@ -18,5 +22,5 @@ body
     #main-view
       .inner
 
-  script(language='Javascript', src='js/app.js', type='text/javascript')
-  script(language='Javascript', src='js/boot.js', type='text/javascript')
+  script(type='text/javascript', src='js/app.js')
+  script(type='text/javascript', src='js/boot.js')

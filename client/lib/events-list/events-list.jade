@@ -7,7 +7,7 @@
         table
           for event in day.events
             tr(class=event.get('id'))
-              td.time
+              td.time(class=moment.unix(event.get('date')).isSame(moment(), 'day') ? "starting-soon" : "")
                 span= moment.unix(event.get('date')).format('H:mm')
               td.info
                 h2.name= event.get('name')
