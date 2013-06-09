@@ -68,6 +68,11 @@ module.exports = (grunt) ->
       app_js:
         src: 'build/app.js'
         dest: 'public/js/app.js'
+      app_images:
+        src: 'images/*'
+        dest: 'public/'
+        filter: 'isFile'
+        flatten: true
 
     # Watch config
     watch:
