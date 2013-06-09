@@ -13,6 +13,7 @@ exports.Router = Backbone.Router.extend
     'event/new' : 'createEvent'
     'event/:id' : 'event'
     'tags'      : 'tags'
+    '*default'  : 'default'
 
   events: ->
     App.EventsList.fetch()
@@ -36,6 +37,19 @@ exports.Router = Backbone.Router.extend
   createEvent: ->
     createEventView = new CreateEventView()
     @loadView createEventView, Strings.newEvent
+
+  default: (route) ->
+    return if @removeTrailingSlash route
+    # TODO
+    console.log 'not found'
+
+  removeTrailingSlash: (route) ->
+    hasTrailingSlash = route[route.length-1] is '/'
+    if hasTrailingSlash
+      @navigate route[0...route.length-1],
+        trigger: true
+        replace: true
+    hasTrailingSlash
 
   loadEventView: (event) ->
     eventView = new EventView
