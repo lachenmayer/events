@@ -13,6 +13,8 @@ strings =
     en: 'Tags'
   eventViewTitle:
     en: 'Event Details'
+  loginViewTitle:
+    en: 'Login'
 
 exports.lang = (language) ->
   return this if @language is language
