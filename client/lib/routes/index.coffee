@@ -18,13 +18,10 @@ exports.Router = Backbone.Router.extend
 
   events: ->
     App.EventsList.fetch()
-    App.NavBar.setRootViewObject
-      view: App.EventsListView
-      title: Strings.upcomingEvents
-    
+
   tags: ->
     App.TagList.fetch()
-    App.NavBar.popToRootViewObject()
+    @loadView App.TagListView, Strings.tags
 
   event: (id) ->
     event = App.EventsList.get id
@@ -57,4 +54,5 @@ exports.Router = Backbone.Router.extend
     App.NavBar.pushViewObject
       view: view
       title: title
+      url: window.location.pathname
 
