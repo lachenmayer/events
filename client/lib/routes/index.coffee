@@ -12,16 +12,21 @@ exports.Router = Backbone.Router.extend
     ''          : 'events'
     'event/new' : 'createEvent'
     'event/:id' : 'event'
+    'tags'      : 'tags'
 
   events: ->
     App.EventsList.fetch()
-    App.NavBar.popToRootViewObject()
+    App.NavBar.setRootViewObject
+      view: App.EventsListView
+      title: Strings.upcomingEvents
     
   tags: ->
     App.TagList.fetch()
     App.NavBar.popToRootViewObject()
 
   event: (id) ->
+    @initialiseRootViewIfEmpty()
+    
     event = App.EventsList.get id
     if event?
       @loadEventView event

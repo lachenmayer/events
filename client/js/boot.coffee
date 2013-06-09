@@ -37,10 +37,6 @@ $ ->
   App.TagListView = new TagListView
     collection: App.TagList
 
-  App.NavBar.setRootViewObject
-    view: App.EventsListView
-    title: Strings.upcomingEvents
-
   App.dispatcher.on 'navbar:backButton', =>
     App.Router.navigate '/', true
 
