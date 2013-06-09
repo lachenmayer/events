@@ -14,6 +14,7 @@ TABLES = [
   "GROUP"       # Table with groups/societies
   "TAGS"        # Table with all the tags
   "ICAL"        # Table with ical urls
+  "JOBS"        # Table with scheduled jobs
 ]
 
 serializeData = (data) ->
@@ -149,4 +150,4 @@ exports.serializeData      = serializeData
 
 # Running the script sets up the database
 if (!module.parent)
-  setup()
+  setup()                     s

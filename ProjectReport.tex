@@ -42,9 +42,10 @@ When we first began talking about the application, we were very careful to ensur
 \subsubsection The Undergraduate Story
  Freshers
 
- General Users
+ General Use
 
 \subsubsection The Postgraduate Story
+
 
 
 \subsubsection Members of College Faculty
@@ -67,6 +68,9 @@ In implementing this we wanted to experiment somewhat with many of the new techn
 \subsubsection {Nginx}
 \subsubsection {Neo4j}
 
+Neo4j is one of the leading graph based databases. It's an open-source, high-performance, NOSQL database that's been seen more and more in both startups and enterprise software systems. We chose it because the data we wish to store and mine for information is essentially a graph. For example each event is connected to users associated with them, multiple tags, API keys for authentication as well as potentially more, with many optional fields (see image). We felt that this sort of dataset fits the graph-based database paradigm much better than a relational database, and were excited to get to use some new technologies. In practice, this has worked out well for us, because it ensures that our querying of the database is much faster than could be achieved on a relational database of similar specifications, because we can start off each query and only be at most 5 edges away from the nodes and thus the information we want. It also fits JSON data well, as each node operates as a key-value store, and is instantly convertable using the client libraries to its REST API.
+
+TODO: Add image of database graph.
 \subsection {Design Processes}
 
 \subsubsection {Agile Development}
@@ -76,6 +80,28 @@ In implementing this we wanted to experiment somewhat with many of the new techn
 \subsection {Version Control System}
 
 \section {System Description}
+
+[Introduction]
+\subsection {Core Features}
+
+When a user first uses the device, what they see is all events that are occuring on that day, scrolling forward through time. Each event item acts as a button through which they can find out more about that event.
+
+
+
+\subsection {Social Features}
+\subsubsection{Tags}
+\subsubsection{Invitation System}
+\subsubsection{Friends}
+
+
+% \subsection {Notifications}
+% \
+
+-
+
+% \begin{itemize}
+
+% \end{itemize}
 
 \section {System Implementation}
 \subsection {Front End}
