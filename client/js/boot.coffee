@@ -20,6 +20,11 @@ $ ->
   # hide iOS browser chrome
   $('body').animate
     'scrollTop': 0
+  $(window).scroll ->
+    if $('body').scrollTop() > 0
+      $('#navbar').addClass('shadow')
+    else
+      $('#navbar').removeClass('shadow')
 
   App.NavBar = new NavBar
     title: '#navbar h1 .inner'
