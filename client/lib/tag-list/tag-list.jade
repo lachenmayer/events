@@ -11,7 +11,8 @@
     - tags.each(function(tag) {
     - name = tag.get('tagName')
       li
-        input.checked(type='checkbox', name=name)
-        label.name(for=name)= name
-        span.numEvents= 5
+        div.left
+          label.name(for=name)= name
+        div.right
+          span.numEvents= 5
     - })

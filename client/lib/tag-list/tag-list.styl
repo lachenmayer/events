@@ -6,7 +6,6 @@ $tagsort_height = 40px
   background-color: #999
   height: $tagsort_height
   padding: 0 $horizontal_margin
-  margin-bottom: $horizontal_margin
   font-size: 85%
   line-height: 20px
   
@@ -36,20 +35,42 @@ $tagsort_height = 40px
 #taglist
   ul
     margin: 0
-    padding: 0 $horizontal_margin
     
     li
+      padding-left: 50px
+      background: url('../images/checkbox_normal.png') 10px center no-repeat;
       clear: both
-      line-height: 30px
-      
-      input
-        float: left
-        margin-top: 8px
+      height: 60px
+      display: table
+      width: 100%
+      cursor: pointer
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
       
       label
-        margin-left: 10px
-        float: left
-        width: 90%
+        cursor: pointer
+            
+      div
+        height: 50px
+        display: table-cell
+        vertical-align: middle
         
-      .numEvents
-        float: right
+      div.left
+        width: 90%
+      div.right
+        width: 10%
+        text-align: right
+        padding-right: 20px
+        
+    li.checked
+      background-image: url('../images/checkbox_active.png')
+      
+      label
+        font-weight: 600
+        
+    li:nth-child(odd)
+      background-color #dedede

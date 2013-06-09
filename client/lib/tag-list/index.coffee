@@ -34,6 +34,9 @@ exports.TagListView = Backbone.View.extend
     $('#tagsort li a').each (index, el)->
       $(el).click ->
         App.dispatcher.trigger 'sort_options:change', index
+    $('#taglist li').each (index, el)->
+      $(el).click =>
+        $(this).toggleClass 'checked'
       
     @list = new List 'taglist',
       valueNames: [
