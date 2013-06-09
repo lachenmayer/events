@@ -1,6 +1,8 @@
 #event-view
   .image
     img(src=model.get('image'))
-  .description
+  header
     h1= model.get('name')
+    p.location= model.get('location')
+  .description
     p= model.get('description')
