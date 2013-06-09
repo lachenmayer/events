@@ -37,9 +37,7 @@ exports.Router = Backbone.Router.extend
           
   login: ->
     App.LoginView ?= new LoginView
-    App.NavBar.setRootViewObject
-      view: App.LoginView
-      title: Strings.loginViewTitle
+    @loadView App.LoginView, Strings.loginViewTitle
 
   createEvent: ->
     createEventView = new CreateEventView()
