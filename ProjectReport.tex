@@ -64,6 +64,9 @@ In implementing this we wanted to experiment somewhat with many of the new techn
 \subsubsection {Node.js}
 \subsubsection {Coffeescript}
 \subsubsection {Nginx}
+Nginx (pronounced engine-x) is a reverse-proxy web server first, and HTTP web server second. However, we decided to use it for our front-end web server because of its simple configuration, particularly that related to proxying. 
+
+All the front-end API calls are made to the nginx server which then proxies them to the back-end Node.js server. This has the advantage of creating a clean separation between the front- and back-ends of our project, and by proxying the API calls doesn't expose the back-end API server publicly. 
 \subsubsection {Neo4j}
 
 Neo4j is one of the leading graph based databases. It's an open-source, high-performance, NOSQL database that's been seen more and more in both startups and enterprise software systems. We chose it because the data we wish to store and mine for information is essentially a graph. For example each event is connected to users associated with them, multiple tags, API keys for authentication as well as potentially more, with many optional fields (see image). We felt that this sort of dataset fits the graph-based database paradigm much better than a relational database, and were excited to get to use some new technologies. In practice, this has worked out well for us, because it ensures that our querying of the database is much faster than could be achieved on a relational database of similar specifications, because we can start off each query and only be at most 5 edges away from the nodes and thus the information we want. It also fits JSON data well, as each node operates as a key-value store, and is instantly convertable using the client libraries to its REST API.
