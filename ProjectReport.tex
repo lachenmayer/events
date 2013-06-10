@@ -56,9 +56,11 @@ Lizzy is really involved in Union activities. She writes for Felix, and is the p
 
 We split our group into two teams: one consisting of Alex and Harry, who worked on the client side, and the other consisting of Tom and Artur, who worked on the server-side implementation. Artur additionally implemented a scraper at the beginning of the project which collected event information from the Union calendar.
 
+\subsubsection {}
+
 \subsection {Implementation Technology Decisions}
 
-In implementing this we wanted to experiment somewhat with many of the new technologies that are only recently entering mainstream use. We focus here on the reason why we picked the major technologies such as front and back end servers, language choice and why we chose to use a graph based database.
+In implementing this we wanted to experiment somewhat with many of the new technologies that are only recently entering mainstream use. We focus here on the reason why we picked the major technologies such as front and {back end servers, language choice and why we chose to use a graph based database.
 
 \subsubsection {Node.js}
 \subsubsection {Coffeescript}
@@ -71,6 +73,10 @@ TODO: Add image of database graph.
 \subsection {Design Processes}
 
 \subsubsection {Agile Development}
+\subsubsection {Ethical impact}
+	Security, passwords etc
+
+\subsection {Collaborative Tools}
 \subsubsection {Github Wiki}
 \subsubsection {Trello}
 
@@ -79,37 +85,64 @@ TODO: Add image of database graph.
 \section {System Description}
 
 [Introduction]
+
 \subsection {Core Features}
 
 When a user first uses the device, what they see is all events that are occuring on that day, scrolling forward through time. Each event item acts as a button through which they can find out more about that event.
 
-
-
 \subsection {Social Features}
-\subsubsection{Tags}
-\subsubsection{Invitation System}
-\subsubsection{Friends}
+\subsubsection {Tags
+\subsubsection {Follower System}
+\subsubsection {Friends}
+\subsubsection {Groups}
+\subsubsection {Subscription}
+\subsection {Subscription}
 
+\subsection {Notifications}
 
-% \subsection {Notifications}
-% \
-
--
-
-% \begin{itemize}
-
-% \end{itemize}
+Email Blah
 
 \section {System Implementation}
 \subsection {Front End}
 \subsection {Back End}
-a
+
+\subsubsection {API}
+	RESTful interface
+\subsubsection {Crawler}
+	HTMLParser blah
+\subsubsection {Notifications}
+	Email stuff
+\subsubsection {ICAL}
+\subsubsection {Database stuff}
+	Arrangement of DB RootNode, SubRootNode, graph edges etc
+\subsubsection {Problems or Limitations}
+	Time, Cypher Queries, SSL Password stuff (self-signed not good)
+
+
+
+
 \section {External Packages}
 
-package.json
+\subsection{Common}
+\begin{itemize}
+\item Node
+\item Coffeescript
+\end{itemize}
+
+\subsection{Backend}
+\begin{itemize}
+\item Neo4j
+	\subitem everything in package.json
+	\subitem more everything
+\end{itemize}
+\subsection{FrontEnd}
+\begin{itemize}
+	\item Nginx
+\end{itemize}
 
 \section {Conclusion}
 
 
 
 \end{document}
+
