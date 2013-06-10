@@ -1,5 +1,5 @@
 \documentclass[11pt]{article}
-\setlength{\parskip}{0.2cm}
+\setlength{\parskip}{1em}
 \setlength{\parindent}{0cm}
 \usepackage[hmargin=2.2cm,vmargin=2.3cm]{geometry}
 \usepackage{url}
@@ -25,19 +25,21 @@
 
 \section {Introduction}
 
-\subsection {Requirements}
+\subsection {Requiremenats}
 
-The product we are building is meant to be a tool to aid college members in discovering new events. To do this, we had several requirements that we agreed upon in the projects conception.
+The product we have built is an application to aid members of Imperial College to both discover and promote events across campus. We decided upon several requirements for the project when we started:
 
 \begin{itemize}
 \item Authenticate with the college systems - no need to register. We consider this incredibly important because to attract a userbase from nothing we need to minimise the amount of interaction the user would need to do with the app to recieve useful information.
+
 \item Provide automatic access to \textit{at least} the feeds that are already provided, such as the Imperial College Union \`Whats On\' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
-\item Provide user interactivity to provide information into the system. While the website as-is is intended to be a strong information source, the hope is that it provides an easier way to advertise events to members of the college, and that it could be a preferred platform for contacting people and cause a snowball effect in userbase increase. This requires that there are mechanisms available to add events.
+
+\item Provide user interactivity to provide information into the system. While the website as-is is intended to be a strong information source, the hope is that it provides an easier way to advaertise events to members of the college, and that it could be a preferred platform for contacting people and cause a snowball effect in userbase increase. This requires that there are mechanisms available to add events.
 \end{itemize}
 
-\subsection {Targets}
+\subsection {Target Audience}
 
-When we first began talking about the application, we were very careful to ensure that we carefully went through each of the potential user categories of the application. We were limited to members of the College, but we split these down into the following characters, and provided user stories for how we wanted to provide value for each of them.
+The first stage of our project was defining our target user(s). We decided on limiting our users to members of the College, but we split these into the following sub-groups, and for each we created user stories describing their key characteristics:
 
 \subsubsection{Undergraduate}
 Harry is an undergraduate at Imperial College. He is a member of a few societies, but does not hold any executive committee positions. He likes going to events organised by the societies he is a member of, and other Union-organised events. He loves free stuff, especially free food, but usually finds out about events that give away free stuff far too late. He has a lot of friends that are really involved in societies, and is often invited to events by them through Facebook and society email lists. He is looking for an internship this summer. He was in halls in first year and knows a lot of people from there that he rarely sees anymore.
@@ -45,11 +47,10 @@ Harry is an undergraduate at Imperial College. He is a member of a few societies
 \subsubsection{Postgraduate}
 Adam is currently doing his PhD in bio-chemistry. He attends many evening lectures relating to research topics that he is interested in. he is also a fan of classical music and likes to attend lunchtime concerts.
 
-
 \subsubsection{Members of College Faculty}
 \subsubsection{Event Organisers}
 Lizzy is really involved in Union activities. She writes for Felix, and is the president of a mid-sized society. She is also the social secretary of another large society. She uses Facebook to invite people to nights out organised by these societies, and regularly uses the society email lists to announce society meetings and smaller events. She currently uses Google Docs spreadsheets to manage attendance to these smaller events.
-
+a
 \section {Project Management}	
 
 \subsection {Group Structure}
@@ -65,6 +66,9 @@ In implementing this we wanted to experiment somewhat with many of the new techn
 \subsubsection {Node.js}
 \subsubsection {Coffeescript}
 \subsubsection {Nginx}
+Nginx (pronounced engine-x) is a reverse-proxy web server first, and HTTP web server second. However, we decided to use it for our front-end web server because of its simple configuration, particularly that related to proxying. 
+
+All the front-end API calls are made to the nginx server which then proxies them to the back-end Node.js server. This has the advantage of creating a clean separation between the front- and back-ends of our project, and by proxying the API calls doesn't expose the back-end API server publicly. 
 \subsubsection {Neo4j}
 
 Neo4j is one of the leading graph based databases. It's an open-source, high-performance, NOSQL database that's been seen more and more in both startups and enterprise software systems. We chose it because the data we wish to store and mine for information is essentially a graph. For example each event is connected to users associated with them, multiple tags, API keys for authentication as well as potentially more, with many optional fields (see image). We felt that this sort of dataset fits the graph-based database paradigm much better than a relational database, and were excited to get to use some new technologies. In practice, this has worked out well for us, because it ensures that our querying of the database is much faster than could be achieved on a relational database of similar specifications, because we can start off each query and only be at most 5 edges away from the nodes and thus the information we want. It also fits JSON data well, as each node operates as a key-value store, and is instantly convertable using the client libraries to its REST API.
@@ -77,11 +81,14 @@ TODO: Add image of database graph.
 	Security, passwords etc
 
 \subsection {Collaborative Tools}
-\subsubsection {Github Wiki}
+\subsubsection {GitHub Wiki}
+We used the GitHub Wiki as a place to document areas of the project as we were implementing them.For example, as we split our group into client- and server-side teams, we each documented setting up the client- and server-side server(s), so that other team members could get everything up and running easily to test the part they were working on with the other components.
+
+We also created Wiki entries for the REST API specification as it was being implemented server-side. This meant that the client-side group could interact with it and start testing calls to it as early as possible.
 \subsubsection {Trello}
 
 \subsection {Version Control System}
-
+a
 \section {System Description}
 
 [Introduction]
@@ -91,7 +98,7 @@ TODO: Add image of database graph.
 When a user first uses the device, what they see is all events that are occuring on that day, scrolling forward through time. Each event item acts as a button through which they can find out more about that event.
 
 \subsection {Social Features}
-\subsubsection {Tags
+\subsubsection {Tags}
 \subsubsection {Follower System}
 \subsubsection {Friends}
 \subsubsection {Groups}
