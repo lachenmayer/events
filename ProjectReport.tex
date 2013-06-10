@@ -6,6 +6,10 @@
 \usepackage{hyperref}
 \usepackage{breakurl}
 
+% For footnotes
+\usepackage{endnotes}
+\let\footnote=\endnote
+
 \ifx\pdftexversion\undefined
 \usepackage[dvips]{graphicx}
 \else
@@ -112,11 +116,15 @@ When a user first uses the device, what they see is all events that are occuring
 \subsection {Back End}
 a
 \section {External Packages}
-
-package.json
+On the client-side, we used Component\footnote{http://github.com/component/component}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into 'components', modules which can be reused in multiple places. 
 
 \section {Conclusion}
 
 
+
+
+\newpage
+
+\theendnotes
 
 \end{document}
