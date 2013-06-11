@@ -25,6 +25,16 @@ findOrCreateTag = (tag, callback) ->
     else if not tagNode
       createTag tag, (err, createdTag) ->
         callback err, createdTag
+    else 
+      callback null, tagNode
+
+findEventTags = (eventNodeId, callback) ->
+  query = "START r=node({eventNodeId})
+           MATCH r-[:TAGGED_WITH]->tag
+           RETURN tag"
+  db.query query, {eventNodeId: eventNodeId}, (err, tags) ->
+    database.returnValue err, tags, ((data) -> database.returnListWithId (tag.e for tag in data)), callback
+
 
 #findSubscribedTags = (user, callback) ->
 #  query = "START r=node({rootId}), e=node({eventId})
