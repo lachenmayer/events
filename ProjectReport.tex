@@ -79,32 +79,6 @@ a
 
 We split our group into two teams: one consisting of Alex and Harry, who worked on the client side, and the other consisting of Tom and Artur, who worked on the server-side implementation. Artur additionally implemented a scraper at the beginning of the project which collected event information from the Union calendar.
 
-\subsection{Implementation Technology Decisions}
-
-In implementing this we wanted to experiment somewhat with many of the new technologies that are only recently entering mainstream use. We focus here on the reason why we picked the major technologies such as front and {back end servers, language choice and why we chose to use a graph based database.
-
-\subsubsection{CoffeeScript}
-We chose to develop our application using CoffeeScript, a programming language with a clean and elegant syntax which compiles down to JavaScript. We realised that building a rich web application would involve writing a lot of client-side JavaScript code. JavaScript however has many quirks, many of which are nicely dealt with in CoffeeScript. As one of the team members already had considerable experience using CoffeeScript prior to the project, it was an obvious choice for the client-side application code.
-
-\subsubsection{Backbone.js}
-On the client-side, we are using a popular JavaScript MVC library called Backbone. This library provides us with "hassle-free" model synchronisation with the server and useful ways of dealing with UI changes in our view code. It is a small library, and leaves a lot of freedom for implementation details. For example, it doesn't prescribe any particular templating engine. (We are using a templating language called Jade)
-
-\subsubsection {Node.js}
-We chose Node.js as server-side platform. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the "plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
-
-The Node.js server exists mainly to expose a REST interface to the client. We are using a library called Swagger, which lets us define our REST interface in the form of an "executable specification", greatly simplifying our server-side code.
-
-\subsubsection {Nginx}
-Nginx (pronounced engine-x) is a reverse-proxy web server first, and HTTP web server second. However, we decided to use it for our front-end web server because of its simple configuration, particularly that related to proxying. 
-
-All the front-end API calls are made to the nginx server which then proxies them to the back-end Node.js server. This has the advantage of creating a clean separation between the front- and back-ends of our project, and by proxying the API calls doesn't expose the back-end API server publicly. 
-\subsubsection {Neo4j}
-
-Neo4j is one of the leading graph based databases. It's an open-source, high-performance, NOSQL database that's been seen more and more in both startups and enterprise software systems. We chose it because the data we wish to store and mine for information is essentially a graph. For example each event is connected to users associated with them, multiple tags, API keys for authentication as well as potentially more, with many optional fields (see image). We felt that this sort of dataset fits the graph-based database paradigm much better than a relational database, and were excited to get to use some new technologies.
-
-In practice, this has worked out well for us, because it ensures that our querying of the database is much faster than could be achieved on a relational database of similar specifications, because we can start off each query and only be at most 5 edges away from the nodes and thus the information we want. It also fits JSON data well, as each node operates as a key-value store, and is instantly convertable using the client libraries to its REST API.
-
-TODO: Add image of database graph.
 \subsection {Design Processes}
 
 Throughout the project, we took both an agile approach by continuously iterating on ideas, but also planned heavily up-front before we started development to establish our target users and the design of our project. This was very important to us as the cost and ease of making changes to a project are lower the earlier they are made.
@@ -116,7 +90,7 @@ Still before we'd even written a single line of code, we designed the user inter
 At this point, we decided on which technologies to use to build our project with for both the front-end and back-ends. We then started to implement features and iterated on them until we were happy with the result. Although we split ourselves into two teams (for the front-end and back-end), we made sure to constantly integrate both parts to find and fix issues as early as possible during the development process.
 
 \subsubsection {Ethical impact}
-	Security, passwords etc
+Security, passwords etc
 aa
 \subsection {Collaborative Tools}
 \subsubsection {GitHub Wiki}
@@ -143,7 +117,7 @@ a
 
 \subsection {Core Features}
 
-When a user first uses the device, what they see is all events that are occuring on that day, scrolling forward through time. Each event item acts as a button through which they can find out more about that event.
+When a user first opens the app, they see a list of future events starting from today. The user can tap/click on any event to see further details about that event.
 
 \subsection {Social Features}
 \subsubsection {Tags}
@@ -157,38 +131,49 @@ When a user first uses the device, what they see is all events that are occuring
 Email Blah
 
 \section {System Implementation}
+
+In this project we wanted to experiment with some new technologies which are only recently becoming widely used. We focus here on our implementation choices and some ofthe reasoning behind these choices.
+
+\subsection{CoffeeScript}
+We chose to develop our application using CoffeeScript, a programming language with a clean and elegant syntax which compiles down to JavaScript. We realised that building a rich web application would involve writing a lot of client-side JavaScript code. JavaScript however has many quirks, many of which are nicely dealt with in CoffeeScript. As one of the team members already had considerable experience using CoffeeScript prior to the project, it was an obvious choice for the client-side application code. CoffeeScript's main syntactical feature is its use of significant whitespace, similar to Python.
+
 \subsection {Front End}
+
+Our application relies heavily on client-side JavaScript running in the browser to display the various views, using data loaded from the server via its REST interface.
+We are using a popular JavaScript MVC library called Backbone. This library provides us with "hassle-free" model synchronisation with the server and useful ways of dealing with UI changes in our view code. It is a small library, and leaves a lot of freedom for implementation details. For example, it doesn't prescribe any particular HTML templating engine.
+
+We are using a templating language called Jade, which uses significant whitespace to indicate nested tags, rather than opening/closing tags. This results in much smaller and more understandable HTML templates. Our CSS styles are written in a language called Stylus, which again uses significant whitespace, and allows nesting of style rules.
+
+In parts of the UI we are using a library called Bacon.js, which is a "functional reactive programming" library. Functional reactive programming represents UI events as "event streams". These streams are collections that can be manipulated using functional methods such as map, filter, etc. This allows for reasoning about UI state as it evolves over time. We are using to validate the data in one of our forms, ensuring that only valid data can be sent to the backend. More "traditional" programming methods would probably have been easier to implement, but we believe that this is an exciting technology. It brings the benefits of functional programming to UI code, which is usually error-prone and difficult to test.
+
 \subsection {Back End}
 
-The backend is implemented with a Node.js server, allowing simple communciation and reusable code between backend and frontend. We split the project down into several categories, which we kept seperate from each other to minimize rigidity.
+The backend is implemented with a Node.js server, allowing simple communciation and reusable code between backend and frontend. We split the project down into several categories, which we kept seperate from each other to minimize rigidity. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the "plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
 
 \subsubsection {API}
-	For the main API, we run express\footnote{express.js}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
-	Swagger also provides an authentication callback, however we decided not to use this. We did this because the major limitation of its `validator' authentication callback is that it gets added to every HTTP request to authenticate it individually. We didn't want to do this, and instead split between HTTPS requests for logged in sessions, with user personalisation and extra permissions, and the public HTTP web application, which simply provides a simple way to view the upcoming calendar of public events. For authentication we used the Kerberos system, which ensured only college users could access the system.
+For the main API, we run express\footnote{express.js}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
+Swagger also provides an authentication callback, however we decided not to use this. We did this because the major limitation of its `validator' authentication callback is that it gets added to every HTTP request to authenticate it individually. We didn't want to do this, and instead split between HTTPS requests for logged in sessions, with user personalisation and extra permissions, and the public HTTP web application, which simply provides a simple way to view the upcoming calendar of public events. For authentication we used the Kerberos system, which ensured only college users could access the system.
 
 \subsubsection {Crawler}
 
-There are already a few events that the Imperial already displays on their calendars.
-However these are usually scattered accross the Imperial website.
-Given that the union calendar does not provide any API to access the database with the list of events then it is necessary to fetch these events directly from the website.
-In order to extract the relevant information the \textit{cheerio} framework was use.
-It is a framework that allows to operate on the HTML dome in a similar fashion to the jQuery framework.
+There are already a few events that the Imperial already displays on their calendars. However these are usually scattered across the Imperial website.
+The Union calendar is not exposed via any publicly-accessible API, so it was necessary to scrape the events directly from the website.
+In order to extract the relevant information we used the \textit{cheerio} framework. This is a framework that allows to operate on the HTML DOM in a similar fashion to the jQuery framework.
 
-On a more positive side the events for the Imperial Website are returned using the RSS format.
-Using the node.js package \textit{feedparser} the fetched data was parsed into a JSON format.
-The JSON format was later converted into the relevant calendar format used by the Neo4j database.
+The events page on the Imperial homepage is syndicated via RSS. Using the node.js package \textit{feedparser} the fetched data was parsed into a JSON format. The JSON format was later converted into the relevant calendar format used by the Neo4j database.
 
-\subsubsection {Notifications}
-	Email notifications are one of the services we provide for registered users. Each week, or other configured time, we collate the users subscriptions and send the upcoming events to them in an email. This is implemented via a connection to an SMTP server, a mining of the users subscribed events via a Cypher query, followed by a prettifying on the events and parsing into a HTML email via a templating engine.
-\subsubsection {ICAL}
+\subsubsection{Notifications}
+Email notifications are one of the services we provide for registered users. Each week, or other configured time, we collate the users subscriptions and send the upcoming events to them in an email. This is implemented via a connection to an SMTP server, a mining of the users subscribed events via a Cypher query, followed by a prettifying on the events and parsing into a HTML email via a templating engine.
 
-In order to allow the users to view the events even outside of our website the events list can easily be exported into the iCal format. This is the standard format used to display calendar events and is currently supported by online websited such as outlook and gmail as well as multiple desktop applications.
+\subsubsection{iCal}
 
-Given that each of these formats requires a publicly availiable URL the events server generate a random string for each user. This URL can then be used to receive a calendar of all events to which he subscribed. However the user can easily opt out from the URL as well as create a new one.
+In order to allow the users to view the events even outside of our website the events list can easily be exported into the iCal format. This is the standard format used to display calendar events and is currently supported by online websited such as Outlook and Gmail as well as multiple desktop applications.
 
-This method allows a user to quickly synchronize with the events from the Imperial website and see them in native applications that he uses.
+Given that each of these formats requires a publicly available URL the events server generate a random string for each user. This URL can then be used to receive a calendar of all events to which they subscribed. However the user can easily opt out from the URL as well as create a new one.
 
-\subsubsection {Database stuff}
+This method allows a user to quickly synchronize with the events from the Imperial website and see them in any native applications that they use.
+
+\subsubsection{Database}
 
 The Neo4j database is a graph database that allows to quickly traverse the database.
 Our database consists of a root node which has edges to nodes that are treated as `database tables'.
@@ -197,13 +182,14 @@ The tables contain entries to relevant nodes (users, events, groups, etc.) that 
 
 Nodes are connected by edges to define relationships like \textit{Friendship}, \textit{Following}, \textit{Member\_Of}.
 
-\subsubsection {Problems or Limitations}
+\subsubsection{Problems or Limitations}
 	
 	Time, Cypher Queries, SSL Password stuff (self-signed not good)
 
 
 
-\section {External Packages}
+\section{External Packages}
+
 On the client-side, we used Component\footnote{http://github.com/component/component}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into 'components', modules which can be reused in multiple places. 
 
 We used serveral external client-side components:
