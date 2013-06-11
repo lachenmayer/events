@@ -1,6 +1,5 @@
 feedparser = require 'feedparser'
 request    = require 'request'
-utils      = require '../utils'
 moment     = require 'moment'
 
 IMPERIAL_URI = 'http://www3.imperial.ac.uk/imperialnewsevents/eventsfront?pid=2551_175458356_2551_76327754_76327754'

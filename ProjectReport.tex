@@ -160,12 +160,36 @@ The backend is implemented with a Node.js server, allowing simple communciation 
 	Swagger also provides an authentication callback, however we decided not to use this. We did this because the major limitation of its `validator' authentication callback is that it gets added to every HTTP request to authenticate it individually. We didn't want to do this, and instead split between HTTPS requests for logged in sessions, with user personalisation and extra permissions, and the public HTTP web application, which simply provides a simple way to view the upcoming calendar of public events. For authentication we used the Kerberos system, which ensured only college users could access the system.
 
 \subsubsection {Crawler}
-	HTMLParser blah
+
+There are already a few events that the Imperial already displays on their calendars.
+However these are usually scattered accross the Imperial website.
+Given that the union calendar does not provide any API to access the database with the list of events then it is necessary to fetch these events directly from the website.
+In order to extract the relevant information the \textit{cheerio} framework was use.
+It is a framework that allows to operate on the HTML dome in a similar fashion to the jQuery framework.
+
+On a more positive side the events for the Imperial Website are returned using the RSS format.
+Using the node.js package \textit{feedparser} the fetched data was parsed into a JSON format.
+The JSON format was later converted into the relevant calendar format used by the Neo4j database.
+
 \subsubsection {Notifications}
 	Email notifications are one of the services we provide for registered users. Each week, or other configured time, we collate the users subscriptions and send the upcoming events to them in an email. This is implemented via a connection to an SMTP server, a mining of the users subscribed events via a Cypher query, followed by a prettifying on the events and parsing into a HTML email via a templating engine.
 \subsubsection {ICAL}
+
+In order to allow the users to view the events even outside of our website the events list can easily be exported into the iCal format. This is the standard format used to display calendar events and is currently supported by online websited such as outlook and gmail as well as multiple desktop applications.
+
+Given that each of these formats requires a publicly availiable URL the events server generate a random string for each user. This URL can then be used to receive a calendar of all events to which he subscribed. However the user can easily opt out from the URL as well as create a new one.
+
+This method allows a user to quickly synchronize with the events from the Imperial website and see them in native applications that he uses.
+
 \subsubsection {Database stuff}
-	Arrangement of DB RootNode, SubRootNode, graph edges etc
+
+The Neo4j database is a graph database that allows to quickly traverse the database.
+Our database consists of a root node which has edges to nodes that are treated as `database tables'.
+Creating a node for each table increases the search time. An alternative would be to create and index for each table node. This has the advantage of not having to specify a node that is treated as a root node.
+The tables contain entries to relevant nodes (users, events, groups, etc.) that contain the relevant information saved as JSON data. Being stored in JSON format it is compatible with Node and the database can easily be upgraded. It is not necessary that all of the nodes in a given `table' have the same keys.
+
+Nodes are connected by edges to define relationships like \textit{Friendship}, \textit{Following}, \textit{Member_Of}.
+
 \subsubsection {Problems or Limitations}
 	
 	Time, Cypher Queries, SSL Password stuff (self-signed not good)
