@@ -1,0 +1,13 @@
+{
+  "name": "forms",
+  "description": "Styles and hacks for forms",
+  "dependencies": {},
+  "development": {},
+  "main": "index.coffee",
+  "scripts": [
+    "index.coffee"
+  ],
+  "styles": [
+    "forms.styl"
+  ]
+}

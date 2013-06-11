@@ -16,6 +16,7 @@
     "event-view",
     "create-event-view",
     "navbar",
+    "forms",
     "model",
     "routes",
     "tag-list",
@@ -27,7 +28,6 @@
     "lib"
   ],
   "styles": [
-    "css/main.styl",
-    "css/forms.styl"
+    "css/main.styl"
   ]
 }

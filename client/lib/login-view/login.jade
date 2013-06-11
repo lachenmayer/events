@@ -1,14 +1,9 @@
-#login
-  h2 Enter your Imperial login below to subscribe to tags and track events
+#login.form
+  h2 Please enter your Imperial login below
   p.security-info We only use your login to check that you're an Imperial student, and <em>never</em> store your password.
   form
-    ul
-      li
-        label Username
-        input(type='text')
-      li
-        label Password
-        input(type='password')
+    input(type='text', placeholder='Username')
+    input(type='password', placeholder='Password')
     input(type='submit', value='Log in')
     input(type='button', value='Cancel')
-        
+
