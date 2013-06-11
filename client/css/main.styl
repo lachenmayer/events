@@ -25,24 +25,20 @@ nav
   z-index 1000                 // We want the navbar to always show.
 
   #back
-    margin-left 10px
-    margin-top 10px
-    padding 0 10px
-    height 25px
+    height $nav_height
     position absolute
     top 0
     left 0
+    padding 0 15px
     z-index 10000
     display none
-    font-size 14px
-    background-color #5e8bb6
-    border-radius 4px
-    line-height 25px
+    font-size 26px
+    background-color #253342
+    line-height $nav_height
     max-width 20%
-    color #34495e
-    text-shadow 0 1px #91afcb
+    color #869fb9
+    //     text-shadow 0 1px #91afcb
     ellipsis()
-    box-shadow 0 1px 0 #18222b
 
   h1
     margin 0
@@ -78,31 +74,3 @@ nav.shadow
 
 #main-view
   margin-top $nav_height
-
-
-// Input fields
-
-input[type=text], input[type=password]
-  float left
-  width 70%
-  background #fff
-  border 1px solid #ccc
-  height: 30px
-  margin: 0
-  padding: 0 5px
-  margin-left: -12px
-    
-input[type=button], input[type=submit]
-  float right
-  margin-left 20px
-  border none
-  padding 5px 10px
-  margin-top 10px
-    
-input[type=submit]
-  background-color #275d91
-  color #fff
-    
-input[type=button]
-  background-color #aaa
-  color #444
