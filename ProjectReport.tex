@@ -5,6 +5,11 @@
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{breakurl}
+\usepackage{float}
+
+% For footnotes
+\usepackage{endnotes}
+\let\footnote=\endnote
 
 \ifx\pdftexversion\undefined
 \usepackage[dvips]{graphicx}
@@ -87,8 +92,18 @@ We used the GitHub Wiki as a place to document areas of the project as we were i
 We also created Wiki entries for the REST API specification as it was being implemented server-side. This meant that the client-side group could interact with it and start testing calls to it as early as possible.
 \subsubsection {Trello}
 
+Trello\footnote{\url{http://trello.com}} is an organisational and management web application produced by FogCreek. It provides a collection a lists of items, each of which can be thought of as a list of small items (which can be expanded in more detail underneath).
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.35]{trello.png}
+\caption{\label{fig:trello} Trello - Collaborative Organizational Tool}
+\end{figure}
+In following the Agile development methodology of an iterative development, we used Trello to define new tasks during our group meetings. In doing this, we could effectively ensure that there was fair and consistent contribution from all members by assigning each task to somebody on Trello. This also allowed us all to keep track of where we were in the project, an maintain a consistent list of tasks we needed to do, minimizing the `what now?' time.
+
+
 \subsection {Version Control System}
-a
+
 \section {System Description}
 
 [Introduction]
@@ -102,10 +117,9 @@ When a user first uses the device, what they see is all events that are occuring
 \subsubsection {Follower System}
 \subsubsection {Friends}
 \subsubsection {Groups}
+\subsection {Other Features}
 \subsubsection {Subscription}
-\subsection {Subscription}
-
-\subsection {Notifications}
+\subsubsection {Notifications}
 
 Email Blah
 
@@ -113,8 +127,12 @@ Email Blah
 \subsection {Front End}
 \subsection {Back End}
 
+The backend is implemented with a Node.js server, allowing simple communciation and reusable code between backend and frontend. We split the project down into several categories, which we kept seperate from each other to minimize rigidity.
+
 \subsubsection {API}
-	RESTful interface
+	For the main API, we run express\footnote{express.js}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
+	Swagger also provides an authentication callback, however we decided not to use this. We did this because the major limitation of its `validator' authentication callback is that it gets added to every HTTP request to authenticate it individually. We didn't want to do this, and instead split between HTTPS requests for logged in sessions, with user personalisation and extra permissions, and the public HTTP web application, which simply provides a simple way to view the upcoming calendar of public events. For authentication we used the Kerberos system, which ensured only college users could access the system.
+
 \subsubsection {Crawler}
 
 There are already a few events that the Imperial already displays on their calendars.
@@ -128,7 +146,7 @@ Using the node.js package \textit{feedparser} the fetched data was parsed into a
 The JSON format was later converted into the relevant calendar format used by the Neo4j database.
 
 \subsubsection {Notifications}
-	Email stuff
+	Email notifications are one of the services we provide for registered users. Each week, or other configured time, we collate the users subscriptions and send the upcoming events to them in an email. This is implemented via a connection to an SMTP server, a mining of the users subscribed events via a Cypher query, followed by a prettifying on the events and parsing into a HTML email via a templating engine.
 \subsubsection {ICAL}
 
 In order to allow the users to view the events even outside of our website the events list can easily be exported into the iCal format. This is the standard format used to display calendar events and is currently supported by online websited such as outlook and gmail as well as multiple desktop applications.
@@ -147,12 +165,24 @@ The tables contain entries to relevant nodes (users, events, groups, etc.) that 
 Nodes are connected by edges to define relationships like \textit{Friendship}, \textit{Following}, \textit{Member_Of}.
 
 \subsubsection {Problems or Limitations}
+	
 	Time, Cypher Queries, SSL Password stuff (self-signed not good)
 
 
 
-
 \section {External Packages}
+On the client-side, we used Component\footnote{http://github.com/component/component}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into 'components', modules which can be reused in multiple places. 
+
+We used serveral external client-side components:
+\begin{itemize}
+    \item \textbf{Backbone}\footnote{http://github.com/solutionio/backbone}: a minimal MVC library.
+    \item \textbf{ListJS}\footnote{http://github.com/cayasso/list}: a JavaScript library which makes HTML lists sortable, filterable and searchable.
+    \item \textbf{jQuery}\footnote{http://github.com/component/jquery}: a JavaScript library which adds many utilities including finding DOM elements by CSS-like selectors.
+    \item \textbf{jade-runtime}\footnote{http://github.com/monstercat/jade-runtime}: the component used to evaluate Jade\footnote{Jade Template Engine: http://jade-lang.com} templates.
+    \item \textbf{Underscore}\footnote{http://github.com/component/underscore}: a utility library used extensively with Backbone.
+    \item \textbf{Moment}\footnote{http://github.com/component/moment}: a JavaScript date library making tasks such as formatting easier.
+    \item \textbf{Reset}:\footnote{http://github.com/ianstormtaylor/reset}: a CSS reset component. 
+\end{itemize}
 
 \subsection{Common}
 \begin{itemize}
@@ -174,6 +204,11 @@ Nodes are connected by edges to define relationships like \textit{Friendship}, \
 \section {Conclusion}
 
 
+
+
+\newpage
+
+\theendnotes
 
 \end{document}
 

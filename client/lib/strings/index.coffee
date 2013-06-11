@@ -15,6 +15,10 @@ strings =
     en: 'Event Details'
   loginViewTitle:
     en: 'Login'
+  dateFormat:
+    en: 'dddd, MMMM Do'
+  dateTimeFormat:
+    en: 'dddd, MMMM Do [at] ha'
 
 exports.lang = (language) ->
   return this if @language is language

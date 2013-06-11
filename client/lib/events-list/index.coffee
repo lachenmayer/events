@@ -13,9 +13,9 @@ moment.lang 'en',
     lastDay  : "[#{Strings.yesterday}]"
     sameDay  : "[#{Strings.today}]"
     nextDay  : "[#{Strings.tomorrow}]"
-    lastWeek : 'dddd, MMMM Do'
-    nextWeek : 'dddd, MMMM Do'
-    sameElse : 'dddd, MMMM Do'
+    lastWeek : Strings.dateFormat
+    nextWeek : Strings.dateFormat
+    sameElse : Strings.dateFormat
 
 exports.EventsListView = Backbone.View.extend
 

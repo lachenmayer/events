@@ -8,7 +8,8 @@
     "component/underscore": "*",
     "component/moment": "*",
     "ianstormtaylor/reset": "*",
-    "lachenmayer/chrono": "*"
+    "lachenmayer/chrono": "*",
+    "raimohanska/bacon.js": "*"
   },
   "local": [
     "events-list",
@@ -26,6 +27,7 @@
     "lib"
   ],
   "styles": [
-    "css/main.styl"
+    "css/main.styl",
+    "css/forms.styl"
   ]
 }
