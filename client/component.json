@@ -27,6 +27,7 @@
     "lib"
   ],
   "styles": [
-    "css/main.styl"
+    "css/main.styl",
+    "css/forms.styl"
   ]
 }
