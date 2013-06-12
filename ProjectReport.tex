@@ -118,7 +118,10 @@ Trello\footnote{\url{http://trello.com}} is an organisational and management web
 \end{figure}
 In following the Agile development methodology of an iterative development, we used Trello to define new tasks during our group meetings. In doing this, we could effectively ensure that there was fair and consistent contribution from all members by assigning each task to somebody on Trello. This also allowed us all to keep track of where we were in the project, an maintain a consistent list of tasks we needed to do, minimizing the `what now?' time.
 
-\subsection {Version Control System}
+\subsection {Backup Systems}
+We used git as our version control system for the project, and hosted the repository privately on GitHub. Although git is a decentralised version control system, having the project hosted on GitHub, as well as the local clones we all had on our machines meant we had enough redundancy that if one of our copies was accidentally deleted it would have little effect on our project (we also all regularly committed our changes and pushed them upstream).
+
+What's more, we built the project so that it was very easy to get up-and-running on a server from a fresh clone of the repository. As we were using three servers (the front-end server, the back-end server and the database server) we wrote scripts which would start, stop and restart all the servers with one command. This also meant that if our VM server given to us by CSG were to fail, even though it was not backed up itself, we could very quickly get the servers up and running again.
 
 \section {System Description}
 
