@@ -88,10 +88,28 @@ verifyKey = (username, keyAPI, callback) ->
       validated = nodes[0].data.key == keyAPI && nodes[0].data.timestamp > moment().unix()
       callback null, validated
 
+# Subscribes to an event
+subscribeTo = (userId, nodeId, callback) ->
+  query = "START r=node({rootId}), u=node({userId}), n=node({eventId})
+           MATCH r-[:EVENT]->ev-->n
+           CREATE u-[:SUBSCRIBED_TO]->n"
+  console.log "query does not work"
+
+  db.query query, {rootId: database.rootNodeId, userId: userId, eventId: nodeId}, database.handle callback, ->
+    callback null, {success: true}
+
+# Unsubscribes from an event
+unsubscribeFrom = (userId, nodeId, callback) ->
+  query = "START r=node({rootId}), u=node({userId}), n=node({eventId})
+           MATCH r-[:EVENT]->()-->n, u-[s:SUBSCRIBED_TO]->n
+           DELETE s"
+  db.query query, {rootId: database.rootNodeId, userId: userId, eventId: nodeId}, database.handle callback, ->
+    callback null, {success: true}
+
 # Returns the list of events a given user has subscribed to
 getUserEvents = (id, callback) ->
   query = "START r=Node({rootId}), m=Node({myId})
-           MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|:SUBSCRIBED_TO]->event
+           MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|SUBSCRIBED_TO]->event
            RETURN event"
   db.query query, {rootId: database.rootNodeId, myId: id}, (err, events) ->
     database.returnValue err, events, ((data) -> database.returnListWithId (value.event for value in data)), callback
@@ -264,3 +282,5 @@ exports.send_invite        = send_invite
 exports.removeFromFriends  = removeFromFriends
 exports.followAPerson      = stalkAPerson
 exports.unfollowAPerson    = unfollowAPerson
+exports.subscribeTo        = subscribeTo
+exports.unsubscribeFrom    = unsubscribeFrom
