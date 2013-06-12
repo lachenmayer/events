@@ -11,6 +11,20 @@
 \usepackage{endnotes}
 \let\footnote=\endnote
 
+% To display two columns side-by-side.
+\newcommand{\twofigure}[4]{
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.35]{#1}
+    \caption{#2}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.35]{#3}
+    \caption{#4}
+\end{minipage}
+}
+
 \ifx\pdftexversion\undefined
 \usepackage[dvips]{graphicx}
 \else
@@ -107,29 +121,20 @@ Trello\footnote{\url{http://trello.com}} is an organisational and management web
 \end{figure}
 In following the Agile development methodology of an iterative development, we used Trello to define new tasks during our group meetings. In doing this, we could effectively ensure that there was fair and consistent contribution from all members by assigning each task to somebody on Trello. This also allowed us all to keep track of where we were in the project, an maintain a consistent list of tasks we needed to do, minimizing the `what now?' time.
 
-
 \subsection {Version Control System}
 
 \section {System Description}
-
-[Introduction]
-
-\subsection {Core Features}
 
 When a user first opens the app, they see a list of future events starting from today. The user can tap/click on any event to see further details about that event.
 
 The user can also browse a list of tags, and order them alphabetically, or by their popularity (how many events are categorised under each).
 
-\subsection {Social Features}
-\subsubsection {Tags}
-\subsubsection {Follower System}
-\subsubsection {Friends}
-\subsubsection {Groups}
-\subsection {Other Features}
-\subsubsection {Subscription}
-\subsubsection {Notifications}
 
-Email Blah
+\begin{figure}
+\twofigure{images/event-list.png}{The main event list.}{images/event-detail.png}{The details for a single event.}
+\\[2em]
+\twofigure{images/tag-list.png}{The list of tags a user can subscribe to.}{images/login.png}{The login screen.}
+\end{figure}
 
 \section {System Implementation}
 
@@ -196,11 +201,11 @@ The client-side heavily uses the MVVM (Model-View, View-Model) design pattern, w
 
 \section{External Packages}
 
-We used Node.js\footnote{\url{http://nodejs.org}} and CoffeeScript\footnote{\url{http://coffeescript.org}} on both the client and server sides.
+We used Node.js\footnote{\url{http://nodejs.org}} and CoffeeScript\footnote{\url{http://coffeescript.org}} on both the client and server sides. We also use nginx\footnote{\url{http://wiki.nginx.org/Main}} as the front-end server.
 
 On the client-side, we used Component\footnote{\url{http://github.com/component/component}}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into `components', modules which can be reused in multiple places. 
 
-We used serveral external client-side components:
+We used several external client-side components:
 \begin{itemize}
     \item \textbf{Backbone}\footnote{\url{http://github.com/solutionio/backbone}}: a minimal MVC library.
     \item \textbf{ListJS}\footnote{\url{http://github.com/cayasso/list}}: a JavaScript library which makes HTML lists sortable, filterable and searchable.
@@ -211,17 +216,20 @@ We used serveral external client-side components:
     \item \textbf{Reset}:\footnote{\url{http://github.com/ianstormtaylor/reset}}: a CSS reset component. 
 \end{itemize}
 
+On the back-end, we used the following Node.js modules:
+\begin{itemize}
+    \item \textbf{Express}:
+    \item \textbf{Cookie}:
+    \item \textbf{Cookie}:
+    \item \textbf{Cookie}:
+\end{itemize}
+
 \subsection{Backend}
 \begin{itemize}
 \item Neo4j
 	\subitem everything in package.json
 	\subitem more everything
 \end{itemize}
-\subsection{FrontEnd}
-\begin{itemize}
-	\item Nginx
-\end{itemize}
-
 \section {Conclusion}
 We feel that our project is a huge step in the right direction to improving discovery of events happening across the Imperial campuses. We have started to collate information from multiple college-related sources (both the Imperial and Union calendars) and in the future we could implement software to perform Natural-Language Processing on other sources of information such as society newsletters to try and pull even more data into our system.
 
