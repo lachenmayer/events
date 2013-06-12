@@ -189,7 +189,7 @@ These components are loaded on demand using a JavaScript module system called re
 
 \subsection {Back End}
 
-The backend is implemented with a Node.js server, allowing simple communciation and reusable code between backend and frontend. We split the project down into several categories, which we kept seperate from each other to minimize rigidity. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the ``plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
+The backend is implemented with a Node.js server, allowing simple communcation and reusable code between backend and frontend. We split the project down into several categories, which we kept separate from each other to minimize rigidity. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the ``plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
 
 \subsubsection {API}
 For the main API, we run express\footnote{\url{http://expressjs.com}}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
@@ -197,7 +197,7 @@ Swagger also provides an authentication callback, however we decided not to use 
 
 \subsubsection {Crawler}
 The crawler is used in order to synchronize out database with the information exposed by the already existing Imperial calendars which currently are the Union and the Imperial calendar.
-The Union calendar does not expose the data in a machine readible format, so it was necessary to scrape the events directly from the HTML that the website provides.
+The Union calendar does not expose the data in a machine readable format, so it was necessary to scrape the events directly from the HTML that the website provides.
 In order to extract the relevant information we used the \textit{cheerio} framework. This is a framework that allows to operate on the HTML DOM in a similar fashion like using jQuery in a browser.
 
 The events page from the Imperial homepage is syndicated via RSS. Using the node.js package \textit{feedparser} the fetched data was parsed into a JSON format. The JSON format was later converted into the relevant calendar format used by the Neo4j database.
