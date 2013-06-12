@@ -36,12 +36,12 @@ findEventTags = (eventNodeId, callback) ->
     database.returnValue err, tags, ((data) -> database.returnListWithId (tag.e for tag in data)), callback
 
 
-#findSubscribedTags = (user, callback) ->
-#  query = "START r=node({rootId}), e=node({eventId})
-#             MATCH r-[:TAG]->events-->e<-[:SUBSCRIBED_TO]-u<--users<-[:USERS]-r
-#             RETURN u"
-#  db.query query, {rootId: database.rootNodeId, eventId: eventId}, database.handle callback, (users) ->
-#  callback null, database.returnListWithId (n.u for n in users)
+findSubscribedTags = (user, callback) ->
+ query = "START r=node({rootId}), e=node({eventId})
+            MATCH r-[:TAG]->events-->e<-[:SUBSCRIBED_TO]-u<--users<-[:USERS]-r
+            RETURN u"
+ db.query query, {rootId: database.rootNodeId, eventId: eventId}, database.handle callback, (users) ->
+ callback null, database.returnListWithId (n.u for n in users)
 #  callback null, null
 
 getAllTags = (callback) ->

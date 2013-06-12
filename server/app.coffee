@@ -122,6 +122,7 @@ getAllEvents =
     errorResponses: [swagger.errors.notFound("events")]
     nickname: "getAllEvents"
   action: (req, res) ->
+    console.log "getAllEvents"
     eventData.getAllEvents returnJson(res, "events")
 
 postGroupEvent =
