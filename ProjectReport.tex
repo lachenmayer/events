@@ -153,6 +153,8 @@ We are using a popular JavaScript MVC-like library called Backbone. This library
 
 We are using a templating language called Jade, which uses significant whitespace to indicate nested tags, rather than opening/closing tags. This results in much smaller and more understandable HTML templates. Our CSS styles are written in a language called Stylus, which again uses significant whitespace, and allows nesting of style rules.
 
+The client-side architecture is based on the model-view-controller pattern. Backbone's naming conventions are slightly misleading. We found that the Backbone "View" class actually takes the place of a controller class in a standard MVC pattern: our Backbone "\textbf{V}iews" handle UI event actions, form validation, and keeping the model up to date. The "\textbf{v}iews" are actually the Jade templates, which generate the actual user-visible HTML 
+
 In parts of the UI we are using a library called Bacon.js, which is a ``functional reactive programming" library. Functional reactive programming represents UI events as ``event streams". These streams are collections that can be manipulated using functional methods such as map, filter, etc. This allows for reasoning about UI state as it evolves over time. We are using to validate the data in one of our forms, ensuring that only valid data can be sent to the backend. More ``traditional" programming methods would probably have been easier to implement, but we believe that this is an exciting technology. It brings the benefits of functional programming to UI code, which is usually error-prone and difficult to test.
 
 The front-end application is divided into logically separate components. Each view is a separate component, namely the events list, single event view, event creation view, login view and tag list view. Our data model is stored in the ``model" component. This contains definitions for the event and tag collections. In Backbone, each model is essentially just a definition of a server URL, which 
@@ -230,10 +232,6 @@ On the front-end, we used a client-side package manager called "component". Thou
 Another problem was initially that none of the team members had used the Neo4j database before. As such we had to learn its unique Cypher query language and try and work around any of the problems created by the queries, as it is very different from traditional SQL.
 
 Secondly the application must respect information that is private to the users. In order to make sure that the user's passwords are not sent in plain text across the internet we decided to use SSL when establishing the login connection. SSL certificates are not free, however, so we self-signed our certificates. This means that on first use, web browsers will show a warning screen. Buying an SSL certificate would have alleviated this problem.
-
-\subsection{Design Patterns}
-
-The client-side architecture is based on the model-view-controller pattern. Backbone's naming conventions are slightly misleading. We found that the Backbone "View" class actually takes the place of a controller class in a standard MVC pattern: our Backbone "\textbf{V}iews" handle UI event actions, form validation, and keeping the model up to date. The "\textbf{v}iews" are actually the Jade templates, which generate the actual user-visible HTML 
 
 \section {Legal Consideration}
 
