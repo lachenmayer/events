@@ -171,22 +171,20 @@ For the main API, we run express\footnote{\url{http://expressjs.com}}, a common 
 Swagger also provides an authentication callback, however we decided not to use this. We did this because the major limitation of its `validator' authentication callback is that it gets added to every HTTP request to authenticate it individually. We didn't want to do this, and instead split between HTTPS requests for logged in sessions, with user personalisation and extra permissions, and the public HTTP web application, which simply provides a simple way to view the upcoming calendar of public events. For authentication we used the Kerberos system, which ensured only college users could access the system.
 
 \subsubsection {Crawler}
-There are already a few events that the Imperial already displays on their calendars. However these are usually scattered across the Imperial website.
-The Union calendar is not exposed via any publicly-accessible API, so it was necessary to scrape the events directly from the website.
-In order to extract the relevant information we used the \textit{cheerio} framework. This is a framework that allows to operate on the HTML DOM in a similar fashion to the jQuery framework.
+The crawler is used in order to synchronize out database with the information exposed by the already existing Imperial calendars which currently are the Union and the Imperial calendar.
+The Union calendar does not expose the data in a machine readible format, so it was necessary to scrape the events directly from the HTML that the website provides.
+In order to extract the relevant information we used the \textit{cheerio} framework. This is a framework that allows to operate on the HTML DOM in a similar fashion like using jQuery in a browser.
 
-The events page on the Imperial homepage is syndicated via RSS. Using the node.js package \textit{feedparser} the fetched data was parsed into a JSON format. The JSON format was later converted into the relevant calendar format used by the Neo4j database.
+The events page from the Imperial homepage is syndicated via RSS. Using the node.js package \textit{feedparser} the fetched data was parsed into a JSON format. The JSON format was later converted into the relevant calendar format used by the Neo4j database.
 
 \subsubsection{Notifications}
 Email notifications are one of the services we provide for registered users. Each week, or other configured time, we collate the users subscriptions and send the upcoming events to them in an email. This is implemented via a connection to an SMTP server, a mining of the users subscribed events via a Cypher query, followed by a prettifying on the events and parsing into a HTML email via a templating engine.
 
 \subsubsection{iCal}
 
-In order to allow the users to view the events even outside of our website the events list can easily be exported into the iCal format. This is the standard format used to display calendar events and is currently supported by online websited such as Outlook and Gmail as well as multiple desktop applications.
+By using the VObject from the \textit{jsDAV} library the events are easily converted and returned using the iCal format. The file contains the list of all of the events the user has subscribed to. This is the standard format used to display calendar events and is supported by online websites such as Outlook and Gmail and many desktop applications.
 
-Given that each of these formats requires a publicly available URL the events server generate a random string for each user. This URL can then be used to receive a calendar of all events to which they subscribed. However the user can easily opt out from the URL as well as create a new one.
-
-This method allows a user to quickly synchronize with the events from the Imperial website and see them in any native applications that they use.
+The calendar application fetches the iCal file from the given URL. In order to make users calendars private the server creates a random URL for each user. Thus only users that know a given URL can subscribe to the event. However the user can easily opt out from the URL as well as create a new one.
 
 \subsubsection{Database}
 
@@ -198,8 +196,15 @@ The tables contain entries to relevant nodes (users, events, groups, etc.) that 
 Nodes are connected by edges to define relationships like \textit{Friendship}, \textit{Following}, \textit{Member\_Of}.
 
 \subsubsection{Problems or Limitations}
-	
-	Time, Cypher Queries, SSL Password stuff (self-signed not good)
+
+There are multiple problems to consider when designing an application as complex as this one.
+Initially we split into back and front-end however as it takes far more time to develop the front-end we had to stop developing the back-end even further in order to make the front-end as user friendly and as feature rich as possible.
+The agile development allowed us to make the group reorganize themselves faster. Otherwise most likely the back-end would end up being very robust but for the end user the application would seem very simple.
+
+Another problem is that no one from the team has used the Neo4j database before. As such we had to learn the cypher query language and work around any of the problems created by the queries as we did not have enough time to see the complete functionality of the language.
+
+Secondly the application must respect information that is private to the users. In order to make sure that the user's passwords are not sent in plain text across the internet we decided to use SSL when establishing the login connection.
+The downfall is that the SSL certificate is self-signed which makes the browsers very hesitant to accept it.
 
 \subsection{Design Patterns}
 
@@ -245,10 +250,13 @@ We used several external client-side components:
 
 On the back-end, we used the following Node.js modules:
 \begin{itemize}
-    \item \textbf{Express}:
+    \item \textbf{Express}: a library that creates a RESTful Http server
+    \item \textbf{Swagger}: a library that creates an easy RESTful API
     \item \textbf{Cookie}:
-    \item \textbf{Cookie}:
-    \item \textbf{Cookie}:
+    \item \textbf{jsDAV}\footnote{https://github.com/mikedeboer/jsDAV}: library that provides iCal support for node
+    \item \textbf{node-feedparser}\footnote{https://github.com/danmactough/node-feedparser}: RSS parser for node
+    \item \textbf{cheerio}\footnote{https://github.com/MatthewMueller/cheerio}: DOM parser for node
+    \item \textbf{node-krb5}\footnote{https://github.com/qesuto/node-krb5}: kerberos authentication library
 \end{itemize}
 
 \subsection{Back End}
