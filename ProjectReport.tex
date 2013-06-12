@@ -45,16 +45,16 @@ To achieve this, we identified three main requirements for the design of the app
 
     \item \textbf{Relevant} \\[0.5em] There are many different kinds of events happening on campus. Many of these are interesting to only a small subset of the college population. Users should be able to focus on events that are relevant to their interests.
 
-    \item \textbf{Up to date} \\[0.5em] Advertising events on campus should be as easy as entering the event details once. Users should be able to stay up to date on the latest events without any effort.
+    \item \textbf{Up-to-date} \\[0.5em] Advertising events on campus should be as easy as entering the event details once. Users should be able to stay up to date on the latest events without any effort.
 
 \end{itemize}
 
 We wanted to make the user interaction with the system as smooth as possible. To that end, we identified the following priorities:
 
 \begin{itemize}
-\item Authenticate with the college systems - no need to register a separate account. We consider this incredibly important because to attract a userbase from nothing we need to minimise the amount of interaction the user would need to do with the app to recieve useful information.
+\item Authenticate with the college systems: no need to register a separate account. We consider this incredibly important because to attract a userbase from nothing we need to minimise the amount of interaction the user would need to do with the app to recieve useful information.
 
-\item Provide automatic access to \textit{at least} the feeds that are already provided, such as the Imperial College Union `Whats On' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
+\item Provide automatic access to \textit{at least} the feeds that are already provided, such as the Imperial College Union `What's On' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
 
 \item Provide user interactivity to provide information into the system. While the website as-is is intended to be a strong information source, the hope is that it provides an easier way to advertise events to members of the college, and that it could be a preferred platform for contacting people and cause a snowball effect in userbase increase. This requires that there are mechanisms available to add events.
 \end{itemize}
@@ -67,7 +67,7 @@ The first stage of our project was defining our target user(s). We decided on li
 Harry is an undergraduate at Imperial College. He is a member of a few societies, but does not hold any executive committee positions. He likes going to events organised by the societies he is a member of, and other Union-organised events. He loves free stuff, especially free food, but usually finds out about events that give away free stuff far too late. He has a lot of friends that are really involved in societies, and is often invited to events by them through Facebook and society email lists. He is looking for an internship this summer. He was in halls in first year and knows a lot of people from there that he rarely sees anymore.
 
 \subsubsection{Postgraduate}
-Adam is currently doing his PhD in bio-chemistry. He attends many evening lectures relating to research topics that he is interested in. He is also a fan of classical music and likes to attend lunchtime concerts.
+Adam is currently doing his PhD in bio-chemistry. He attends many evening lectures relating to research topics that he is interested in. He is also a fan of classical music and likes to attend lunchtime concerts. He is an avid snowboarder and surfer and regularly goes to snow domes with the ski society and week-long trips with the surfing society. He has recently become interested in starting a company, and goes to business school events to meet fellow entrepreneurs. He is not particularly interested in any Union events.
 
 \subsubsection{Members of College Faculty}
 \subsubsection{Event Organisers}
@@ -117,6 +117,8 @@ In following the Agile development methodology of an iterative development, we u
 \subsection {Core Features}
 
 When a user first opens the app, they see a list of future events starting from today. The user can tap/click on any event to see further details about that event.
+
+The user can also browse a list of tags, and order them alphabetically, or by their popularity (how many events are categorised under each).
 
 \subsection {Social Features}
 \subsubsection {Tags}
@@ -198,20 +200,32 @@ Nodes are connected by edges to define relationships like \textit{Friendship}, \
 	
 	Time, Cypher Queries, SSL Password stuff (self-signed not good)
 
-\section{External Packages}
+\subsection{Design Patterns}
 
-On the client-side, we used Component\footnote{http://github.com/component/component}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into `components', modules which can be reused in multiple places. 
-	HTMLParser blah
-\subsubsection {Notifications}
-\subsubsection {ICAL}
-\subsubsection {Database stuff}
-	Arrangement of DB RootNode, SubRootNode, graph edges etc
-\subsubsection {Problems or Limitations}
+The client-side heavily uses the MVVM (Model-View, View-Model) design pattern, which is closely related to the MVC pattern, except controllers aren't used. Views and models are separate and the communication between the two is handled by the views.
+
+\subsection {Problems or Limitations}
 	Time, Cypher Queries, SSL Password stuff (self-signed not good)
 
-\section {External Packages}
+
+\section {Legal Consideration}
+
+For this project we've used sources from a wide variety of places. We've mostly been using the `npm' package manager for getting Node.js packages. In these packages, the default licence agreement is MIT, and we've checked this in each of the packages we've used. As such, there would be no major barriers to commecialising the product on that front.
+
+On the legal issues for data use, we are using information crawled from  Imperial College and Imperial College Union. Under Section 6 Part 2 of the College Data protection policy, it is required that personal data obtained and processed for a specific purpose must be only that which is sufficient to achieve that purpose, and held until that purpose is achieved, and must be obtained and processed `fairly'. It must be adequatly protected, and if transferred to a country outside the EEA, must be ensured that that country can provide equivalent levels of protection. This information must also be registered using the departments central system.
+
+\section {Conclusion}
+We feel that our project is a huge step in the right direction to improving discovery of events happening across the Imperial campuses. We have started to collate information from multiple college-related sources (both the Imperial and Union calendars) and in the future we could implement software to perform Natural-Language Processing on other sources of information such as society newsletters to try and pull even more data into our system.
+
+We have learned a lot of new technologies by undertaking this project, which has been a valuable experience, especially since they are very relevant in industry right now. However, if we were to do the project again, we'd think about using some more established projects in certain places, as the immaturity and instability of some of the newer libraries we used cost us a lot of time in trying to fix or work around small bugs.
+
+
+\newpage
+\section {Appendix}
+
+
+\subsection {External Packages}
 On the client-side, we used Component\footnote{http://github.com/component/component}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into 'components', modules which can be reused in multiple places. 
->>>>>>> Stashed changes
 
 We used serveral external client-side components:
 \begin{itemize}
@@ -224,33 +238,8 @@ We used serveral external client-side components:
     \item \textbf{Reset}:\footnote{http://github.com/ianstormtaylor/reset}: a CSS reset component. 
 \end{itemize}
 
-\subsection{Common}
-\begin{itemize}
-\item Node
-\item Coffeescript
-\end{itemize}
-
-\subsection{Backend}
-\begin{itemize}
-\item Neo4j
-	\subitem everything in package.json
-	\subitem more everything
-\end{itemize}
-\subsection{FrontEnd}
-\begin{itemize}
-	\item Nginx
-\end{itemize}
-
-\section {Legal Consideration}
-
-\section {Conclusion}
-
-
-
-
-\newpage
-
 \theendnotes
+
 
 \end{document}
 
