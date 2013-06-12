@@ -66,11 +66,11 @@ To achieve this, we identified three main requirements for the design of the app
 We wanted to make the user interaction with the system as smooth as possible. To that end, we identified the following priorities:
 
 \begin{itemize}
-\item Authenticate with the college systems: no need to register a separate account. We consider this incredibly important because to attract a userbase from nothing we need to minimise the amount of interaction the user would need to do with the app to recieve useful information.
+\item Authenticate with the college systems: no need to register a separate account. We consider this incredibly important because to attract a user base from nothing we need to make the barrier to entry as low as possible.
 
-\item Provide automatic access to \textit{at least} the feeds that are already provided, such as the Imperial College Union `What's On' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
+\item Provide automatic access to \textit{at least} the feeds that we already have access to, such as the Imperial College Union `What's On' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
 
-\item Provide user interactivity to provide information into the system. While the website as-is is intended to be a strong information source, the hope is that it provides an easier way to advertise events to members of the college, and that it could be a preferred platform for contacting people and cause a snowball effect in userbase increase. This requires that there are mechanisms available to add events.
+\item Allow users to add events. While the website is intended to be a good source of information, the hope is that it could become the preferred platform for organising events by Imperial students and committees.
 \end{itemize}
 
 \subsection {Target Audience}
@@ -146,7 +146,7 @@ We chose to develop our application using CoffeeScript, a programming language w
 \subsection {Front End}
 
 Our application relies heavily on client-side JavaScript running in the browser to display the various views, using data loaded from the server via its REST interface.
-We are using a popular JavaScript MVC library called Backbone. This library provides us with ``hassle-free" model synchronisation with the server and useful ways of dealing with UI changes in our view code. It is a small library, and leaves a lot of freedom for implementation details. For example, it doesn't prescribe any particular HTML templating engine.
+We are using a popular JavaScript MVC-like library called Backbone. This library provides us with ``hassle-free" model synchronisation with the server and useful ways of dealing with UI changes in our view code. It is a small library, and leaves a lot of freedom for implementation details. For example, it doesn't prescribe any particular HTML templating engine.
 
 We are using a templating language called Jade, which uses significant whitespace to indicate nested tags, rather than opening/closing tags. This results in much smaller and more understandable HTML templates. Our CSS styles are written in a language called Stylus, which again uses significant whitespace, and allows nesting of style rules.
 
