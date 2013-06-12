@@ -11,6 +11,20 @@
 \usepackage{endnotes}
 \let\footnote=\endnote
 
+% To display two columns side-by-side.
+\newcommand{\twofigure}[4]{
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.35]{#1}
+    \caption{#2}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.35]{#3}
+    \caption{#4}
+\end{minipage}
+}
+
 \ifx\pdftexversion\undefined
 \usepackage[dvips]{graphicx}
 \else
@@ -20,7 +34,7 @@
 
 \begin{document}
 
-\title{WebApps Group Project - Integrated Event Management and Discovery System for members of Imperial College London}
+\title{Web Apps Project Report}
 
 \author{Harry Lachenmayer, Artur Spychaj, Alex Rozanski and Thomas Rooney}
 
@@ -52,11 +66,11 @@ To achieve this, we identified three main requirements for the design of the app
 We wanted to make the user interaction with the system as smooth as possible. To that end, we identified the following priorities:
 
 \begin{itemize}
-\item Authenticate with the college systems: no need to register a separate account. We consider this incredibly important because to attract a userbase from nothing we need to minimise the amount of interaction the user would need to do with the app to recieve useful information.
+\item Authenticate with the college systems: no need to register a separate account. We consider this incredibly important because to attract a user base from nothing we need to make the barrier to entry as low as possible.
 
-\item Provide automatic access to \textit{at least} the feeds that are already provided, such as the Imperial College Union `What's On' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
+\item Provide automatic access to \textit{at least} the feeds that we already have access to, such as the Imperial College Union `What's On' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
 
-\item Provide user interactivity to provide information into the system. While the website as-is is intended to be a strong information source, the hope is that it provides an easier way to advertise events to members of the college, and that it could be a preferred platform for contacting people and cause a snowball effect in userbase increase. This requires that there are mechanisms available to add events.
+\item Allow users to add events. While the website is intended to be a good source of information, the hope is that it could become the preferred platform for organising events by Imperial students and committees.
 \end{itemize}
 
 \subsection {Target Audience}
@@ -88,9 +102,6 @@ Still before we'd even written a single line of code, we designed the user inter
 
 At this point, we decided on which technologies to use to build our project with for both the front-end and back-ends. We then started to implement features and iterated on them until we were happy with the result. Although we split ourselves into two teams (for the front-end and back-end), we made sure to constantly integrate both parts to find and fix issues as early as possible during the development process.
 
-\subsubsection {Ethical and Legal Considerations}
-	Security, passwords etc
-
 \subsection {Collaborative Tools}
 \subsubsection {GitHub Wiki}
 We used the GitHub Wiki as a place to document areas of the project as we implemented them. For example, both the client-side and server-side teams each documented the process involved in setting up their respective system, so that other group could always run the entire system to test the part they were working on with the other components.
@@ -102,34 +113,28 @@ Trello\footnote{\url{http://trello.com}} is an organisational and management web
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.35]{trello.png}
+\includegraphics[scale=0.35]{images/trello.png}
 \caption{\label{fig:trello} Trello - Collaborative Organizational Tool}
 \end{figure}
 In following the Agile development methodology of an iterative development, we used Trello to define new tasks during our group meetings. In doing this, we could effectively ensure that there was fair and consistent contribution from all members by assigning each task to somebody on Trello. This also allowed us all to keep track of where we were in the project, an maintain a consistent list of tasks we needed to do, minimizing the `what now?' time.
 
+\subsection {Backup Systems}
+We used git as our version control system for the project, and hosted the repository privately on GitHub. Although git is a decentralised version control system, having the project hosted on GitHub, as well as the local clones we all had on our machines meant we had enough redundancy that if one of our copies was accidentally deleted it would have little effect on our project (we also all regularly committed our changes and pushed them upstream).
 
-\subsection {Version Control System}
+What's more, we built the project so that it was very easy to get up-and-running on a server from a fresh clone of the repository. As we were using three servers (the front-end server, the back-end server and the database server) we wrote scripts which would start, stop and restart all the servers with one command. This also meant that if our VM server given to us by CSG were to fail, even though it was not backed up itself, we could very quickly get the servers up and running again.
 
 \section {System Description}
-
-[Introduction]
-
-\subsection {Core Features}
 
 When a user first opens the app, they see a list of future events starting from today. The user can tap/click on any event to see further details about that event.
 
 The user can also browse a list of tags, and order them alphabetically, or by their popularity (how many events are categorised under each).
 
-\subsection {Social Features}
-\subsubsection {Tags}
-\subsubsection {Follower System}
-\subsubsection {Friends}
-\subsubsection {Groups}
-\subsection {Other Features}
-\subsubsection {Subscription}
-\subsubsection {Notifications}
 
-Email Blah
+\begin{figure}
+\twofigure{images/event-list.png}{The main event list.}{images/event-detail.png}{The details for a single event.}
+\\[2em]
+\twofigure{images/tag-list.png}{The list of tags a user can subscribe to.}{images/login.png}{The login screen.}
+\end{figure}
 
 \section {System Implementation}
 
@@ -141,7 +146,7 @@ We chose to develop our application using CoffeeScript, a programming language w
 \subsection {Front End}
 
 Our application relies heavily on client-side JavaScript running in the browser to display the various views, using data loaded from the server via its REST interface.
-We are using a popular JavaScript MVC library called Backbone. This library provides us with ``hassle-free" model synchronisation with the server and useful ways of dealing with UI changes in our view code. It is a small library, and leaves a lot of freedom for implementation details. For example, it doesn't prescribe any particular HTML templating engine.
+We are using a popular JavaScript MVC-like library called Backbone. This library provides us with ``hassle-free" model synchronisation with the server and useful ways of dealing with UI changes in our view code. It is a small library, and leaves a lot of freedom for implementation details. For example, it doesn't prescribe any particular HTML templating engine.
 
 We are using a templating language called Jade, which uses significant whitespace to indicate nested tags, rather than opening/closing tags. This results in much smaller and more understandable HTML templates. Our CSS styles are written in a language called Stylus, which again uses significant whitespace, and allows nesting of style rules.
 
@@ -152,21 +157,17 @@ In parts of the UI we are using a library called Bacon.js, which is a ``function
 \begin{figure}[H]
 \centering
 \fbox{
-\includegraphics[scale=0.25]{WebAppsBackendSystemDiagram.png}
+\includegraphics[scale=0.25]{./images/WebAppsBackendSystemDiagram.png}
 }
-\caption{\label{fig:trello} Backend System Design}
+\caption{\label{fig:backend-diagram} Backend System Design}
 \end{figure}
-
-Routing, Models, Templates front end, REST
-
-
 
 \subsection {Back End}
 
 The backend is implemented with a Node.js server, allowing simple communciation and reusable code between backend and frontend. We split the project down into several categories, which we kept seperate from each other to minimize rigidity. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the ``plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
 
 \subsubsection {API}
-For the main API, we run express\footnote{http://expressjs.com}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
+For the main API, we run express\footnote{\url{http://expressjs.com}}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
 Swagger also provides an authentication callback, however we decided not to use this. We did this because the major limitation of its `validator' authentication callback is that it gets added to every HTTP request to authenticate it individually. We didn't want to do this, and instead split between HTTPS requests for logged in sessions, with user personalisation and extra permissions, and the public HTTP web application, which simply provides a simple way to view the upcoming calendar of public events. For authentication we used the Kerberos system, which ensured only college users could access the system.
 
 \subsubsection {Crawler}
@@ -225,18 +226,38 @@ We have learned a lot of new technologies by undertaking this project, which has
 
 
 \subsection {External Packages}
+We used Node.js\footnote{\url{http://nodejs.org}} and CoffeeScript\footnote{\url{http://coffeescript.org}} on both the client and server sides. We also use nginx\footnote{\url{http://wiki.nginx.org/Main}} as the front-end server.
+
 On the client-side, we used Component\footnote{http://github.com/component/component}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into 'components', modules which can be reused in multiple places. 
 
-We used serveral external client-side components:
+On the client-side, we used Component\footnote{\url{http://github.com/component/component}}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into `components', modules which can be reused in multiple places. 
+
+We used several external client-side components:
 \begin{itemize}
-    \item \textbf{Backbone}\footnote{http://github.com/solutionio/backbone}: a minimal MVC library.
-    \item \textbf{ListJS}\footnote{http://github.com/cayasso/list}: a JavaScript library which makes HTML lists sortable, filterable and searchable.
-    \item \textbf{jQuery}\footnote{http://github.com/component/jquery}: a JavaScript library which adds many utilities including finding DOM elements by CSS-like selectors.
-    \item \textbf{jade-runtime}\footnote{http://github.com/monstercat/jade-runtime}: the component used to evaluate Jade\footnote{Jade Template Engine: http://jade-lang.com} templates.
-    \item \textbf{Underscore}\footnote{http://github.com/component/underscore}: a utility library used extensively with Backbone.
-    \item \textbf{Moment}\footnote{http://github.com/component/moment}: a JavaScript date library making tasks such as formatting easier.
-    \item \textbf{Reset}:\footnote{http://github.com/ianstormtaylor/reset}: a CSS reset component. 
+    \item \textbf{Backbone}\footnote{\url{http://github.com/solutionio/backbone}}: a minimal MVC library.
+    \item \textbf{ListJS}\footnote{\url{http://github.com/cayasso/list}}: a JavaScript library which makes HTML lists sortable, filterable and searchable.
+    \item \textbf{jQuery}\footnote{\url{http://github.com/component/jquery}}: a JavaScript library which adds many utilities including finding DOM elements by CSS-like selectors.
+    \item \textbf{jade-runtime}\footnote{\url{http://github.com/monstercat/jade-runtime}}: the component used to evaluate Jade\footnote{Jade Template Engine: \url{http://jade-lang.com}} templates.
+    \item \textbf{Underscore}\footnote{\url{http://github.com/component/underscore}}: a utility library used extensively with Backbone.
+    \item \textbf{Moment}\footnote{\url{http://github.com/component/moment}}: a JavaScript date library making tasks such as formatting easier.
+    \item \textbf{Reset}:\footnote{\url{http://github.com/ianstormtaylor/reset}}: a CSS reset component. 
 \end{itemize}
+
+On the back-end, we used the following Node.js modules:
+\begin{itemize}
+    \item \textbf{Express}:
+    \item \textbf{Cookie}:
+    \item \textbf{Cookie}:
+    \item \textbf{Cookie}:
+\end{itemize}
+
+\subsection{Back End}
+\begin{itemize}
+\item Neo4j
+	\subitem everything in package.json
+	\subitem more everything
+\end{itemize}
+\newpage
 
 \theendnotes
 
