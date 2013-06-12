@@ -90,7 +90,7 @@ Lizzy is really involved in Union activities. She writes for Felix, and is the p
 
 \subsection {Group Structure}
 
-We split our group into two teams: one consisting of Alex and Harry, who worked on the client side, and the other consisting of Tom and Artur, who worked on the server-side implementation. Artur additionally implemented a scraper at the beginning of the project which collected event information from the Union calendar.
+We split our group into two teams: one consisting of Alex and Harry, who worked on the client side, and the other consisting of Tom and Artur, who worked on the server-side implementation. As discussed below, we adhered to Agile development practices, whilst operating as a leaderless group. We found this process happened naturally, with all of us been able to contribute and integrate our various ideas into a single product. We believe that working in this manner was made possible by knowing each other and our differing skills well, and removed the overhead that having a formal group leader or facilitator role can add.
 
 \subsection {Design Processes}
 
@@ -178,7 +178,7 @@ In order to extract the relevant information we used the \textit{cheerio} framew
 The events page on the Imperial homepage is syndicated via RSS. Using the node.js package \textit{feedparser} the fetched data was parsed into a JSON format. The JSON format was later converted into the relevant calendar format used by the Neo4j database.
 
 \subsubsection{Notifications}
-Email notifications are one of the services we provide for registered users. Each week, or other configured time, we collate the users subscriptions and send the upcoming events to them in an email. This is implemented via a connection to an SMTP server, a mining of the users subscribed events via a Cypher query, followed by a prettifying on the events and parsing into a HTML email via a templating engine.
+Email notifications are one of the 
 
 \subsubsection{iCal}
 
