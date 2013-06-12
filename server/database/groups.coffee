@@ -111,4 +111,5 @@ exports.getGroupById    = getGroupById
 exports.getGroupEvents  = getGroupEvents
 exports.leaveGroup      = leaveGroup
 exports.removeFromGroup = removeFromGroup
-
+exports.deleteGroup     = deleteGroup
+exports.joinGroup       = joinGroup

@@ -46,6 +46,7 @@ handleWithError = (callback, errorMessage, handlerWithNoErrors) -> (err, data) -
 # If an error occurs then propagates the error
 # Otherwise maps the result using the f function
 returnValue = (err, data, f, callback) ->
+  console.log "Returning data", data
   handler(callback, (data) -> callback null, f data)(err, data)
 
 getRootNode = (callback) ->
@@ -59,7 +60,7 @@ getTableNodeById = (tableName, nodeId, callback) ->
   
   db.query query, {rootId: ROOT_NODE_ID, nodeId: nodeId}, (err, results) ->
     if err
-      console.log "Could not find node with id #{nodeId} inside of the table #{tableName}: #{err}"
+      console.log "Could not find node with id #{nodeId} inside of the table #{tableName}", err
       callback err, null
     else if (results.length == 0)
       console.log "Could not find node with id #{nodeId} inside of the table #{tableName}"

@@ -37,6 +37,7 @@ swagger.addModels swaggerModels
 
 returnJson = (res, field) -> (err, value) ->
   if err
+    console.log err
     res.status(404).send "404: invalid data. Cannot return #{field}"
   else
     value = {} unless value?
@@ -45,9 +46,10 @@ returnJson = (res, field) -> (err, value) ->
 # TODO: get the logged in user id
 # If cannot log on should throw an error
 getLoggedInUser = (callback) -> (req, res) ->
-  userId = 15469
+  userId = 23064
   userData.getUserById userId, (err, user) ->
     if err
+      res.status(404).send "404: invalid data. Cannot return"
       res.redirect LOGIN_URL
     else
       callback req, res, { id: userId, username: user.username }
@@ -307,6 +309,134 @@ getAllTags =
   action: (req, res) ->
     tagData.getAllTags returnJson(res, "tags")
 
+createNewGroup =
+  spec:
+    description: "Ceates a new group"
+    path: "/groups/new"
+    notes: ""
+    method: "POST"
+    params: []
+    responseClass: "integer"
+    errorResponses: [swagger.errors.invalid("group")]
+    nickname: "createNewGroup"
+  action: getLoggedInUser (req, res, user) ->
+    data =
+      value: "value"
+    groups.createGroup user.id, data, returnJson(res, "group")
+
+deleteGroup =
+  spec:
+    description: "Deletes an existing group"
+    path: "/groups/{id}"
+    notes: ""
+    method: "DELETE"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("id")]
+    nickname: "deleteGroup"
+  action: getLoggedInUser (req, res) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+
+    # TODO: authorize the user
+    groups.deleteGroup id, returnJson(res, "id")
+
+joinGroup =
+  spec:
+    description: "Subscribes to a group"
+    path: "/groups/{id}/join"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: []
+    nickname: "joinGroup"
+  action: getLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+
+    # TODO: authorize the user
+    groups.joinGroup user.id, id, returnJson(res, "id")
+
+leaveGroup =
+  spec:
+    description: "Leaves a group"
+    path: "/groups/{id}/leave"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: []
+    nickname: "leaveGroup"
+  action: getLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+    # TODO: authorize the user
+    groups.leaveGroup user.id, id, returnJson(res, "id")
+
+removeFromGroup =
+  spec:
+    description: "removes a member of the group"
+    path: "/groups/{id}/remove"
+    notes: ""
+    method: "POST"
+    params: []
+    responseClass: "string"
+    errorResponses: []
+    nickname: "removeFromGroup"
+  action: getLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless (req.params.id and req.body.userId)
+    groupId = parseInt req.params.id
+
+    removeUserId = parseInt req.body.userId
+
+    groups.removeFromGroup user.id, removeUserId, groupId, returnJson(res, "id")
+
+getSubscribedEvents =
+  spec:
+    description: "Returns the list of subscribed to events"
+    path: "/user/subscribed"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: []
+    nickname: "getSubscribedEvents"
+  action: getLoggedInUser (req, res, user) ->
+    console.log "logged in"
+    userData.getUserEvents user.id, returnJson(res, "events")
+
+subscribeToEvent =
+  spec:
+    description: "Subscribes to an event"
+    path: "/event.json/{id}/subscribe"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("id")]
+    nickname: "subscribeToEvent"
+  action: getLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+
+    userData.subscribeTo user.id, id, returnJson(res, "success")
+
+unsubscribeFromEvent =
+  spec:
+    description: "Unsubscribes from an event"
+    path: "/event.json/{id}/unsubscribe"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("id")]
+    nickname: "unsubscribeFromEvent"
+  action: getLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+
+    userData.unsubscribeFrom user.id, id, returnJson(res, "success")
 
 swagger.addPost userLogin
 swagger.addGet getUserByUsername
@@ -321,6 +451,14 @@ swagger.addGet getICalURL
 swagger.addGet createICalURL
 swagger.addDelete deleteICalURL
 swagger.addGet getICal
+swagger.addPost removeFromGroup
+swagger.addGet leaveGroup
+swagger.addGet joinGroup
+swagger.addDelete deleteGroup
+swagger.addPost createNewGroup
+swagger.addGet getSubscribedEvents
+swagger.addGet subscribeToEvent
+swagger.addGet unsubscribeFromEvent
 swagger.configure "http://superawesome.swagger.imperialEvents.com", "0.1"
 
 httpapp  = app
