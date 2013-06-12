@@ -16,7 +16,7 @@
     "jade": "*",
     "nconf": "*",
     "pkginfo": "*",
-    "underscore": "*",
+    "underscore": "~1.4.4",
     "underscore.string": "*",
     "component": "~0.16.0",
     "cheerio": "~0.11.0",

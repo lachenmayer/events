@@ -1,6 +1,8 @@
 database = require './database'
 moment   = require 'moment'
 async    = require 'async'
+tags     = require './tags'
+_        = require 'underscore'
 db = database.db
 
 getNodeById = (id, callback) ->
@@ -18,9 +20,11 @@ getOrganizedEvents = (ownerId, callback) ->
     database.returnValue err, events, ((data) -> database.returnListWithId (event.e for event in data)), callback
 
 returnEvents = (query, nodeId, callback) ->
+  console.log "RunningQuery"
   db.query query, {nodeId: parseInt(nodeId)}, database.handle callback, (events) ->
-    console.log "Here"
+    console.log "Here"  
     callback null, database.returnListWithId (event.e for event in events)
+
 
 # Returns the list of events a given node is subscribed to
 getSubscribedEvents = (nodeId, callback) ->
@@ -89,8 +93,11 @@ getAllEvents = (callback) ->
            WHERE e.date > {from}
            RETURN e
            ORDER BY e.date"
-  fromTime = moment().startOf('day').unix()
+  fromTime = moment().startOf('day').unix()  
   db.query query, {rootId: database.rootNodeId, from: fromTime}, database.handle callback, (events) ->
+    tags = []
+    for key,val in events
+      tags += tags.key.e
     callback null, database.returnListWithId (e.e for e in events)
 
 getEventsInRange = (query, handler) ->
