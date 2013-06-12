@@ -32,29 +32,29 @@
 
 Our web app is a tool to help Imperial students find out about events happening on campus.
 
-Most people currently find out about events on campus through noticeboards and mailing lists. The problem with these is that there is no easy, centralised way of finding out what is happening on campus. A big problem with the noticeboards is that a lot of the posters are outdated, and often irrelevant. It is also difficult to find out which mailing lists to subscribe to to find interesting events. Additionally, the Imperial College home page and the Union website have event calendars. An 'Imperial Mobile' application exists, which pulls data from the Imperial and Union sites, but we found that very few people use this, as it is complicated and slow.
+Most people currently find out about events on campus through noticeboards and mailing lists. The problem with these is that there is no easy, centralised way of finding out what is happening on campus. A big problem with the noticeboards is that a lot of the posters are outdated, and often irrelevant. It is also difficult to find out which mailing lists to subscribe to to find interesting events. Additionally, the Imperial College home page and the Union website have event calendars. An `Imperial Mobile' application exists, which pulls data from the Imperial and Union sites, but we found that very few people use this, as it is complicated and slow.
 
 \subsection{Requirements}
 
-Our main aim is to bring all these disparate sources together and make a simple, 'one-stop' solution to find interesting events.
+Our main aim is to bring all these disparate sources together and make a simple, `one-stop' solution to find interesting events.
 
 To achieve this, we identified three main requirements for the design of the app. The app should be:
 
 \begin{itemize}
-\item Simple \\ Users should immediately see relevant and interesting events. There should be no barrier of entry, such as registering or logging in, for most activities in the app.
+    \item \textbf{Simple} \\[0.5em] Users should immediately see relevant and interesting events. There should be no barrier of entry, such as registering or logging in, for most activities in the app.
 
-\item Relevant \\ There are many different kinds of events happening on campus. Many of these are interesting to only a small subset of the college population. Users should be able to focus on events that are relevant to their interests.
+    \item \textbf{Relevant} \\[0.5em] There are many different kinds of events happening on campus. Many of these are interesting to only a small subset of the college population. Users should be able to focus on events that are relevant to their interests.
 
-\item Up to date \\ Advertising events on campus should be as easy as entering the event details once. Users should be able to stay up to date on the latest events without any effort.
+    \item \textbf{Up-to-date} \\[0.5em] Advertising events on campus should be as easy as entering the event details once. Users should be able to stay up to date on the latest events without any effort.
 
 \end{itemize}
 
 We wanted to make the user interaction with the system as smooth as possible. To that end, we identified the following priorities:
 
 \begin{itemize}
-\item Authenticate with the college systems - no need to register a separate account. We consider this incredibly important because to attract a userbase from nothing we need to minimise the amount of interaction the user would need to do with the app to recieve useful information.
+\item Authenticate with the college systems: no need to register a separate account. We consider this incredibly important because to attract a userbase from nothing we need to minimise the amount of interaction the user would need to do with the app to recieve useful information.
 
-\item Provide automatic access to \textit{at least} the feeds that are already provided, such as the Imperial College Union \`Whats On\' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
+\item Provide automatic access to \textit{at least} the feeds that are already provided, such as the Imperial College Union `What's On' calendar. We wanted to provide value without user interaction, so that it can be used immediately as an information source.
 
 \item Provide user interactivity to provide information into the system. While the website as-is is intended to be a strong information source, the hope is that it provides an easier way to advertise events to members of the college, and that it could be a preferred platform for contacting people and cause a snowball effect in userbase increase. This requires that there are mechanisms available to add events.
 \end{itemize}
@@ -72,7 +72,6 @@ Adam is currently doing his PhD in bio-chemistry. He attends many evening lectur
 \subsubsection{Members of College Faculty}
 \subsubsection{Event Organisers}
 Lizzy is really involved in Union activities. She writes for Felix, and is the president of a mid-sized society. She is also the social secretary of another large society. She uses Facebook to invite people to nights out organised by these societies, and regularly uses the society email lists to announce society meetings and smaller events. She currently uses Google Docs spreadsheets to manage attendance to these smaller events.
-a
 \section {Project Management}
 
 \subsection {Group Structure}
@@ -91,7 +90,7 @@ At this point, we decided on which technologies to use to build our project with
 
 \subsubsection {Ethical impact}
 Security, passwords etc
-aa
+
 \subsection {Collaborative Tools}
 \subsubsection {GitHub Wiki}
 We used the GitHub Wiki as a place to document areas of the project as we implemented them. For example, both the client-side and server-side teams each documented the process involved in setting up their respective system, so that other group could always run the entire system to test the part they were working on with the other components.
@@ -110,7 +109,7 @@ In following the Agile development methodology of an iterative development, we u
 
 
 \subsection {Version Control System}
-a
+
 \section {System Description}
 
 [Introduction]
@@ -118,6 +117,8 @@ a
 \subsection {Core Features}
 
 When a user first opens the app, they see a list of future events starting from today. The user can tap/click on any event to see further details about that event.
+
+The user can also browse a list of tags, and order them alphabetically, or by their popularity (how many events are categorised under each).
 
 \subsection {Social Features}
 \subsubsection {Tags}
@@ -132,7 +133,7 @@ Email Blah
 
 \section {System Implementation}
 
-In this project we wanted to experiment with some new technologies which are only recently becoming widely used. We focus here on our implementation choices and some ofthe reasoning behind these choices.
+In this project we wanted to experiment with some new technologies which are only recently becoming widely used. We focus here on our implementation choices and some of the reasoning behind these choices.
 
 \subsection{CoffeeScript}
 We chose to develop our application using CoffeeScript, a programming language with a clean and elegant syntax which compiles down to JavaScript. We realised that building a rich web application would involve writing a lot of client-side JavaScript code. JavaScript however has many quirks, many of which are nicely dealt with in CoffeeScript. As one of the team members already had considerable experience using CoffeeScript prior to the project, it was an obvious choice for the client-side application code. CoffeeScript's main syntactical feature is its use of significant whitespace, similar to Python.
@@ -140,18 +141,18 @@ We chose to develop our application using CoffeeScript, a programming language w
 \subsection {Front End}
 
 Our application relies heavily on client-side JavaScript running in the browser to display the various views, using data loaded from the server via its REST interface.
-We are using a popular JavaScript MVC library called Backbone. This library provides us with "hassle-free" model synchronisation with the server and useful ways of dealing with UI changes in our view code. It is a small library, and leaves a lot of freedom for implementation details. For example, it doesn't prescribe any particular HTML templating engine.
+We are using a popular JavaScript MVC library called Backbone. This library provides us with ``hassle-free" model synchronisation with the server and useful ways of dealing with UI changes in our view code. It is a small library, and leaves a lot of freedom for implementation details. For example, it doesn't prescribe any particular HTML templating engine.
 
 We are using a templating language called Jade, which uses significant whitespace to indicate nested tags, rather than opening/closing tags. This results in much smaller and more understandable HTML templates. Our CSS styles are written in a language called Stylus, which again uses significant whitespace, and allows nesting of style rules.
 
-In parts of the UI we are using a library called Bacon.js, which is a "functional reactive programming" library. Functional reactive programming represents UI events as "event streams". These streams are collections that can be manipulated using functional methods such as map, filter, etc. This allows for reasoning about UI state as it evolves over time. We are using to validate the data in one of our forms, ensuring that only valid data can be sent to the backend. More "traditional" programming methods would probably have been easier to implement, but we believe that this is an exciting technology. It brings the benefits of functional programming to UI code, which is usually error-prone and difficult to test.
+In parts of the UI we are using a library called Bacon.js, which is a ``functional reactive programming" library. Functional reactive programming represents UI events as ``event streams". These streams are collections that can be manipulated using functional methods such as map, filter, etc. This allows for reasoning about UI state as it evolves over time. We are using to validate the data in one of our forms, ensuring that only valid data can be sent to the backend. More ``traditional" programming methods would probably have been easier to implement, but we believe that this is an exciting technology. It brings the benefits of functional programming to UI code, which is usually error-prone and difficult to test.
 
 \subsection {Back End}
 
-The backend is implemented with a Node.js server, allowing simple communciation and reusable code between backend and frontend. We split the project down into several categories, which we kept seperate from each other to minimize rigidity. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the "plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
+The backend is implemented with a Node.js server, allowing simple communciation and reusable code between backend and frontend. We split the project down into several categories, which we kept seperate from each other to minimize rigidity. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the ``plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
 
 \subsubsection {API}
-For the main API, we run express\footnote{express.js}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
+For the main API, we run express\footnote{http://expressjs.com}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
 Swagger also provides an authentication callback, however we decided not to use this. We did this because the major limitation of its `validator' authentication callback is that it gets added to every HTTP request to authenticate it individually. We didn't want to do this, and instead split between HTTPS requests for logged in sessions, with user personalisation and extra permissions, and the public HTTP web application, which simply provides a simple way to view the upcoming calendar of public events. For authentication we used the Kerberos system, which ensured only college users could access the system.
 
 \subsubsection {Crawler}
@@ -188,9 +189,14 @@ Nodes are connected by edges to define relationships like \textit{Friendship}, \
 
 
 
+
+\subsection{Design Patterns}
+
+The client-side heavily uses the MVVM (Model-View, View-Model) design pattern, which is closely related to the MVC pattern, except controllers aren't used. Views and models are separate and the communication between the two is handled by the views.
+
 \section{External Packages}
 
-On the client-side, we used Component\footnote{http://github.com/component/component}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into 'components', modules which can be reused in multiple places. 
+On the client-side, we used Component\footnote{http://github.com/component/component}, which is a client-side package manager. It bundles reusable JavaScript, CSS and HTML into `components', modules which can be reused in multiple places. 
 
 We used serveral external client-side components:
 \begin{itemize}
@@ -221,8 +227,9 @@ We used serveral external client-side components:
 \end{itemize}
 
 \section {Conclusion}
+We feel that our project is a huge step in the right direction to improving discovery of events happening across the Imperial campuses. We have started to collate information from multiple college-related sources (both the Imperial and Union calendars) and in the future we could implement software to perform Natural-Language Processing on other sources of information such as society newsletters to try and pull even more data into our system.
 
-
+We have learned a lot of new technologies by undertaking this project, which has been a valuable experience, especially since they are very relevant in industry right now. However, if we were to do the project again, we'd think about using some more established projects in certain places, as the immaturity and instability of some of the newer libraries we used cost us a lot of time in trying to fix or work around small bugs.
 
 
 \newpage
