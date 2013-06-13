@@ -19,6 +19,8 @@ strings =
     en: 'dddd, MMMM Do'
   dateTimeFormat:
     en: 'dddd, MMMM Do [at] ha'
+  notFoundTitle:
+    en: 'Page not found'
 
 exports.lang = (language) ->
   return this if @language is language
