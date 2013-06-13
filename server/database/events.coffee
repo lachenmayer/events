@@ -95,9 +95,6 @@ getAllEvents = (callback) ->
            ORDER BY e.date"
   fromTime = moment().startOf('day').unix()  
   db.query query, {rootId: database.rootNodeId, from: fromTime}, database.handle callback, (events) ->
-    tags = []
-    for key,val in events
-      tags += tags.key.e
     callback null, database.returnListWithId (e.e for e in events)
 
 getEventsInRange = (query, handler) ->
