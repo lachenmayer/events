@@ -22,7 +22,8 @@
     "tag-list",
     "routes",
     "strings",
-    "login-view"
+    "login-view",
+    "not-found"
   ],
   "paths": [
     "lib"

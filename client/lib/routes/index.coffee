@@ -7,6 +7,7 @@ CreateEventView = require('../create-event-view').CreateEventView
 LoginView       = require('../login-view').LoginView
 TagListView     = require('../tag-list').TagListView
 Strings         = require('../strings').lang 'en'
+NotFoundView    = require('../not-found').NotFoundView
 
 exports.Router = Backbone.Router.extend
 
@@ -49,8 +50,8 @@ exports.Router = Backbone.Router.extend
 
   default: (route) ->
     return if @removeTrailingSlash route
-    # TODO
-    console.log 'not found'
+    
+    @routeNotFound()
 
   removeTrailingSlash: (route) ->
     hasTrailingSlash = route[route.length-1] is '/'
@@ -70,4 +71,8 @@ exports.Router = Backbone.Router.extend
       view: view
       title: title
       url: window.location.pathname
+      
+  routeNotFound: ->
+    App.NotFoundView ?= new NotFoundView()
+    @loadView App.NotFoundView, Strings.notFoundTitle
 

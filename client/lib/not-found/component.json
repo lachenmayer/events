@@ -1,0 +1,20 @@
+{
+  "name": "NotFound",
+  "repo": "main/not-found",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.coffee"
+  ],
+  "styles": [
+    "not-found.styl"
+  ],
+  "templates": [
+    "not-found.jade"
+  ]
+}

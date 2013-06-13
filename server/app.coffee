@@ -75,6 +75,21 @@ getUserByUsername =
       else
         returnJson(res)(user)
 
+getEventsFromTag =
+  spec:
+    decription: "Find events by tag"
+    path: "/events.json/getEventsFromTag/{tag}"
+    notes: "Returns a list of events tagged with the given tag"
+    summary: "Find events by tag"
+    method: "GET"
+    params: []
+    responseClass: "List[event]"
+    errorResponses: [swagger.errors.invalid("tag"), swagger.errors.notFound("event")]
+    nickname: "getEventsFromTag"
+  action: (req, res) ->
+    console.log "GetEventsFromTag #{req.params.tag}"
+    eventData.findEventNodeFromTag req.params.tag, returnJson(res, "events")
+
 getEventById =
   spec:
     description: "Get Event By Node ID"
@@ -440,6 +455,7 @@ swagger.addGet getUserByUsername
 swagger.addGet getAllTags
 swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
+swagger.addGet getEventsFromTag
 swagger.addGet getEventById
 swagger.addPost postChangeEvent
 swagger.addPut postGroupEvent
