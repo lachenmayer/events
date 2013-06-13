@@ -21,15 +21,16 @@ exports.EventsListView = Backbone.View.extend
 
   mainTemplate: require './events-list'
 
-  events:
-    'click tr': (e) ->
-      @openEvent +e.currentTarget.className
-
   initialize: ->
     @dayLists = []
     @collection.bind 'reset', =>
       @splitEvents()
       @render()
+    @collection.fetch()
+
+  events:
+    'click tr': (e) ->
+      @openEvent +e.currentTarget.className
 
   # separate events list into a list for each day
   splitEvents: ->

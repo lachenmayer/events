@@ -4,9 +4,6 @@
   "dependencies": {},
   "development": {},
   "main": "index.coffee",
-  "scripts": [
-    "index.coffee"
-  ],
   "styles": [
     "forms.styl"
   ]

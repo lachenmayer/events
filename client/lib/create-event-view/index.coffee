@@ -47,6 +47,7 @@ exports.CreateEventView = Backbone.View.extend
     valids.onValue (fields) => @highlightInvalidFields fields
 
   onSubmission: ->
+    @submitButtonClick.doAction '.preventDefault'
     validSubmission = @submitButtonClick.map(=>
       @allFieldsValid(@validFields(@inputValues()))).filter(id)
     validSubmission.onValue (val) =>

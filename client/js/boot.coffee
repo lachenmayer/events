@@ -30,6 +30,7 @@ $ ->
     title: '#navbar h1 .inner'
     backButton: '#navbar a#back'
     accessoryButton: '#navbar a#accessory-button'
+    helperView: '#helper-view'
     container: '#main-view'
     el: $('#content')
   App.NavBar.render()
@@ -44,9 +45,6 @@ $ ->
     view: App.EventsListView
     title: Strings.upcomingEvents
     url: '/'
-
-  App.TagListView = new TagListView
-    collection: App.TagList
 
   App.Router = new Router
   Backbone.history.start

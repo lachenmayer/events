@@ -5,16 +5,23 @@ exports.NavBar = Backbone.View.extend
 
   viewObjects: []
 
+  elems: [
+    'title'
+    'container'
+    'accessoryButton'
+    'backButton'
+    'helperView'
+  ]
+
   initialize: ->
-    @$titleElement = @$el.find @options.title
-    @$container = @$el.find @options.container
-    @$accessoryButton = @$el.find @options.accessoryButton
+    for elem in @elems
+      this["$#{elem}"] = @$el.find @options[elem]
     @$accessoryButton.on 'click', =>
       App.dispatcher.trigger 'navbar:accessoryButton'
-    @$backButton = @$el.find @options.backButton
     @$backButton.on 'click', =>
       App.dispatcher.trigger 'navbar:backButton'
       @popViewObject()
+    @$helperView
 
   # Returns the visible view object (at the top of the stack)
   currentViewObject: ->
@@ -22,11 +29,8 @@ exports.NavBar = Backbone.View.extend
     @viewObjects[@viewObjects.length - 1]
 
   setRootViewObject: (viewObject) ->
-    # Unbind the old view from .inner
     if @currentViewObject()?
-      @currentViewObject.setElement(null)
-
-    # Set the new stack of views
+      @removeCurrentViewElement()
     @viewObjects = [viewObject]
     @render()
 
@@ -34,11 +38,13 @@ exports.NavBar = Backbone.View.extend
     @viewObjects.length > 0
 
   pushViewObject: (viewObject) ->
-    @viewObjects.push(viewObject)
+    @removeCurrentViewElement()
+    @viewObjects.push viewObject
     @render()
 
   popViewObject: ->
     return unless @hasViews()
+    @removeCurrentViewElement()
     @viewObjects.pop()
     App.Router.navigate @currentViewObject().url,
       trigger: false
@@ -46,12 +52,24 @@ exports.NavBar = Backbone.View.extend
 
   popToRootViewObject: ->
     return unless @hasViews()
+    @removeCurrentViewElement()
     @viewObjects.splice 0, 1
     @render()
 
   updateContentView: ->
-    if @$container and @currentViewObject()? and @currentViewObject().view?
+    if @$container and @currentViewObject()?.view?
       @currentViewObject().view.setElement(@$container).render()
+
+  showHelperView: (view) ->
+    @helperView = view
+    view.setElement(@$helperView).render()
+
+  hideHelperView: ->
+    @helperView = null
+    @$helperView.hide()
+
+  removeCurrentViewElement: ->
+    @currentViewObject().view.setElement null
 
   render: ->
     @$accessoryButton.hide()
@@ -63,7 +81,7 @@ exports.NavBar = Backbone.View.extend
       @$backButton.hide()
 
     if @currentViewObject()?
-      @$titleElement.html @currentViewObject().title
+      @$title.html @currentViewObject().title
       @updateContentView()
 
     this

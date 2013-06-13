@@ -5,6 +5,7 @@ EventView       = require('../event-view').EventView
 EventsListView  = require('../events-list').EventsListView
 CreateEventView = require('../create-event-view').CreateEventView
 LoginView       = require('../login-view').LoginView
+TagListView     = require('../tag-list').TagListView
 Strings         = require('../strings').lang 'en'
 
 exports.Router = Backbone.Router.extend
@@ -18,10 +19,12 @@ exports.Router = Backbone.Router.extend
     '*default'  : 'default'
 
   events: ->
-    App.EventsList.fetch()
+    App.EventsListView ?= new EventsListView
+      collection: App.EventsList
 
   tags: ->
-    App.TagList.fetch()
+    App.TagListView ?= new TagListView
+      collection: App.TagList
     @loadView App.TagListView, Strings.tags
 
   event: (id) ->

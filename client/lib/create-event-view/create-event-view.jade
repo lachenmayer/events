@@ -1,5 +1,5 @@
 #create-event
-  form(action='')
+  form(action='', onsubmit='return false;')
     label What?
       input.what(type='text', placeholder='eg. Free pizza')
     textarea.description(placeholder='Some more information about the event')
@@ -8,5 +8,5 @@
     .date
     label Where?
       input.where(type='text', placeholder='eg. JCR')
-    input(type='submit', value='Create event').submit(href='#')
+    input.submit(type='submit', value='Create event')
 
