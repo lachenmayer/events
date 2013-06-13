@@ -1,5 +1,6 @@
 union    = require './scrapeUnion.coffee'
 imperial = require './imperialCalendar'
+custom   = require './customData'
 database = require '../database/database.coffee'
 events   = require '../database/events'
 tagData     = require '../database/tags'
@@ -39,6 +40,7 @@ scrapeAll = ->
       console.log "executed delete. Result:", res
       union.scrape pushToNeo
       imperial.scrape pushToNeo
+      custom.scrape pushToNeo
 
 main = ->
   console.log "Events-scrape: Updating the auto-generated events"
