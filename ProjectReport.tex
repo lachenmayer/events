@@ -1,7 +1,7 @@
 \documentclass[11pt]{article}
-\setlength{\parskip}{1em}
+\setlength{\parskip}{0.2cm}
 \setlength{\parindent}{0cm}
-\usepackage[hmargin=2.2cm,vmargin=2.3cm]{geometry}
+\usepackage[hmargin=2.0cm,vmargin=2.3cm]{geometry}
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{breakurl}
@@ -46,7 +46,7 @@
 
 Our web app is a tool to help Imperial students find out about events happening on campus.
 
-Most people currently find out about events on campus through noticeboards and mailing lists. The problem with these is that there is no easy, centralised way of finding out what is happening on campus. A big problem with the noticeboards is that a lot of the posters are outdated, and often irrelevant. It is also difficult to find out which mailing lists to subscribe to to find interesting events. Additionally, the Imperial College home page and the Union website have event calendars. An `Imperial Mobile' application exists, which pulls data from the Imperial and Union sites, but we found that very few people use this, as it is complicated and slow.
+Most people currently find out about events through noticeboards and mailing lists. The problem with these is that there is no easy, centralised way of finding out what is happening on campus. A big problem with the noticeboards is that a lot of the posters are outdated, and often irrelevant. It is also difficult to find out which mailing lists to subscribe to to find interesting events. Additionally, the Imperial College home page and the Union website have event calendars. An `Imperial Mobile' application exists, which pulls data from the Imperial and Union sites, but we found that very few people use this, as it is complicated and slow.
 
 \subsection{Requirements}
 
@@ -63,7 +63,7 @@ To achieve this, we identified three main requirements for the design of the app
 
 \end{itemize}
 
-We wanted to make the user interaction with the system as smooth as possible. To that end, we identified the following priorities:
+We wanted to make the user interaction with the system as easy as possible. To that end, we identified the following priorities:
 
 \begin{itemize}
 \item Authenticate with the college systems: no need to register a separate account. We consider this incredibly important because to attract a user base from nothing we need to make the barrier to entry as low as possible.
@@ -83,7 +83,6 @@ Harry is an undergraduate at Imperial College. He is a member of a few societies
 \subsubsection{Postgraduate}
 Adam is currently doing his PhD in bio-chemistry. He attends many evening lectures relating to research topics that he is interested in. He is also a fan of classical music and likes to attend lunchtime concerts. He is an avid snowboarder and surfer and regularly goes to snow domes with the ski society and week-long trips with the surfing society. He has recently become interested in starting a company, and goes to business school events to meet fellow entrepreneurs. He is not particularly interested in any Union events.
 
-\subsubsection{Members of College Faculty}
 \subsubsection{Event Organisers}
 Lizzy is really involved in Union activities. She writes for Felix, and is the president of a mid-sized society. She is also the social secretary of another large society. She uses Facebook to invite people to nights out organised by these societies, and regularly uses the society email lists to announce society meetings and smaller events. She currently uses Google Docs spreadsheets to manage attendance to these smaller events.
 \section {Project Management}
@@ -118,12 +117,12 @@ Trello\footnote{\url{http://trello.com}} is an organisational and management web
 \end{figure}
 In following the Agile development methodology of an iterative development, we used Trello to define new tasks during our group meetings. In doing this, we could effectively ensure that there was fair and consistent contribution from all members by assigning each task to somebody on Trello. This also allowed us all to keep track of where we were in the project, an maintain a consistent list of tasks we needed to do, minimizing the `what now?' time.
 
-\subsection {Backup Systems}
+\subsection{Backup Systems}
 We used git as our version control system for the project, and hosted the repository privately on GitHub. Although git is a decentralised version control system, having the project hosted on GitHub, as well as the local clones we all had on our machines meant we had enough redundancy that if one of our copies was accidentally deleted it would have little effect on our project (we also all regularly committed our changes and pushed them upstream).
 
 What's more, we built the project so that it was very easy to get up-and-running on a server from a fresh clone of the repository. As we were using three servers (the front-end server, the back-end server and the database server) we wrote scripts which would start, stop and restart all the servers with one command. This also meant that if our VM server given to us by CSG were to fail, even though it was not backed up itself, we could very quickly get the servers up and running again.
 
-\section {The System}
+\section{How it Looks}
 
 When a user first opens the app, they see a list of future events starting from today. The user can tap/click on any event to see further details about that event.
 
@@ -135,15 +134,16 @@ The user can also browse a list of tags, and order them alphabetically, or by th
 \\[2em]
 \end{figure}
 \begin{figure}[H]
-\twofigure{images/tag-list.png}{The list of tags a user can subscribe to.}{images/login.png}{The login screen.}
+\twofigure{images/tag-list.png}{The list of tags a user can subscribe to.}{images/new-event.png}{The UI for creating a new event}
 \end{figure}
 
 
 \section {System Implementation}
 
-In this project we wanted to experiment with some new technologies which are only recently becoming widely used. We focus here on our implementation choices and some of the reasoning behind these choices.
+In this project we wanted to experiment with some new technologies which are only starting to become widely used. We focus here on our implementation choices and some of the reasoning behind these.
 
 \subsection{CoffeeScript}
+
 We chose to develop our application using CoffeeScript, a programming language with a clean and elegant syntax which compiles down to JavaScript. We realised that building a rich web application would involve writing a lot of client-side JavaScript code. JavaScript however has many quirks, many of which are nicely dealt with in CoffeeScript. As one of the team members already had considerable experience using CoffeeScript prior to the project, it was an obvious choice for the client-side application code. CoffeeScript's main syntactical feature is its use of significant whitespace, similar to Python.
 
 \subsection {Front End}
@@ -153,7 +153,21 @@ We are using a popular JavaScript MVC-like library called Backbone. This library
 
 We are using a templating language called Jade, which uses significant whitespace to indicate nested tags, rather than opening/closing tags. This results in much smaller and more understandable HTML templates. Our CSS styles are written in a language called Stylus, which again uses significant whitespace, and allows nesting of style rules.
 
+The client-side architecture is based on the model-view-controller pattern. Backbone's naming conventions are slightly misleading. We found that the Backbone ``View'' class actually takes the place of a controller class in a standard MVC pattern: our Backbone ``\textbf{V}iews" handle UI event actions, form validation, and keeping the model up to date. The \textbf{v}iews" are actually the Jade templates, which generate the actual user-visible HTML 
+
 In parts of the UI we are using a library called Bacon.js, which is a ``functional reactive programming" library. Functional reactive programming represents UI events as ``event streams". These streams are collections that can be manipulated using functional methods such as map, filter, etc. This allows for reasoning about UI state as it evolves over time. We are using to validate the data in one of our forms, ensuring that only valid data can be sent to the backend. More ``traditional" programming methods would probably have been easier to implement, but we believe that this is an exciting technology. It brings the benefits of functional programming to UI code, which is usually error-prone and difficult to test.
+
+The front-end application is divided into logically separate components. Each view is a separate component, namely the events list, single event view, event creation view, login view and tag list view. Our data model is stored in the ``model" component. This contains definitions for the event and tag collections. In Backbone, each model is essentially just a definition of a server URL, which 
+
+The navigation bar which is visible in all views is in a separate ``navbar" component. This component is inspired by the iOS navigation controller: It requires specifying a single root view object, and contains a stack of views. Going ``back" and ``forwards" is implemented as popping and pushing to this stack respectively. This allows for theoretically infinite nesting of views.
+
+The URL routes are stored in the ``routes" component. One of Backbone's features is a router, which allows specific functions to be executed based on which URLs are navigated to by the user. The different views are initialised in each of the route functions. One advantage of this is that view changes are simply implemented by redirecting the browser to the relevant URL (this process does not require a full page reload, as it is completely implemented in JavaScript using browser history manipulation).
+
+We also created a ``strings" component, which allows us to avoid using string constants for UI labels all over the code. This has the added advantage of enabling us to translate the UI with relative ease (though we do not intend to support multiple languages within the scope of this project).
+
+Additionally, we created a ``forms" component, which contains stylesheets used in forms in the UI. Since we have several forms in the application, it made sense to factor out the common styles to avoid repetition and enforce consistency.
+
+These components are loaded on demand using a JavaScript module system called require.js. The only file loaded manually via a script tag is the ``boot" CoffeeScript file. This file creates a global ``App" object and initialises the navigation bar, initial view, main collections (events and tags) and router.
 
 \subsection {System Design}
 
@@ -169,13 +183,13 @@ In parts of the UI we are using a library called Bacon.js, which is a ``function
 \fbox{
 \includegraphics[scale=0.25]{./images/WebappsConnectionDiagram.png}
 }
-\caption{\label{fig:backend-diagram} System Connectivity}
+\caption{\label{fig:system-connectivity} System Connectivity}
 \end{figure}
 
 
 \subsection {Back End}
 
-The backend is implemented with a Node.js server, allowing simple communciation and reusable code between backend and frontend. We split the project down into several categories, which we kept seperate from each other to minimize rigidity. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the ``plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
+The backend is implemented with a Node.js server, allowing simple communcation and reusable code between backend and frontend. We split the project down into several categories, which we kept separate from each other to minimize rigidity. Node.js is currently massively growing in popularity, and there are many useful libraries and frameworks which allow us to focus on writing application-specific code rather than the ``plumbing". Using Node.js also enabled us to develop both the front-end and back-end in CoffeeScript.
 
 \subsubsection {API}
 For the main API, we run express\footnote{\url{http://expressjs.com}}, a common package that has many plugins for enhanced ease of use in building web applications. On top of this we are running Swagger, a package built to ease documentation and design of RESTful interfaces. Swagger's major advantage is a one-command documentation/validator of the API, by running its validator and static documentation tool\footnote{https://github.com/wordnik/swagger-codegen} on the Node.js code itself. This allows us to perform basic unit testing to validate the UI whilst describing the UI for its documentation.
@@ -183,7 +197,7 @@ Swagger also provides an authentication callback, however we decided not to use 
 
 \subsubsection {Crawler}
 The crawler is used in order to synchronize out database with the information exposed by the already existing Imperial calendars which currently are the Union and the Imperial calendar.
-The Union calendar does not expose the data in a machine readible format, so it was necessary to scrape the events directly from the HTML that the website provides.
+The Union calendar does not expose the data in a machine readable format, so it was necessary to scrape the events directly from the HTML that the website provides.
 In order to extract the relevant information we used the \textit{cheerio} framework. This is a framework that allows to operate on the HTML DOM in a similar fashion like using jQuery in a browser.
 
 The events page from the Imperial homepage is syndicated via RSS. Using the node.js package \textit{feedparser} the fetched data was parsed into a JSON format. The JSON format was later converted into the relevant calendar format used by the Neo4j database.
@@ -210,23 +224,20 @@ Nodes are connected by edges to define relationships like \textit{Friendship}, \
 \subsection{Problems or Limitations}
 
 There are multiple problems to consider when designing an application as complex as this one.
-Initially we split into back and front-end however as it takes far more time to develop the front-end we had to stop developing the back-end even further in order to make the front-end as user friendly and as feature rich as possible.
+Initially we split into back and front-end teams, but we found that developing the front-end was a much larger task for this application. This meant that we had to stop developing the back-end further in order to make the front-end as user friendly and as feature rich as possible.
 The agile development allowed us to make the group reorganize themselves faster. Otherwise most likely the back-end would end up being very robust but for the end user the application would seem very simple.
 
-Another problem is that no one from the team has used the Neo4j database before. As such we had to learn the cypher query language and work around any of the problems created by the queries as we did not have enough time to see the complete functionality of the language.
+On the front-end, we used a client-side package manager called ``component". Though this library is well-designed, it is at a very early stage of development. As a result, its documentation is severely lacking in many places. This meant that we had to read the source in several instances to learn how certain things worked. Also, there were several issues with some of the library's plugins, for example the CoffeeScript compilation plugin was totally broken. As all the code is open source, MIT licensed and available on GitHub, we were able to fork the offending projects and fix the bugs ourselves. Some of the external libraries used also had to be fixed to work with ``component", notably the natural language date parsing library ``chrono". Again, forking the projects and fixing the problems ourselves was the easiest and fastest solution.
 
-Secondly the application must respect information that is private to the users. In order to make sure that the user's passwords are not sent in plain text across the internet we decided to use SSL when establishing the login connection.
-The downfall is that the SSL certificate is self-signed which makes the browsers very hesitant to accept it.
+Another problem was initially that none of the team members had used the Neo4j database before. As such we had to learn its unique Cypher query language and try and work around any of the problems created by the queries, as it is very different from traditional SQL.
 
-\subsection{Design Patterns}
-
-The client-side heavily uses the MVVM (Model-View, View-Model) design pattern, which is closely related to the MVC pattern, except controllers aren't used. Views and models are separate and the communication between the two is handled by the views.
+Secondly the application must respect information that is private to the users. In order to make sure that the user's passwords are not sent in plain text across the internet we decided to use SSL when establishing the login connection. SSL certificates are not free, however, so we self-signed our certificates. This means that on first use, web browsers will show a warning screen. Buying an SSL certificate would have alleviated this problem.
 
 \section {Legal Consideration}
 
-For this project we've used sources from a wide variety of places. We've mostly been using the `npm' package manager for getting Node.js packages. In these packages, the default licence agreement is MIT, and we've checked this in each of the packages we've used. As such, there would be no major barriers to commecialising the product on that front.
+For this project we've used sources from a wide variety of places. We've mostly been using the `npm' package manager for getting Node.js packages. In these packages, the default licence agreement is MIT, and we've checked this in each of the packages we've used. As such, there would be no major barriers to commercialising the product on that front.
 
-On the legal issues for data use, we are using information crawled from  Imperial College and Imperial College Union. Under Section 6 Part 2 of the College Data protection policy, it is required that personal data obtained and processed for a specific purpose must be only that which is sufficient to achieve that purpose, and held until that purpose is achieved, and must be obtained and processed `fairly'. It must be adequatly protected, and if transferred to a country outside the EEA, must be ensured that that country can provide equivalent levels of protection. This information must also be registered using the departments central system.
+On the legal issues for data use, we are using information crawled from Imperial College and Imperial College Union. Under Section 6 Part 2 of the College Data protection policy, it is required that personal data obtained and processed for a specific purpose must be only that which is sufficient to achieve that purpose, and held until that purpose is achieved, and must be obtained and processed `fairly'. It must be adequately protected, and if transferred to a country outside the EEA, must be ensured that that country can provide equivalent levels of protection. This information must also be registered using the departments central system.
 
 \section {Conclusion}
 We feel that our project is a huge step in the right direction to improving discovery of events happening across the Imperial campuses. We have started to collate information from multiple college-related sources (both the Imperial and Union calendars) and in the future we could implement software to perform Natural-Language Processing on other sources of information such as society newsletters to try and pull even more data into our system.
@@ -251,7 +262,9 @@ We used several external client-side components:
     \item \textbf{jade-runtime}\footnote{\url{http://github.com/monstercat/jade-runtime}}: the component used to evaluate Jade\footnote{Jade Template Engine: \url{http://jade-lang.com}} templates.
     \item \textbf{Underscore}\footnote{\url{http://github.com/component/underscore}}: a utility library used extensively with Backbone.
     \item \textbf{Moment}\footnote{\url{http://github.com/component/moment}}: a JavaScript date library making tasks such as formatting easier.
-    \item \textbf{Reset}:\footnote{\url{http://github.com/ianstormtaylor/reset}}: a CSS reset component. 
+    \item \textbf{Chrono}\footnote{\url{http://github.com/lachenmayer/chrono}}: A natural language date parser in JavaScript.
+    \item \textbf{Bacon.js}\footnote{\url{http://github.com/raimohanska/bacon.js}}: A natural language date parser in JavaScript.
+    \item \textbf{Reset}:\footnote{\url{http://github.com/ianstormtaylor/reset}}: a CSS reset component.
 \end{itemize}
 
 On the back-end, we used the following Node.js modules:
