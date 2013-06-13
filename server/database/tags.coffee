@@ -13,8 +13,10 @@ findTagNode = (tagName, callback) ->
            WHERE t.tagName = {tagName}
            RETURN t"
   db.query query, {rootId: database.rootNodeId, tagName: tagName}, database.handle callback, (tags) ->
+    #console.log "Tag Found #{tags} #{tags[0].t} #{tags.t}"
+#    (console.log t.t) for t in tags
     if tags.length > 0
-      callback null, tags[0]
+      callback null, tags[0].t
     else
       callback null, null
 
@@ -57,6 +59,7 @@ findPopularTags = (callback) ->
 
 attachTag = (node, tagNode, callback) ->
   database.makeRelationship node, tagNode, "TAGGED_WITH", database.handle callback, ->
+    console.log "Attaching tag"
     callback null, tagNode
 
 exports.createTag = createTag

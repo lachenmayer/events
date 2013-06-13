@@ -71,6 +71,17 @@ findEventNodeById = (eventId, callback) ->
   db.query query, {eventId: eventId}, database.handle callback, (events) ->
     callback null, events[0].e
 
+findEventNodeFromTag = (tag, callback) ->
+  query = "START root=node({rootId})
+           MATCH root-[:EVENT]->events-->e-[:TAGGED_WITH]->t
+           WHERE e.date > {from}
+           AND t.tagName =~ '(?i)#{tag}'
+           RETURN e
+           ORDER BY e.date"
+  db.query query, {rootId: database.rootNodeId, from: moment().unix()}, database.handle callback, (events) ->
+    callback null, database.returnListWithId (e.e for e in events)
+
+
 updateEvent = (eventId, data, callback) ->
   findEventNodeById eventId, database.handle callback, (eventNode) ->
     for key, value of data
@@ -129,6 +140,7 @@ makePublicEvent = (event, callback) ->
 exports.createEvent       = createEvent
 exports.removeEvent       = removeEvent
 exports.findEventNodeById = findEventNodeById
+exports.findEventNodeFromTag = findEventNodeFromTag
 exports.getEventById = getEventById
 exports.getAllEvents = getAllEvents
 exports.getEventsInRange = getEventsInRange

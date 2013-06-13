@@ -15,12 +15,13 @@ pushToNeo = (config) ->
       console.log "Failed creating the event: #{err}"
     else
       events.makePublicEvent scrapedEvent, -> # Made the event public
+        console.log "Attach tags"
         for tag in tags
           tagData.findOrCreateTag tag, (err, createdTag) ->
+            console.log "Attach tag: #{tag}, err: #{err}, node: #{scrapedEvent}, tagNode: #{createdTag}"
             if (err)
               console.log "Error: #{err}"
             else
-              # attach to this tag
               tagData.attachTag scrapedEvent, createdTag, ->
 
 
