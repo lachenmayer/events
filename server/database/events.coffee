@@ -20,9 +20,7 @@ getOrganizedEvents = (ownerId, callback) ->
     database.returnValue err, events, ((data) -> database.returnListWithId (event.e for event in data)), callback
 
 returnEvents = (query, nodeId, callback) ->
-  console.log "RunningQuery"
   db.query query, {nodeId: parseInt(nodeId)}, database.handle callback, (events) ->
-    console.log "Here"  
     callback null, database.returnListWithId (event.e for event in events)
 
 

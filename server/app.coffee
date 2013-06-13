@@ -105,7 +105,6 @@ getEventsInRange =
     errorResponses: [swagger.errors.invalid("eventRangeRequestHeader"), swagger.errors.notFound("events")]
     nickname: "getEventInRange"
   action: (req, res) ->
-    console.log "Request Query", req.query
     throw swagger.errors.invalid("eventRangeRequestHeader") unless (\
       req.query.from \
       and req.query.to\
@@ -124,7 +123,6 @@ getAllEvents =
     errorResponses: [swagger.errors.notFound("events")]
     nickname: "getAllEvents"
   action: (req, res) ->
-    console.log "getAllEvents"
     eventData.getAllEvents returnJson(res, "events")
 
 postGroupEvent =
@@ -403,7 +401,6 @@ getSubscribedEvents =
     errorResponses: []
     nickname: "getSubscribedEvents"
   action: getLoggedInUser (req, res, user) ->
-    console.log "logged in"
     userData.getUserEvents user.id, returnJson(res, "events")
 
 subscribeToEvent =

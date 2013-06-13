@@ -56,7 +56,6 @@ eventToVObject = (event) ->
   return new Event(uid, event.date, event.name, event.location, event.description)
 
 toVCalendar = (prodId, events) ->
-  console.log "Building the v calendar"
   vcal = createICal prodId, events
   return vcal.serialize()
 
