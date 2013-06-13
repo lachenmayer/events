@@ -10,7 +10,13 @@ moment  = require 'moment'
 # Defines the url for the union website
 UNION_URL = "https://www.imperialcollegeunion.org/whats-on"
 EVENTS_SITE = (year, month) ->
-  return "#{UNION_URL}/month/#{year}/#{month}"
+  return "#{UNION_URL}/month/#{twoDig(year)}/#{twoDig(month)}"
+
+twoDig = (num) ->
+  if num < 10
+    return "0#{num}"
+  else
+    return "#{num}"
 
 scrape = (handler) ->
   # Scrape all of the dates for the event

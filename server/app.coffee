@@ -142,9 +142,9 @@ postGroupEvent =
       req.query.name \
       and req.query.location \
       and req.query.description \
-      and req.query.image \
       and req.query.url)
-
+    if not req.query.image     
+      req.query.image = ""
     data =
       name: req.query.name
       location: req.query.location
