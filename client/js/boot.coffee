@@ -1,15 +1,14 @@
 window.$ = window.jQuery = require 'component-jquery'
-Backbone       = require 'solutionio-backbone'
-_              = require 'component-underscore'
+Backbone                 = require 'solutionio-backbone'
+_                        = require 'component-underscore'
 
-EventsListView = require('events-list').EventsListView
-TagListView    = require('tag-list').TagListView
-Router         = require('routes').Router
-NavBar         = require('navbar').NavBar
-MenuView       = require('menu-view').MenuView
-Events         = require('model').Events
-Tags           = require('model').Tags
-Strings        = require('strings').lang 'en'
+{EventsListView}         = require 'events-list'
+{TagListView}            = require 'tag-list'
+{MenuView}               = require 'menu-view'
+{Router}                 = require 'routes'
+{NavBar}                 = require 'navbar'
+{Events, Tags, User}     = require 'model'
+Strings                  = require('strings').lang 'en'
 
 # Store our stuff in a global app object.
 window.App =
@@ -36,10 +35,9 @@ $ ->
     el: $('#content')
     accessoryTitle: 'Menu'
   App.NavBar.render()
-  
+
   App.dispatcher.on 'navbar:accessoryButton', ->
     App.MenuView ?= new MenuView()
-    
     if App.NavBar.isHelperViewVisible()
       App.NavBar.hideHelperView()
     else
@@ -47,6 +45,7 @@ $ ->
 
   App.EventsList = new Events
   App.TagList = new Tags
+  App.User = new User
 
   App.EventsListView = new EventsListView
     collection: App.EventsList
