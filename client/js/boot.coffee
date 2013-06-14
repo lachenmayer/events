@@ -1,14 +1,13 @@
 window.$ = window.jQuery = require 'component-jquery'
-Backbone       = require 'solutionio-backbone'
-_              = require 'component-underscore'
+Backbone                 = require 'solutionio-backbone'
+_                        = require 'component-underscore'
 
-EventsListView = require('events-list').EventsListView
-TagListView    = require('tag-list').TagListView
-Router         = require('routes').Router
-NavBar         = require('navbar').NavBar
-Events         = require('model').Events
-Tags           = require('model').Tags
-Strings        = require('strings').lang 'en'
+{EventsListView}         = require 'events-list'
+{TagListView}            = require 'tag-list'
+{Router}                 = require 'routes'
+{NavBar}                 = require 'navbar'
+{Events, Tags, User}     = require 'model'
+Strings                  = require('strings').lang 'en'
 
 # Store our stuff in a global app object.
 window.App =
@@ -38,6 +37,7 @@ $ ->
 
   App.EventsList = new Events
   App.TagList = new Tags
+  App.User = new User
 
   App.EventsListView = new EventsListView
     collection: App.EventsList
