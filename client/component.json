@@ -23,7 +23,8 @@
     "routes",
     "strings",
     "login-view",
-    "not-found"
+    "not-found",
+    "menu-view"
   ],
   "paths": [
     "lib"
