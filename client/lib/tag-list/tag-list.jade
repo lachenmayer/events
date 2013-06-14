@@ -8,11 +8,3 @@
 
 #taglist
   ul.list
-    - tags.each(function(tag) {
-    - name = tag.get('tagName')
-      li
-        div.left
-          label.name(for=name)= name
-        div.right
-          span.numEvents= 5
-    - })

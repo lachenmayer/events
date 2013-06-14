@@ -9,12 +9,14 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": [
+
     "index.coffee"
   ],
   "styles": [
     "tag-list.styl"
   ],
   "templates": [
-    "tag-list.jade"
+    "tag-list.jade",
+    "tag-item.jade"
   ]
 }
