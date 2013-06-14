@@ -8,13 +8,14 @@ class NodeCtl < Ctl
         end
 
         printf "Starting node... "
-        `coffee ../server/app.coffee > /dev/null &`
+        Dir.mkdir(@@logs_dir) unless File.exists?(@@logs_dir)
+        `coffee ../server/app.coffee > ../logs/node-log.txt &`
         puts "Done."
     end
 
     def stop
         return if !is_running?
-        
+
         node_pid = Util.process_pid("node.*app.coffee")
         puts "Found node process with pid #{node_pid}"
         printf "Stopping node... "
