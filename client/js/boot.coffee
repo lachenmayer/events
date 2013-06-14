@@ -33,6 +33,7 @@ $ ->
     helperView: '#helper-view'
     container: '#main-view'
     el: $('#content')
+    accessoryTitle: 'Menu'
   App.NavBar.render()
 
   App.EventsList = new Events

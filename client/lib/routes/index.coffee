@@ -13,14 +13,14 @@ NotFoundView    = require('../not-found').NotFoundView
 exports.Router = Backbone.Router.extend
 
   routes:
-    ''          : 'events'
-    'events'    : 'events'
-    'event/new' : 'createEvent'
-    'event/:id' : 'event'
+    ''                    : 'events'
+    'events'              : 'events'
+    'event/new'           : 'createEvent'
+    'event/:id'           : 'event'
     'events/tagged/:tag'  : 'taggedEvents'
-    'tags'      : 'tags'
-    'login'     : 'login'
-    '*default'  : 'default'
+    'tags'                : 'tags'
+    'login'               : 'login'
+    '*default'            : 'default'
 
   events: ->
     App.EventsListView ?= new EventsListView
