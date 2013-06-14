@@ -36,6 +36,7 @@ handler = (callback, handlerWithNoErrors) -> (err, data) ->
     handlerWithNoErrors data
 
 handleWithError = (callback, errorMessage, handlerWithNoErrors) -> (err, data) ->
+  console.log "Err: #{err}\nData: #{data}"
   if err
     console.log "Error: #{errorMessage}\n#{err}"
     callback err, null
@@ -118,6 +119,15 @@ createNode = (tableName, data, relationship, callback) ->
     newNode.save handleWithError callback, "Could not create the node", (node) ->
       makeRelationship table, node, relationship, (err, relationship) -> callback err, node, relationship
 
+createUniqueNode = (tableName, data, relationship, callback) ->
+  values = serializeData data
+  query = "MATCH table
+           WHERE table.name = \"#{tableName}\"
+           CREATE UNIQUE (table)-[:#{relationship}]->(node {#{values}})
+           RETURN node"
+  db.query query, {}, handler callback, (nodes) ->
+    callback null, nodes[0].node.id
+
 # Sets up the initial nodes in the database
 setup = ->
   console.log "Events-database: Setting up the database"
@@ -155,6 +165,7 @@ exports.handle           = handler
 exports.handleErr        = handleWithError
 exports.removeRelationship = removeRelationship
 exports.serializeData      = serializeData
+exports.createUniqueNode   = createUniqueNode
 
 # Running the script sets up the database
 if (!module.parent)

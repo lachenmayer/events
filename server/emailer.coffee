@@ -1,32 +1,29 @@
-path = require("path")
-templatesDir = path.join(__dirname, "templates")
-emailTemplates = require("email-templates")
-emailTemplates templatesDir, (err, template) ->
-  
-  # Render a single email with one template
-  locals = pasta: "Spaghetti"
-  template "pasta-dinner", locals, (err, html, text) ->
+nodemailer = require("nodemailer")
 
-  
-  # ...
-  
-  # Render multiple emails with one template
-  locals = [
-    pasta: "Spaghetti"
-  ,
-    pasta: "Rigatoni"
-  ]
-  Render = (locals) ->
-    @locals = locals
-    @send = (err, html, text) ->
+# create reusable transport method (opens pool of SMTP connections)
+smtpTransport = nodemailer.createTransport("SMTP",
+  service: "Gmail"
+  auth:
+    user: "gmail.user@gmail.com"
+    pass: "userpass"
+)
 
-    
-    # ...
-    @batch = (batch) ->
-      batch @locals, @send
+# setup e-mail data with unicode symbols
+mailOptions =
+  from: "Fred Foo ✔ <foo@blurdybloop.com>" # sender address
+  to: "bar@blurdybloop.com, baz@blurdybloop.com" # list of receivers
+  subject: "Hello ✔" # Subject line
+  text: "Hello world ✔" # plaintext body
+  html: "<b>Hello world ✔</b>" # html body
 
-  template "pasta-dinner", true, (err, batch) ->
-    for user of users
-      render = new Render(users[user])
-      render.batch batch
 
+# send mail with defined transport object
+smtpTransport.sendMail mailOptions, (error, response) ->
+  if error
+    console.log error
+  else
+    console.log "Message sent: " + response.message
+
+
+# if you don't want to use this transport object anymore, uncomment following line
+#smtpTransport.close(); // shut down the connection pool, no more messages

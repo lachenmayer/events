@@ -3,8 +3,9 @@ database = require('./database.coffee')
 db = database.db
 
 createTag = (tagName, callback) ->
-  database.createNode "TAGS", {"tagName": tagName} , "TAG", database.handle callback, (tagNode) ->
-    console.log "Creating Tag: #{tagNode}"
+  console.log "createTag"
+  database.createUniqueNode "TAGS", {"tagName": tagName} , "TAG", database.handle callback, (tagNode) ->
+    console.log "Creating Tag: #{tagNode}, #{tagName}"
     callback null, tagNode
 
 findTagNode = (tagName, callback) ->
@@ -13,11 +14,12 @@ findTagNode = (tagName, callback) ->
            WHERE t.tagName = {tagName}
            RETURN t"
   db.query query, {rootId: database.rootNodeId, tagName: tagName}, database.handle callback, (tags) ->
-    #console.log "Tag Found #{tags} #{tags[0].t} #{tags.t}"
 #    (console.log t.t) for t in tags
     if tags.length > 0
+      console.log "Tag Found #{tagName}"
       callback null, tags[0].t
     else
+      console.log "Tag Not Found #{tagName}"
       callback null, null
 
 findOrCreateTag = (tag, callback) ->
