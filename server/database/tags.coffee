@@ -68,8 +68,9 @@ findPopularTags = (callback) ->
   callback null, null
 
 attachTag = (node, tagNode, callback) ->
+  console.log "Attaching tag: #{node}, #{tagNode}"
   database.makeRelationship node, tagNode, "TAGGED_WITH", database.handle callback, ->
-    console.log "Attaching tag"
+    console.log "Attached tag: #{tagNode}"
     callback null, tagNode
 
 exports.createTag = createTag
