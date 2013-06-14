@@ -25,6 +25,7 @@ findTagNode = (tagName, callback) ->
 findOrCreateTag = (tag, callback) ->
   findTagNode tag, (err, tagNode) ->
     if err
+      console.log "findTag Fail"
       callback err, null
     else if not tagNode
       createTag tag, (err, createdTag) ->
