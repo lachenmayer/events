@@ -1,4 +1,6 @@
 class Ctl
+    @@logs_dir = '../logs'
+
     def start
     end
 
