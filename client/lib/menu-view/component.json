@@ -1,0 +1,20 @@
+{
+  "name": "menu-view",
+  "repo": "main/menu-view",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.coffee"
+  ],
+  "styles": [
+    "menu-view.styl"
+  ],
+  "templates": [
+    "menu-view.jade"
+  ]
+}
