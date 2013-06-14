@@ -46,7 +46,6 @@ handleWithError = (callback, errorMessage, handlerWithNoErrors) -> (err, data) -
 # If an error occurs then propagates the error
 # Otherwise maps the result using the f function
 returnValue = (err, data, f, callback) ->
-  console.log "Returning data", data
   handler(callback, (data) -> callback null, f data)(err, data)
 
 getRootNode = (callback) ->
@@ -79,6 +78,14 @@ createTable = (root, name, callback) ->
       console.log "Created the table #{name}"
       makeRelationship root, node, name, callback
 
+hasRelationship = (node1, node2, relationshipType, callback) ->
+  node1.outgoing relationshipType, handler callback, (relationships) ->
+    matches = (rel for rel in relationships when rel.end.id == node2.id)
+    if (matches.length > 0)
+      callback null, matches[0]
+    else
+      callback null, false
+
 # Creates the table if it hasn't been defined yet
 makeTableNode = (root, name, callback) ->
   getTable name, (err, node) ->
@@ -89,18 +96,17 @@ makeTableNode = (root, name, callback) ->
 
 # Creates a relationship if it hasn't been defined before
 makeRelationship = (node1, node2, type, callback) ->
-  node1.outgoing type, handler callback, (relationships) ->
-    matches = (rel for rel in relationships when rel.end.id == node2.id)
-    if (matches.length > 0)
-      callback null, matches[0]
+  hasRelationship node1, node2, type, handler callback, (rel) ->
+    if rel
+      callback null, rel
     else
       node1.createRelationshipTo(node2, type)(callback)
 
+
 removeRelationship = (node1, node2, type, callback) ->
-  node1.outgoing type, handler callback, (relationships) ->
-    matches = (rel for rel in relationships when rel.end.id == node2.id)
-    if (matches.length > 0)
-      matches[0].delete callback
+  hasRelationship node1, node2, type, handler callback, (rel) ->
+    if rel
+      rel.delete callback
     else
       callback "Relationship #{type} does not exist", null
 
@@ -144,6 +150,7 @@ exports.getTableNodeById = getTableNodeById
 exports.returnValue      = returnValue
 exports.returnDataWithId = returnDataWithId
 exports.returnListWithId = returnListWithId
+exports.hasRelationship  = hasRelationship
 exports.handle           = handler
 exports.handleErr        = handleWithError
 exports.removeRelationship = removeRelationship

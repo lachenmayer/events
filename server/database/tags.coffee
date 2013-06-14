@@ -37,22 +37,29 @@ findEventTags = (eventNodeId, callback) ->
   db.query query, {eventNodeId: eventNodeId}, (err, tags) ->
     database.returnValue err, tags, ((data) -> database.returnListWithId (tag.e for tag in data)), callback
 
-
-findSubscribedTags = (user, callback) ->
- query = "START r=node({rootId}), e=node({eventId})
-            MATCH r-[:TAG]->events-->e<-[:SUBSCRIBED_TO]-u<--users<-[:USERS]-r
-            RETURN u"
- db.query query, {rootId: database.rootNodeId, eventId: eventId}, database.handle callback, (users) ->
- callback null, database.returnListWithId (n.u for n in users)
-#  callback null, null
+# Finds the list of tags subscribed by a node
+findSubscribedTags = (nodeId, callback) ->
+  query = "START r=node({rootId}), u=node({userId})
+            MATCH r-[:TAGS]->tags-[:TAG]->t<-[:SUBSCRIBED_TO]-u<--users<-[:USERS]-r
+            RETURN t"
+  db.query query, {rootId: database.rootNodeId, userId: nodeId}, database.handle callback, (users) ->
+    callback null, (n.t.id for n in users)
 
 getAllTags = (callback) ->
   query = "START r=node({rootId})
            MATCH r-[:TAGS]->tags-->t
            RETURN t"
   db.query query, {rootId: database.rootNodeId}, database.handle callback, (tags) ->
-    callback null, database.returnListWithId(t.t for t in tags)
+    callback null, database.returnListWithId (t.t for t in tags)
 
+
+getUserTags = (userId, callback) ->
+  findSubscribedTags userId, database.handle callback, (subscribed) ->
+    getAllTags database.handle callback, (tags) ->
+      for tag in tags
+        tag.subscribed = tag.id in subscribed
+
+      callback null, tags
 
 findPopularTags = (callback) ->
   callback null, null
@@ -69,3 +76,4 @@ exports.getAllTags = getAllTags
 # exports.findSubscribedTags = findSubscribedTags
 exports.findPopularTags = findPopularTags
 exports.attachTag = attachTag
+exports.getUserTags = getUserTags

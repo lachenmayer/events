@@ -90,18 +90,18 @@ verifyKey = (username, keyAPI, callback) ->
 
 # Subscribes to an event
 subscribeTo = (userId, nodeId, callback) ->
-  query = "START r=node({rootId}), u=node({userId}), n=node({eventId})
-           MATCH r-[:EVENT]->ev-->n
-           CREATE u-[:SUBSCRIBED_TO]->n"
-  console.log "query does not work"
-
-  db.query query, {rootId: database.rootNodeId, userId: userId, eventId: nodeId}, database.handle callback, ->
-    callback null, {success: true}
+  query = "START u=node({userId}), n=node({eventId})
+           RETURN u, n"
+  db.query query, {userId: userId, eventId: nodeId}, database.handle callback, (data) ->
+    userNode = data[0].u
+    eventNode = data[0].n
+    database.makeRelationship userNode, eventNode, "SUBSCRIBED_TO", database.handle callback, ->
+      callback null, {success: true}
 
 # Unsubscribes from an event
 unsubscribeFrom = (userId, nodeId, callback) ->
   query = "START r=node({rootId}), u=node({userId}), n=node({eventId})
-           MATCH r-[:EVENT]->()-->n, u-[s:SUBSCRIBED_TO]->n
+           MATCH u-[s:SUBSCRIBED_TO]->n
            DELETE s"
   db.query query, {rootId: database.rootNodeId, userId: userId, eventId: nodeId}, database.handle callback, ->
     callback null, {success: true}

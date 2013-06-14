@@ -49,10 +49,19 @@ getLoggedInUser = (callback) -> (req, res) ->
   userId = 23064
   userData.getUserById userId, (err, user) ->
     if err
-      res.status(404).send "404: invalid data. Cannot return"
-      res.redirect LOGIN_URL
+      callback req, res, null
     else
       callback req, res, { id: userId, username: user.username }
+
+# Requires the user to be logged in
+requireLoggedInUser = (callback) -> (req, res) ->
+  getLoggedInUser((req, res, user) ->
+    if user
+      callback req, res, user
+    else
+      res.status(404).send "404: invalid data. Cannot return"
+      res.redirect LOGIN_URL
+  )(req, res)
 
 getUserByUsername =
   spec:
@@ -150,7 +159,7 @@ postGroupEvent =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
     nickname: "postGroupEvent"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("event") unless (\
       req.query.name \
       and req.query.location \
@@ -190,7 +199,7 @@ postChangeEvent =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
     nickname: "postChangeEvent"
-  action: getLoggedInUser (req, res) ->
+  action: requireLoggedInUser (req, res) ->
     data = req.body
     throw swagger.errors.invalid("event") unless (req.params.id and req.body \
       and usesKeys data, (key for key of swaggerModels.models.event.properties))
@@ -209,7 +218,7 @@ postDeleteEvent =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
     nickname: "postDeleteEvent"
-  action: getLoggedInUser (req, res) ->
+  action: requireLoggedInUser (req, res) ->
     throw swagger.errors.invalid("event") unless req.params.id
     id = parseInt req.params.id
 
@@ -266,7 +275,7 @@ createICalURL =
     responseClass: "integer"
     errorResponses: []
     nickname: "createICalURL"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     calendarData.createICalURL user.id, returnJson(res, "icalURL")
 
 getICalURL =
@@ -279,7 +288,7 @@ getICalURL =
     responseClass: "string"
     errorResponses: [swagger.errors.invalid("icalURL")]
     nickname: "getICalURL"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     calendarData.getICalURL user.id, returnJson(res, "icalURL")
 
 getICal =
@@ -306,7 +315,7 @@ deleteICalURL =
     responseClass: "string"
     errorResponses: []
     nickname: "deleteICalURL"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     calendarData.removeICalURL user.id, returnJson(res, "icalURL")
 
 getAllTags =
@@ -322,6 +331,19 @@ getAllTags =
   action: (req, res) ->
     tagData.getAllTags returnJson(res, "tags")
 
+getUserTags =
+  spec:
+    description: "Returns all of the tags that a user will use"
+    path: "/user/tags"
+    notes: "Returns the list of all tags. Adds the subsribed field to state which tags were subscribed by the user"
+    method: "GET"
+    params: []
+    responseClass: "List[tag]"
+    errorResponses: [swagger.errors.notFound("tag")]
+    nickname: "getUserTags"
+  action: requireLoggedInUser (req, res, user) ->
+    tagData.getUserTags user.id, returnJson(res, "tag")
+
 createNewGroup =
   spec:
     description: "Ceates a new group"
@@ -332,7 +354,7 @@ createNewGroup =
     responseClass: "integer"
     errorResponses: [swagger.errors.invalid("group")]
     nickname: "createNewGroup"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     data =
       value: "value"
     groups.createGroup user.id, data, returnJson(res, "group")
@@ -347,7 +369,7 @@ deleteGroup =
     responseClass: "string"
     errorResponses: [swagger.errors.invalid("id")]
     nickname: "deleteGroup"
-  action: getLoggedInUser (req, res) ->
+  action: requireLoggedInUser (req, res) ->
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
 
@@ -364,7 +386,7 @@ joinGroup =
     responseClass: "string"
     errorResponses: []
     nickname: "joinGroup"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
 
@@ -381,7 +403,7 @@ leaveGroup =
     responseClass: "string"
     errorResponses: []
     nickname: "leaveGroup"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
     # TODO: authorize the user
@@ -397,7 +419,7 @@ removeFromGroup =
     responseClass: "string"
     errorResponses: []
     nickname: "removeFromGroup"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("id") unless (req.params.id and req.body.userId)
     groupId = parseInt req.params.id
 
@@ -415,8 +437,41 @@ getSubscribedEvents =
     responseClass: "string"
     errorResponses: []
     nickname: "getSubscribedEvents"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     userData.getUserEvents user.id, returnJson(res, "events")
+
+subscribeToTag =
+  spec:
+    description: "Subscribes to a tag list"
+    path: "/tags/{id}/subscribe"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: []
+    nickname: "subscribeToTag"
+  action: requireLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+    console.log "Subscribing"
+
+    userData.subscribeTo user.id, id, returnJson(res, "success")
+
+unsubscribeTag =
+  spec:
+    description: "Unsubscribes from a tag list"
+    path: "/tags/{id}/unsubscribe"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: []
+    nickname: "unsubscribeTag"
+  action: requireLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+
+    userData.unsubscribeFrom user.id, id, returnJson(res, "success")
 
 subscribeToEvent =
   spec:
@@ -428,7 +483,8 @@ subscribeToEvent =
     responseClass: "string"
     errorResponses: [swagger.errors.invalid("id")]
     nickname: "subscribeToEvent"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
+    console.log "Subscribing"
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
 
@@ -444,7 +500,7 @@ unsubscribeFromEvent =
     responseClass: "string"
     errorResponses: [swagger.errors.invalid("id")]
     nickname: "unsubscribeFromEvent"
-  action: getLoggedInUser (req, res, user) ->
+  action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
 
@@ -472,6 +528,9 @@ swagger.addPost createNewGroup
 swagger.addGet getSubscribedEvents
 swagger.addGet subscribeToEvent
 swagger.addGet unsubscribeFromEvent
+swagger.addGet subscribeToTag
+swagger.addGet unsubscribeTag
+swagger.addGet getUserTags
 swagger.configure "http://superawesome.swagger.imperialEvents.com", "0.1"
 
 httpapp  = app
