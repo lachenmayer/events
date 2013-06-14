@@ -46,7 +46,14 @@ returnJson = (res, field) -> (err, value) ->
 # TODO: get the logged in user id
 # If cannot log on should throw an error
 getLoggedInUser = (callback) -> (req, res) ->
-  userId = 23064
+  #req.cookie.userId = 12312
+  #req.cookie.key = blah
+  if not req.cookie.userId
+    userId = 23064 # Generate from key, work it out
+  else userId = req.cookie.userId
+  if not req.cookie.key
+    key = "blahblahblah"
+  else key = req.cookie.key
   userData.getUserById userId, (err, user) ->
     if err
       callback req, res, null
@@ -59,8 +66,7 @@ requireLoggedInUser = (callback) -> (req, res) ->
     if user
       callback req, res, user
     else
-      res.status(404).send "404: invalid data. Cannot return"
-      res.redirect LOGIN_URL
+      res.status(401).send "401: invalid data. Cannot return"
   )(req, res)
 
 getUserByUsername =
@@ -154,7 +160,7 @@ postGroupEvent =
     description: "Creates a new group event"
     path: "/event"
     notes: "Creates a new event by the given group"
-    method: "PUT"
+    method: "POST"
     params: []
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
@@ -163,8 +169,7 @@ postGroupEvent =
     throw swagger.errors.invalid("event") unless (\
       req.query.name \
       and req.query.location \
-      and req.query.description \
-      and req.query.url)
+      and req.query.description)
     if not req.query.image     
       req.query.image = ""
     data =
@@ -240,17 +245,17 @@ userLogin =
     # Check what we exect is in the headers
     username = ""
     password = ""
-    if (req.headers["username"])
-      username = req.headers["username"]
+    if (req.body["username"])
+      username = req.body["username"]
     else
       throw swagger.errors.invalid "header"
-    if (req.headers["password"])
-      password = req.headers["password"]
+    if (req.body["password"])
+      password = req.body["password"]
     else
       throw swagger.errors.invalid "header"
     # Uncrypt the password
     # Authenticate the username Password Combo
-    auth.authenticate username , password, (err) ->
+    auth.authenticate username, password, (err) ->
       if err
         console.log "There was an error logging in: " + username
         console.log "Error: #{err}"
@@ -542,7 +547,7 @@ httpapp.get '/user/*',(req,res) ->
 
 http.createServer(httpapp).listen HTTP_PORT, ->
   console.log "http running! on port #{HTTP_PORT}"
-#
-#https.createServer(server_options, app).listen HTTPS_PORT, ->
-#  console.log "https running! on port #{HTTPS_PORT}"
+
+https.createServer(server_options, app).listen HTTPS_PORT, ->
+  console.log "https running! on port #{HTTPS_PORT}"
 

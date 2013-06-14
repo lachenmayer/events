@@ -67,7 +67,9 @@ getUserById = (id, callback) ->
     database.returnValue err, user, ((node) -> database.returnDataWithId node), callback
 
 generateNewAPIKey = (username, callback) ->
+  console.log "generateNewAPIKey"
   findOrCreateUserNode username, database.handle callback, (userNode) ->
+    console.log "usernode: #{userNode}"
     new_key = uuid.v1()
     timestamp = moment().unix()
     # Traverse to userNode-[:API_KEY]->KEY
@@ -161,20 +163,23 @@ findUserNode = (username, callback) ->
 # Finds and returns the list of matching users
 findMatchingUsers = (username, callback) ->
   query = "START r=Node({rootId})
-             MATCH r-[:USERS]->u-->user
-             WHERE user.username = {username}
-             RETURN user"
+           MATCH r-[:USERS]->u-->user
+           WHERE user.username = {username}
+           RETURN user"
   db.query query, {rootId: database.rootNodeId, username: username},
     database.handleErr callback, "Could not find the user #{username}", (users) ->
       callback null, users
 
 # Tries to find a user. If one does not exist sets up a new node
 findOrCreateUserNode = (username, callback) ->
+  console.log "findOrCreateUser(#{username})"
   findMatchingUsers username, database.handle callback, (users) ->
     if (users.length == 0)
+      console.log "createNewUser(#{username})"
       newUser username, callback
     else
-    return users[0].user
+      console.log "findMatchingUsers: #{users}, #{users[0].user}, #{JSON.stringify users[0].user }"
+      callback null, users[0].user
 
 # Finds a user
 # Assumes that the user exists

@@ -78,10 +78,10 @@ runJob = (job, callback) ->
 
 postJob = (err, job) ->
   console.log "Err: <#{err}>, arg: <#{arg}>"
-  removeJob job
-  if job.repeatDiff
-    job.runTimestamp = moment().unix() + job.repeatDiff
-    addJob job
+  removeJob job.id, ->
+    if job.repeatDiff
+      job.runTimestamp = moment().unix() + job.repeatDiff
+      addJob job
 
 exports.addJob = addJob
 exports.checkJobs = checkJobs
