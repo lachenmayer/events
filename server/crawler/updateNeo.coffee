@@ -38,8 +38,8 @@ scrapeAll = ->
       console.log "Error #{err}"
     else
       console.log "executed delete. Result:", res
-#      union.scrape pushToNeo
-#      imperial.scrape pushToNeo
+      union.scrape pushToNeo
+      imperial.scrape pushToNeo
       custom.scrape pushToNeo
 
 main = ->
