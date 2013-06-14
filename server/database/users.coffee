@@ -174,10 +174,11 @@ findMatchingUsers = (username, callback) ->
 findOrCreateUserNode = (username, callback) ->
   console.log "findOrCreateUser(#{username})"
   findMatchingUsers username, database.handle callback, (users) ->
-    console.log "findMatchingUsers: #{users}, #{users[0].user}, #{JSON.stringify users[0].user }"
     if (users.length == 0)
+      console.log "createNewUser(#{username})"
       newUser username, callback
     else
+      console.log "findMatchingUsers: #{users}, #{users[0].user}, #{JSON.stringify users[0].user }"
       callback null, users[0].user
 
 # Finds a user

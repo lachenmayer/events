@@ -246,16 +246,16 @@ userLogin =
     username = ""
     password = ""
     if (req.body["username"])
-      username = req.headers["username"]
+      username = req.body["username"]
     else
       throw swagger.errors.invalid "header"
     if (req.body["password"])
-      password = req.headers["password"]
+      password = req.body["password"]
     else
       throw swagger.errors.invalid "header"
     # Uncrypt the password
     # Authenticate the username Password Combo
-    auth.authenticate username , password, (err) ->
+    auth.authenticate username, password, (err) ->
       if err
         console.log "There was an error logging in: " + username
         console.log "Error: #{err}"
