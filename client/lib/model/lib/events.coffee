@@ -1,4 +1,10 @@
 Backbone = require '../../solutionio-backbone'
 
 exports.Events = Backbone.Collection.extend
-  url: 'api/events'
+  initialize: (options)->
+    @tagName = options?.tagName
+
+  url: ->
+    base = '/api/events'
+    
+    return if @tagName? then "#{base}/tagged/#{@tagName}" else base

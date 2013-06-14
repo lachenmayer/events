@@ -1,6 +1,7 @@
 Backbone        = require '../solutionio-backbone'
 
 Model           = require '../model'
+Events          = Model.Events
 EventView       = require('../event-view').EventView
 EventsListView  = require('../events-list').EventsListView
 CreateEventView = require('../create-event-view').CreateEventView
@@ -16,6 +17,7 @@ exports.Router = Backbone.Router.extend
     'events'    : 'events'
     'event/new' : 'createEvent'
     'event/:id' : 'event'
+    'events/tagged/:tag'  : 'taggedEvents'
     'tags'      : 'tags'
     'login'     : 'login'
     '*default'  : 'default'
@@ -40,6 +42,15 @@ exports.Router = Backbone.Router.extend
         success: (event) =>
           App.EventsList.add event
           @loadEventView event
+          
+  taggedEvents: (tagName)->
+    taggedEvents = new Events
+      tagName: tagName
+    
+    eventsView = new EventsListView
+      collection: taggedEvents
+    
+    @loadView eventsView, "'#{tagName}' Events"
 
   login: ->
     App.LoginView ?= new LoginView
