@@ -15,6 +15,7 @@
     "lib/event.coffee",
     "lib/events.coffee",
     "lib/tag.coffee",
-    "lib/tags.coffee"
+    "lib/tags.coffee",
+    "lib/user.coffee"
   ]
 }

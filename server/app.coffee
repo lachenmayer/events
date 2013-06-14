@@ -16,6 +16,7 @@ server_options =
   key: fs.readFileSync "#{__dirname}/cert/server.key"
   cert: fs.readFileSync "#{__dirname}/cert/server.crt"
   requestCert: true
+  passphrase: 'alexiscool'
 
 app = express()
 
@@ -259,7 +260,7 @@ userLogin =
       if err
         console.log "There was an error logging in: " + username
         console.log "Error: #{err}"
-        res.send "Error in username/password combo"
+        res.send "{\"error\": \"#{err}\"}"
       else
         console.log "Success! with #{username}"
         # Pass on to database library
