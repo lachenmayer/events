@@ -9,7 +9,7 @@
   ul.tags
     - for (tag in model.get('tags')) {
       li
-        a(href='/events/tagged/' + model.get('tags')[tag])= model.get('tags')[tag]
+        a(href='', data-tag=model.get('tags')[tag])= model.get('tags')[tag]
     - }
   .description
     p= model.get('description')
