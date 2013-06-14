@@ -3,7 +3,7 @@ imperial = require './imperialCalendar'
 custom   = require './customData'
 database = require '../database/database.coffee'
 events   = require '../database/events'
-tagData     = require '../database/tags'
+tagData  = require '../database/tags'
 
 db = database.db
 

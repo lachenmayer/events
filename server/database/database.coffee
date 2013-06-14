@@ -121,12 +121,12 @@ createNode = (tableName, data, relationship, callback) ->
 
 createUniqueNode = (tableName, data, relationship, callback) ->
   values = serializeData data
-  query = "MATCH table
-           WHERE table.name = \"#{tableName}\"
-           CREATE UNIQUE (table)-[:#{relationship}]->(node {#{values}})
-           RETURN node"
+  query = "START n = node(#{ROOT_NODE_ID})
+           CREATE UNIQUE n-[:#{tableName}]->table-[:#{relationship}]->(newNode {#{values}})
+           RETURN newNode"
   db.query query, {}, handler callback, (nodes) ->
-    callback null, nodes[0].node.id
+    console.log "createUniqueNode: #{nodes[0].newNode}"
+    callback null, nodes[0].newNode
 
 # Sets up the initial nodes in the database
 setup = ->

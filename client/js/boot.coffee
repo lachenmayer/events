@@ -4,6 +4,7 @@ _                        = require 'component-underscore'
 
 {EventsListView}         = require 'events-list'
 {TagListView}            = require 'tag-list'
+{MenuView}               = require 'menu-view'
 {Router}                 = require 'routes'
 {NavBar}                 = require 'navbar'
 {Events, Tags, User}     = require 'model'
@@ -34,6 +35,13 @@ $ ->
     el: $('#content')
     accessoryTitle: 'Menu'
   App.NavBar.render()
+
+  App.dispatcher.on 'navbar:accessoryButton', ->
+    App.MenuView ?= new MenuView()
+    if App.NavBar.isHelperViewVisible()
+      App.NavBar.hideHelperView()
+    else
+      App.NavBar.showHelperView App.MenuView
 
   App.EventsList = new Events
   App.TagList = new Tags

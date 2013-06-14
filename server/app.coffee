@@ -94,7 +94,7 @@ getUserByUsername =
 getEventsFromTag =
   spec:
     decription: "Find events by tag"
-    path: "/events.json/getEventsFromTag/{tag}"
+    path: "/event.json/getEventsFromTag/{tag}"
     notes: "Returns a list of events tagged with the given tag"
     summary: "Find events by tag"
     method: "GET"

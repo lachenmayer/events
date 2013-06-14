@@ -76,7 +76,7 @@ findEventNodeFromTag = (tag, callback) ->
            AND t.tagName =~ '(?i)#{tag}'
            RETURN e
            ORDER BY e.date"
-  db.query query, {rootId: database.rootNodeId, from: moment().unix()}, database.handle callback, (events) ->
+  db.query query, {rootId: database.rootNodeId, from: moment().startOf("day").unix()}, database.handle callback, (events) ->
     callback null, database.returnListWithId (e.e for e in events)
 
 

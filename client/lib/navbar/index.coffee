@@ -19,6 +19,7 @@ exports.NavBar = Backbone.View.extend
     @accessoryTitle = @options.accessoryTitle
     @$accessoryButton.on 'click', =>
       App.dispatcher.trigger 'navbar:accessoryButton'
+      false
     @$backButton.on 'click', =>
       App.dispatcher.trigger 'navbar:backButton'
       @popViewObject()
@@ -67,11 +68,16 @@ exports.NavBar = Backbone.View.extend
 
   showHelperView: (view) ->
     @helperView = view
+    @$helperView.hide()
     view.setElement(@$helperView).render()
+    @$helperView.slideDown()
 
   hideHelperView: ->
-    @helperView = null
-    @$helperView.hide()
+    @$helperView.slideUp =>
+      @helperView = null
+      
+  isHelperViewVisible: ->
+    @helperView?.$el?
 
   removeCurrentViewElement: ->
     @currentViewObject().view.setElement null
