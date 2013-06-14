@@ -3,7 +3,7 @@ imperial = require './imperialCalendar'
 custom   = require './customData'
 database = require '../database/database.coffee'
 events   = require '../database/events'
-tagData     = require '../database/tags'
+tagData  = require '../database/tags'
 
 db = database.db
 
@@ -38,8 +38,8 @@ scrapeAll = ->
       console.log "Error #{err}"
     else
       console.log "executed delete. Result:", res
-      union.scrape pushToNeo
-      imperial.scrape pushToNeo
+#      union.scrape pushToNeo
+#      imperial.scrape pushToNeo
       custom.scrape pushToNeo
 
 main = ->
