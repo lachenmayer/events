@@ -8,7 +8,8 @@
     p.location= model.get('location')
   ul.tags
     - for (tag in model.get('tags')) {
-      li= model.get('tags')[tag]
+      li
+        a(href='/events/tagged/' + model.get('tags')[tag])= model.get('tags')[tag]
     - }
   .description
     p= model.get('description')
