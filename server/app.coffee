@@ -324,7 +324,7 @@ getICal =
     nickname: "getICal"
   action: (req, res) ->
     throw swagger.errors.invalid("id") unless req.params.id
-    calendarData.getICal req.params.id, returnJson(res, "userId")
+    calendarData.getICal req.params.id, returnJson(res, "user calendar")
 
 deleteICalURL =
   spec:
