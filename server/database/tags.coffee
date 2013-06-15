@@ -1,4 +1,5 @@
 database = require('./database.coffee')
+_ = require 'underscore'
 
 db = database.db
 
@@ -50,9 +51,11 @@ findSubscribedTags = (nodeId, callback) ->
 
 getAllTags = (callback) ->
   query = "START r=node({rootId})
-           MATCH r-[:TAGS]->tags-->t
-           RETURN t"
+           MATCH r-[:TAGS]->tags-->t-[:TAGGED_WITH]-c
+           RETURN t, count(c)"
   db.query query, {rootId: database.rootNodeId}, database.handle callback, (tags) ->
+    (t.t.data['count'] = t['count(c)'] for t in tags)
+    # console.log JSON.stringify(t.t.data)+' --- '+t['count(c)'] for t in tags
     callback null, database.returnListWithId (t.t for t in tags)
 
 

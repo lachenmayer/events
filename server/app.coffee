@@ -51,10 +51,12 @@ getLoggedInUser = (callback) -> (req, res) ->
   #req.cookie.key = blah
   if not req.cookie.userId
     userId = 23064 # Generate from key, work it out
-  else userId = req.cookie.userId
+  else
+    userId = req.cookie.userId
   if not req.cookie.key
     key = "blahblahblah"
-  else key = req.cookie.key
+  else
+    key = req.cookie.key
   userData.getUserById userId, (err, user) ->
     if err
       callback req, res, null
