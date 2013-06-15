@@ -58,13 +58,14 @@ returnJson = (res, field) -> (err, value) ->
 getLoggedInUser = (callback) -> (req, res) ->
   #req.cookie.userId = 12312
   #req.cookie.key = blah
-  if not req.cookie || not req.cookie.userId
-    userId = 23064 # Generate from key, work it out
-  else userId = req.cookie.userId || 23064
-  if not req.cookie || not req.cookie.key
-    key = "blahblahblah"
-  else key = req.cookie.key
-  console.log "User id is #{userId}"
+  # console.log req
+  if not req.body || not req.body.userId
+    callback
+  else userId = parseInt(req.body.userId)
+  if not req.body || not req.body.key
+    callback
+  else key = req.body.key
+  console.log "User id is #{userId}, key is: #{key}"
   userData.getUserById userId, (err, user) ->
     if err
       callback req, res, null
@@ -509,7 +510,6 @@ unsubscribeTag =
   action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
-
     userData.unsubscribeFrom user.id, id, returnJson(res, "success")
 
 subscribeToEvent =
@@ -517,7 +517,7 @@ subscribeToEvent =
     description: "Subscribes to an event"
     path: "/event.json/{id}/subscribe"
     notes: ""
-    method: "GET"
+    method: "POST"
     params: []
     responseClass: "string"
     errorResponses: [swagger.errors.invalid("id")]
@@ -534,7 +534,7 @@ unsubscribeFromEvent =
     description: "Unsubscribes from an event"
     path: "/event.json/{id}/unsubscribe"
     notes: ""
-    method: "GET"
+    method: "POST"
     params: []
     responseClass: "string"
     errorResponses: [swagger.errors.invalid("id")]
@@ -558,7 +558,6 @@ getComments =
   action: (req, res) ->
     throw swagger.errors.invalid('eventId') unless req.params.id
     eventId = parseInt req.params.id
-
     commentData.getCommentsFromEvent eventId, returnJson(res, "success")
 
 getComment =
@@ -652,8 +651,8 @@ swagger.addGet joinGroup
 swagger.addDelete deleteGroup
 swagger.addPost createNewGroup
 swagger.addGet getSubscribedEvents
-swagger.addGet subscribeToEvent
-swagger.addGet unsubscribeFromEvent
+swagger.addPost subscribeToEvent
+swagger.addPost unsubscribeFromEvent
 swagger.addGet subscribeToTag
 swagger.addGet unsubscribeTag
 swagger.addGet getUserTags

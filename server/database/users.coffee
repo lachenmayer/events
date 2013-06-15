@@ -81,7 +81,7 @@ generateNewAPIKey = (username, callback) ->
         nodes[0].data.key = new_key
         nodes[0].data.timestamp = timestamp
         nodes[0].save database.handle callback, (new_node) ->
-          callback null, {"key": new_key, "id": new_node.id}
+          callback null, {"key": new_key, "id": userNode.id}
 
 # Verifies the key and returns whether the USERNAME, KEYAPI combination is valid
 verifyKey = (username, keyAPI, callback) ->

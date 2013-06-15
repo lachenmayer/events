@@ -125,7 +125,7 @@ createUniqueNode = (tableName, data, relationship, callback) ->
            CREATE UNIQUE n-[:#{tableName}]->table-[:#{relationship}]->(newNode {#{values}})
            RETURN newNode"
   db.query query, {}, handler callback, (nodes) ->
-    console.log "createUniqueNode: #{nodes[0].newNode}"
+    # console.log "createUniqueNode: #{nodes[0].newNode}"
     callback null, nodes[0].newNode
 
 # Sets up the initial nodes in the database

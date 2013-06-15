@@ -30,8 +30,8 @@ exports.EventView = EventView = Backbone.View.extend
       subscribed = !subButton.hasClass('on')
       @model.set 'subscribed', subscribed
       if subscribed # Subscribes to the event
-        $.get("/api/event/#{@model.get('id')}/subscribe")
+        App.Auth.authPost("/api/event/#{@model.get('id')}/subscribe")
       else # Unsubscribe from the event
-        $.get("/api/event/#{@model.get('id')}/unsubscribe")
+        App.Auth.authPost("/api/event/#{@model.get('id')}/unsubscribe")
       @render()
 
