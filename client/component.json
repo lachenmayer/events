@@ -9,7 +9,8 @@
     "component/moment": "*",
     "ianstormtaylor/reset": "*",
     "lachenmayer/chrono": "*",
-    "raimohanska/bacon.js": "*"
+    "raimohanska/bacon.js": "*",
+    "yields/store": "*"
   },
   "local": [
     "events-list",
@@ -24,7 +25,9 @@
     "strings",
     "login-view",
     "not-found",
-    "menu-view"
+    "menu-view",
+    "feed-view",
+    "firstTime-view"
   ],
   "paths": [
     "lib"

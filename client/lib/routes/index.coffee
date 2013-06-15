@@ -2,6 +2,7 @@ Backbone        = require '../solutionio-backbone'
 
 Model           = require '../model'
 Events          = Model.Events
+ICalURL         = Model.ICalURL
 EventView       = require('../event-view').EventView
 EventsListView  = require('../events-list').EventsListView
 CreateEventView = require('../create-event-view').CreateEventView
@@ -9,6 +10,8 @@ LoginView       = require('../login-view').LoginView
 TagListView     = require('../tag-list').TagListView
 Strings         = require('../strings').lang 'en'
 NotFoundView    = require('../not-found').NotFoundView
+FirstTimeView   = require('../firstTime-view').FirstTimeView
+feeds           = require('../feed-view')
 
 exports.Router = Backbone.Router.extend
 
@@ -18,9 +21,32 @@ exports.Router = Backbone.Router.extend
     'event/new'           : 'createEvent'
     'event/:id'           : 'event'
     'events/tagged/:tag'  : 'taggedEvents'
+    'firstTime'           : 'firstTime'
+    'ical/subscribe/outlook' : 'outlook'
+    'ical/subscribe/gmail'   : 'gmail'
     'tags'                : 'tags'
     'login'               : 'login'
-    '*default'            : 'default'
+    '*default'            : 'defaultRoute'
+
+
+  gmail: ->
+    App.GmailView ?= new feeds.GmailView
+      model: new ICalURL
+
+    @loadView App.GmailView, Strings.setupGmail
+
+  outlook: ->
+    console.log "Opening outlook"
+    App.OutlookView ?= new feeds.OutlookView
+      model: new ICalURL
+
+    @loadView App.OutlookView, Strings.setupOutlook
+
+  firstTime: ->
+    App.FirstTimeView ?= new FirstTimeView
+      model: new ICalURL
+
+    @loadView App.FirstTimeView, Strings.firstTime
 
   events: ->
     App.EventsListView ?= new EventsListView
@@ -60,7 +86,7 @@ exports.Router = Backbone.Router.extend
     createEventView = new CreateEventView()
     @loadView createEventView, Strings.newEvent
 
-  default: (route) ->
+  defaultRoute: (route) ->
     return if @removeTrailingSlash route
     
     @routeNotFound()
