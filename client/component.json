@@ -10,7 +10,8 @@
     "ianstormtaylor/reset": "*",
     "lachenmayer/chrono": "*",
     "raimohanska/bacon.js": "*",
-    "yields/store": "*"
+    "yields/store": "*",
+    "timoxley/font-awesome": "*"
   },
   "local": [
     "events-list",
