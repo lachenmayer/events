@@ -83,6 +83,12 @@ module.exports = (grunt) ->
         dest: 'public/'
         filter: 'isFile'
         flatten: true
+      fonts:
+        cwd: 'build/timoxley-font-awesome/font/'
+        src: '*'
+        dest: 'public/timoxley-font-awesome/font/'
+        filter: 'isFile'
+        expand: true
 
     # Watch config
     watch:

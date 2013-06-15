@@ -69,10 +69,11 @@ exports.NavBar = Backbone.View.extend
   showHelperView: (view) ->
     @helperView = view
     
-    height = @$helperView.css('height')
-    
     @$helperView.hide()
     view.setElement(@$helperView).render()
+    
+    height = @$helperView.css('height')
+    
     @$helperView.slideDown()
     @$container.animate
       'padding-top': height

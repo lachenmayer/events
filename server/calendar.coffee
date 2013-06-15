@@ -25,11 +25,11 @@ class Event
 
   toVObject: ->
     vobject = jsDAV.create('VEVENT')
-    startStamp = moment.unix(@start).format(TIME_FORMAT)
+    startStamp = moment.unix(@start)
     dateStamp  = moment().format(TIME_FORMAT)
 
     vobject.add 'UID', @uid
-    vobject.add 'STSTAMP', startStamp
+    vobject.add 'STSTAMP', startStamp.format(TIME_FORMAT)
     vobject.add 'DTSTART', dateStamp
     if @end?
       vobject.add 'DTEND', moment.unix(@end).format(TIME_FORMAT)
@@ -46,14 +46,16 @@ createICal = (prodid, events) ->
   vcal.add 'VERSION', '2.0'
   vcal.add 'PRODID', prodid
   for e in events
-    vcal.add e.toVObject()
+    if not e.tagName?
+      vcal.add eventToVObject(e)
   return vcal
 
 # Modifies the event format provided by the database into the ical format
 eventToVObject = (event) ->
   startTime = moment.unix(event.date).format(TIME_FORMAT)
   uid = "#{startTime}-#{event.id}"
-  return new Event(uid, event.date, event.name, event.location, event.description)
+  event = new Event(uid, event.date, event.name, event.location, event.description)
+  return event.toVObject()
 
 toVCalendar = (prodId, events) ->
   vcal = createICal prodId, events

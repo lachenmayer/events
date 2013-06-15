@@ -3,6 +3,7 @@ swagger       = require 'swagger-node-express'
 swaggerModels = require './models'
 eventData     = require './database/events'
 userData      = require './database/users'
+commentData   = require './database/comments'
 calendarData  = require './calendar'
 database      = require './database/database'
 ldap          = require './ldapsearch'
@@ -341,7 +342,7 @@ getICal =
     nickname: "getICal"
   action: (req, res) ->
     throw swagger.errors.invalid("id") unless req.params.id
-    calendarData.getICal req.params.id, returnJson(res, "userId")
+    calendarData.getICal req.params.id, returnJson(res, "user calendar")
 
 deleteICalURL =
   spec:
@@ -544,6 +545,92 @@ unsubscribeFromEvent =
 
     userData.unsubscribeFrom user.id, id, returnJson(res, "success")
 
+getComments =
+  spec:
+    description: "Gets the comments for a given event"
+    path: "/event.json/{id}/comments"
+    notes: "Retuns the list of comments"
+    method: "GET"
+    params: []
+    responseClass: "List[comment]"
+    errorResponses: [swagger.errors.invalid('eventId')]
+    nickname: "getComments"
+  action: (req, res) ->
+    throw swagger.errors.invalid('eventId') unless req.params.id
+    eventId = parseInt req.params.id
+
+    commentData.getCommentsFromEvent eventId, returnJson(res, "success")
+
+getComment =
+  spec:
+    description: "Gets the information about a given comment"
+    path: "/event.json/{eventId}/comments/{commentId}"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid('eventId')]
+    nickname: "getComment"
+  action: (req, res) ->
+    throw swagger.errors.invalid('eventId') unless (req.params.eventId and req.params.commentId)
+    commentId = parseInt req.params.commentId
+
+    commentData.getCommentFromId commentId, returnJson(res, "success")
+
+addComment =
+  spec:
+    description: "Adds a new comment"
+    path: "/event.json/{eventId}/comments"
+    notes: ""
+    method: "POST"
+    params: []
+    responseClass: "integer"
+    errorResponses: []
+    nickname: "addComment"
+  action: requireLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid('eventId') unless (req.params.eventId)
+    eventId = parseInt req.params.eventId
+
+    data =
+      comment: req.body.comment
+      author: user.username
+    commentData.addComment eventId, user.id, data, returnJson(res, "comment")
+
+updateComment =
+  spec:
+    description: "Edits a user comment"
+    path: "/event.json/{eventId}/comments/{commentId}"
+    notes: "Edits a user comment"
+    method: "PUT"
+    params: []
+    responseClass: "integer"
+    errorResponses: []
+    nickname: "updateComment"
+  action: requireLoggedInUser (req, res) ->
+    throw swagger.errors.invalid('eventId') unless (req.params.eventId and req.params.commentId)
+    eventId = parseInt req.params.eventId
+    commentId = parseInt req.params.commentId
+
+    commentData.modifyComment commentId, { comment: req.query.comment }, returnJson(res, "comment")
+
+deleteComment =
+  spec:
+    description: "Deletes a user comment"
+    path: "/event.json/{eventId}/comments/{commentId}"
+    notes: "Deletes a user comment"
+    method: "DELETE"
+    params: []
+    responseClass: "integer"
+    errorResponses: []
+    nickname: "deleteComment"
+  action: requireLoggedInUser (req, res) ->
+    throw swagger.errors.invalid('eventId') unless (req.params.eventId and req.params.commentId)
+    eventId = parseInt req.params.eventId
+    commentId = parseInt req.params.commentId
+
+    commentData.deleteComment commentId, returnJson(res, "comment")
+
+
 swagger.addPost userLogin
 swagger.addGet getUserByUsername
 swagger.addGet getAllTags
@@ -570,6 +657,13 @@ swagger.addGet unsubscribeFromEvent
 swagger.addGet subscribeToTag
 swagger.addGet unsubscribeTag
 swagger.addGet getUserTags
+
+swagger.addGet getComments
+swagger.addGet getComment
+swagger.addDelete deleteComment
+swagger.addPost addComment
+swagger.addPut updateComment
+
 swagger.configure "http://superawesome.swagger.imperialEvents.com", "0.1"
 
 httpapp  = app

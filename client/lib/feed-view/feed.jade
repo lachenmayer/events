@@ -1,39 +1,40 @@
-h1 Manage your subscriptions
-p Change the settings of your subscriptions
+#feeds
+    h1 Manage your subscriptions
+    p Change the settings of your subscriptions
 
-div.left
-    a RSS feeds
-    a ICal calendar
-    a Mail subscriptions
+    div.left
+        a RSS feeds
+        a ICal calendar
+        a Mail subscriptions
 
-div.right
-p RSS feeds
-    h2 RSS feed
+    div.right
+    p RSS feeds
+        h2 RSS feed
 
-    a.button Enable/disable
-    if rss.enabled
-        p Currently subscribed to #{rss.tagCount} tags
-        a.button Change the subscriptions
-p Calendar subscriptions
-    h2 Calendar subscriptions
+        a.button Enable/disable
+        if rss.enabled
+            p Currently subscribed to #{rss.tagCount} tags
+            a.button Change the subscriptions
+    p Calendar subscriptions
+        h2 Calendar subscriptions
 
-    a.button Enable/disable
-    if ical.enabled
-        p Your current url is #{ical.url}
-        a(href='/ical/url/reset') Reset your url
-        | If you feel that the privacy of your account has been breached you can reset the URL to a new one.
+        a.button Enable/disable
+        if ical.enabled
+            p Your current url is #{ical.url}
+            a(href='/ical/url/reset') Reset your url
+            | If you feel that the privacy of your account has been breached you can reset the URL to a new one.
 
-        h3 Subscribe to the calendar
-        a(href=url) Using iPhone or iCal
-        a(href='/ical/subscribe/outlook') Windows phone/outlook
-        a(href='/ical/subscribe/gmail') Andoid phone/gmail
+            h3 Subscribe to the calendar
+            a(href=url) Using iPhone or iCal
+            a(href='/ical/subscribe/outlook') Windows phone/outlook
+            a(href='/ical/subscribe/gmail') Andoid phone/gmail
 
-p Mail subscriptions
-    h1 Mail subscriptions
+    p Mail subscriptions
+        h1 Mail subscriptions
 
-    | :(
-    | The page has not been created yet.
-    | If you are a hosting an `events` server try to pull the new version.
-    | Otherwise... oh well try again at a later time.
+        | :(
+        | The page has not been created yet.
+        | If you are a hosting an `events` server try to pull the new version.
+        | Otherwise... oh well try again at a later time.
 
-a(href="/user/delete").button Delete account
+    a(href="/user/delete").button Delete account
