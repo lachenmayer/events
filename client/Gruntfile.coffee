@@ -16,7 +16,7 @@ module.exports = (grunt) ->
           dest: 'public/'
           ext: '.html'
         ]
-  
+
     # CoffeeScript config
     coffee:
       config:
@@ -27,7 +27,7 @@ module.exports = (grunt) ->
           dest: 'public/js'
           ext: '.js'
         ]
-        
+
     #Stylus config
     stylus:
       compile:
@@ -38,7 +38,7 @@ module.exports = (grunt) ->
           dest: 'public/css'
           ext: '.css'
         ]
-    
+
     # Component config
     component:
       install:

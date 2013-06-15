@@ -6,7 +6,6 @@ UserInfo = Backbone.Model.extend
   url: ->
     "/api/user/info/#{@attributes.username}"
 
-debugger
 exports.User = Backbone.Model.extend
 
   initialize: ->
@@ -26,8 +25,7 @@ exports.User = Backbone.Model.extend
         return fn? data.error
       unless @validLogin data
         return fn? 'Invalid response'
-      @storeInfo username, data.id, data.key
-      fn? null
+      @storeInfo username, data.id, data.key, fn? null
 
   validLogin: (data) ->
     data.key? and data.id?
@@ -35,16 +33,19 @@ exports.User = Backbone.Model.extend
   logout: ->
     @clearInfo()
 
-  storeInfo: (@username, @id, @key) ->
+  storeInfo: (@username, @id, @key, fn) ->
     userInfo = new UserInfo
       username: username
+    onFetch = (info) ->
+      store 'User',
+        username: username
+        id: id
+        key: key
+        userInfo: info
+      fn? null
     userInfo.fetch
-      success: (info) ->
-        store 'User',
-          username: username
-          id: id
-          key: key
-          userInfo: info
+      success: onFetch
+      error: onFetch
 
   clearInfo: ->
     store 'User', null

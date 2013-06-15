@@ -6,9 +6,10 @@ exports.MenuView = Backbone.View.extend
 
   mainTemplate: require './menu-view'
 
+  initialize: ->
+    @loginView = new LoginView()
+
   render: ->
     @$el.html _.template @mainTemplate()
-    loginView = new LoginView
-      el: @$('.login')
-    loginView.render()
+    @loginView.setElement(@$('.login')).render()
 
