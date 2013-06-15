@@ -25,7 +25,9 @@
     "strings",
     "login-view",
     "not-found",
-    "menu-view"
+    "menu-view",
+    "feed-view",
+    "firstTime-view"
   ],
   "paths": [
     "lib"

@@ -42,9 +42,19 @@ scrapeAll = ->
       imperial.scrape pushToNeo
       custom.scrape pushToNeo
 
+cleanTags = (handler) ->
+  query = "START root=node({rootId})
+           MATCH root-[:TAGS]->()-->t
+           WHERE NOT(u-[:TAGGED_WITH]->t)
+           WITH t
+           MATCH t-[r]-()
+           DELETE t, r"
+  db.query query, {}, (err, res) ->
+    console.log "Submitted the query"
+
 main = ->
   console.log "Events-scrape: Updating the auto-generated events"
-  scrapeAll()
+  cleanTags scrapeAll
 
 # If the module is run from a script invoke it
 if (!module.parent)
