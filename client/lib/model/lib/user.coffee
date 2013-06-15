@@ -1,10 +1,14 @@
 $ = require '../../component-jquery'
 Backbone = require '../../solutionio-backbone'
+store = require '../../store'
 
 exports.User = Backbone.Model.extend
 
   initialize: ->
-    @id = @key = null
+    user = store 'User'
+    if user?
+      this[key] = user[key] for key of user
+    @clearInfo()
 
   url: ->
     "/user/#{@id}"
@@ -19,16 +23,24 @@ exports.User = Backbone.Model.extend
     , (data, status) =>
       if data.error?
         return fn? data.error
-      if @validLogin data
-        @id = data.id
-        @key = data.key
-      else
-        fn? 'Invalid response'
+      unless @validLogin data
+        return fn? 'Invalid response'
+      @storeInfo username, data.id, data.key
       fn? null
 
   validLogin: (data) ->
     data.key? and data.id?
 
   logout: ->
-    @id = @key = null
+    @clearInfo()
+
+  storeInfo: (@username, @id, @key) ->
+    store 'User',
+      username: username
+      id: id
+      key: key
+
+  clearInfo: ->
+    store 'User', null
+    @username = @id = @key = null
 
