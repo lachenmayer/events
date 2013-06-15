@@ -36,6 +36,12 @@ swagger.setAppHandler app
 
 swagger.addModels swaggerModels
 
+handler = (f) -> (err, value) ->
+  if err
+    res.status(404).send "404: invalid data."
+  else
+    f value
+
 returnJson = (res, field) -> (err, value) ->
   if err
     console.log err
@@ -119,10 +125,17 @@ getEventById =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("eventId"), swagger.errors.notFound("event")]
     nickname: "getNodeById"
-  action: (req, res) ->
+  action: getLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("eventId") unless req.params.eventId
     id = parseInt(req.params.eventId)
-    eventData.getEventById id, returnJson(res, "event")
+    eventData.getEventById id, handler (event) ->
+      if user
+        userData.getUserEvents user.id, handler (subscribedEvents) ->
+          event.subscribed = id in (e.id for e in subscribedEvents)
+          returnJson(res, "event")(null, event)
+      else
+        event.subscribed = false
+        returnJson(res, "event")(null, event)
 
 getEventsInRange =
   spec:
