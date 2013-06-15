@@ -6,5 +6,4 @@ exports.Events = Backbone.Collection.extend
 
   url: ->
     base = '/api/events'
-    
     return if @tagName? then "#{base}/tagged/#{@tagName}" else base

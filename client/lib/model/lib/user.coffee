@@ -2,15 +2,17 @@ $        = require '../../component-jquery'
 Backbone = require '../../solutionio-backbone'
 store    = require '../../store'
 
+UserInfo = Backbone.Model.extend
+  url: ->
+    "/api/user/info/#{@attributes.username}"
+
+debugger
 exports.User = Backbone.Model.extend
 
   initialize: ->
     user = store 'User'
     if user?
       this[key] = user[key] for key of user
-
-  url: ->
-    "/user/#{@id}"
 
   isLoggedIn: ->
     @validLogin this
@@ -34,10 +36,15 @@ exports.User = Backbone.Model.extend
     @clearInfo()
 
   storeInfo: (@username, @id, @key) ->
-    store 'User',
+    userInfo = new UserInfo
       username: username
-      id: id
-      key: key
+    userInfo.fetch
+      success: (info) ->
+        store 'User',
+          username: username
+          id: id
+          key: key
+          userInfo: info
 
   clearInfo: ->
     store 'User', null
