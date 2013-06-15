@@ -576,7 +576,7 @@ httpapp  = app
 
 
 httpapp.get '/user/*',(req,res) ->
-  res.redirect "https://127.0.0.1:#{HTTPS_PORT}#{req.url}"
+  res.redirect "https://#{req.get['Host']}:#{HTTPS_PORT}#{req.url}"
 
 
 http.createServer(httpapp).listen HTTP_PORT, ->
