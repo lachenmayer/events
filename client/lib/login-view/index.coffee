@@ -19,14 +19,14 @@ exports.LoginView = Backbone.View.extend
                 @$el.find('.password input')]
       @highlight inputs
       [username, password] = (field.val() for field in inputs)
-      App.User.login username, password, (err) =>
-        @render() unless err
+      App.User.login username, password, (err) ->
+        App.MenuView.render() unless err
 
   logout: ->
     @$('#logout form').submit (e) =>
       e.preventDefault()
       App.User.logout()
-      @render()
+      App.MenuView.render()
 
   highlight: (fields) ->
     for field in fields

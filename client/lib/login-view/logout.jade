@@ -1,4 +1,4 @@
 #logout
   form(action='')
-    p You're logged in
+    span You're logged in as #{App.User.userInfo.displayName} (#{App.User.username})
     input(type='submit', value='Log out')
