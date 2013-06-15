@@ -5,6 +5,7 @@ eventData     = require './database/events'
 userData      = require './database/users'
 calendarData  = require './calendar'
 database      = require './database/database'
+ldap          = require './ldapsearch'
 tagData       = require './database/tags'
 auth          = require './authenticate'
 groups        = require './database/groups'
@@ -36,11 +37,18 @@ swagger.setAppHandler app
 
 swagger.addModels swaggerModels
 
+handler = (f) -> (err, value) ->
+  if err
+    res.status(404).send "404: invalid data."
+  else
+    f value
+
 returnJson = (res, field) -> (err, value) ->
   if err
     console.log err
     res.status(404).send "404: invalid data. Cannot return #{field}"
   else
+    console.log "The value is", value
     value = {} unless value?
     res.send JSON.stringify value
 
@@ -49,14 +57,13 @@ returnJson = (res, field) -> (err, value) ->
 getLoggedInUser = (callback) -> (req, res) ->
   #req.cookie.userId = 12312
   #req.cookie.key = blah
-  if not req.cookie.userId
+  if not req.cookie || not req.cookie.userId
     userId = 23064 # Generate from key, work it out
-  else
-    userId = req.cookie.userId
-  if not req.cookie.key
+  else userId = req.cookie.userId || 23064
+  if not req.cookie || not req.cookie.key
     key = "blahblahblah"
-  else
-    key = req.cookie.key
+  else key = req.cookie.key
+  console.log "User id is #{userId}"
   userData.getUserById userId, (err, user) ->
     if err
       callback req, res, null
@@ -119,10 +126,17 @@ getEventById =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("eventId"), swagger.errors.notFound("event")]
     nickname: "getNodeById"
-  action: (req, res) ->
+  action: getLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("eventId") unless req.params.eventId
     id = parseInt(req.params.eventId)
-    eventData.getEventById id, returnJson(res, "event")
+    eventData.getEventById id, handler (event) ->
+      if user
+        userData.getUserEvents user.id, handler (subscribedEvents) ->
+          event.subscribed = id in (e.id for e in subscribedEvents)
+          returnJson(res, "event")(null, event)
+      else
+        event.subscribed = false
+        returnJson(res, "event")(null, event)
 
 getEventsInRange =
   spec:
@@ -286,6 +300,22 @@ createICalURL =
   action: requireLoggedInUser (req, res, user) ->
     calendarData.createICalURL user.id, returnJson(res, "icalURL")
 
+
+getUserInfo =
+  spec:
+    description: "Returns relevant LDAP information for given uid"
+    path: "/user/getUserInfo/{uid}"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("uid"), swagger.errors.notFound("uid")]
+    nickname: "getUserInfo"
+  action: (req, res) ->
+    throw swagger.errors.invalid("uid") unless req.params.uid
+    ldap.getUserInfo req.params.uid, returnJson(res, "userInfo")
+
+
 getICalURL =
   spec:
     description: "Gets the ICal URL for the currently logged in user"
@@ -316,7 +346,7 @@ getICal =
 deleteICalURL =
   spec:
     description: "Makes the current user remove his ical url"
-    path: "/calendar"
+    path: "/calendar/URL"
     notes: ""
     method: "DELETE"
     params: []
@@ -521,12 +551,13 @@ swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventsFromTag
 swagger.addGet getEventById
+swagger.addGet getUserInfo
 swagger.addPost postChangeEvent
 swagger.addPut postGroupEvent
 swagger.addDelete postDeleteEvent
+swagger.addDelete deleteICalURL
 swagger.addGet getICalURL
 swagger.addGet createICalURL
-swagger.addDelete deleteICalURL
 swagger.addGet getICal
 swagger.addPost removeFromGroup
 swagger.addGet leaveGroup

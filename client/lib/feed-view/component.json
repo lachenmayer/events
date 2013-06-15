@@ -1,0 +1,22 @@
+{
+    "name": "feed",
+    "repo": "main/feed",
+    "description": "",
+    "version": "0.0.1",
+    "keywords": [],
+    "dependencies": {},
+    "development": {},
+    "license": "MIT",
+    "main": "index.js",
+    "scripts": [
+        "index.coffee"
+    ],
+    "styles": [
+        "feed.styl"
+    ],
+    "templates": [
+        "feed.jade",
+        "outlook.jade",
+        "gmail.jade"
+    ]
+}

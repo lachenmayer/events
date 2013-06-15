@@ -16,6 +16,7 @@
     "lib/events.coffee",
     "lib/tag.coffee",
     "lib/tags.coffee",
-    "lib/user.coffee"
+    "lib/user.coffee",
+    "lib/icalURL.coffee"
   ]
 }

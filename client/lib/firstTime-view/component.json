@@ -1,0 +1,20 @@
+{
+    "name": "firstTime",
+    "repo": "main/firstTime",
+    "description": "",
+    "version": "0.0.1",
+    "keywords": [],
+    "dependencies": {},
+    "development": {},
+    "license": "MIT",
+    "main": "index.js",
+    "scripts": [
+        "index.coffee"
+    ],
+    "styles": [
+        "firstTime.styl"
+    ],
+    "templates": [
+        "firstTime.jade"
+    ]
+}

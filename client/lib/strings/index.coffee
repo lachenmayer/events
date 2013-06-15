@@ -21,6 +21,12 @@ strings =
     en: 'dddd, MMMM Do [at] ha'
   notFoundTitle:
     en: 'Page not found'
+  firstTime:
+    en: 'Set up your app'
+  setupGmail:
+    en: 'Synchronize events with Gmail'
+  setupOutlook:
+    en: 'Synchronize events with Outlook'
 
 exports.lang = (language) ->
   return this if @language is language

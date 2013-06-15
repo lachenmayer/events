@@ -68,7 +68,7 @@ getICalURL = (nodeId, callback) ->
     if (iUrl.length == 0)
       callback "User does not have iCAL activated", null
     else
-      callback null, iUrl[0].i.data.icalId
+      callback null, iUrl[0].i.data
 
 # Returns the user id that has a given ICALID
 getICalUser = (icalId, callback) ->
