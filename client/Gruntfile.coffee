@@ -2,7 +2,8 @@ module.exports = (grunt) ->
   grunt.initConfig
   
     pkg: grunt.file.readJSON 'package.json'
-    
+
+      
     # Jade config
     jade:
       development:
@@ -54,6 +55,15 @@ module.exports = (grunt) ->
           builder.use (require 'component-stylus')
           builder.use (require 'component-jade')
 
+    # Combine config for fixing a bug
+    combine:
+      app_fix:
+        input: 'public/js/app.js'
+        output: 'public/js/app.js'
+        tokens: [
+          token: '.coffee'
+          string: '.js'
+        ]
     # Minification
 #     uglify# :
 #       app:
@@ -107,16 +117,21 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-component'
   grunt.loadNpmTasks 'grunt-component-build'
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks  'grunt-combine'
+
 
   grunt.registerTask 'component_private', [
     'component_build',
     'copy'
+    'combine:app_fix'
   ]
   grunt.registerTask 'component_update', [
     'component',
     'component_build',
     'copy'
+    'combine:app_fix'
   ]
+
   
   # Register our default tasks
   grunt.registerTask 'default',  [
