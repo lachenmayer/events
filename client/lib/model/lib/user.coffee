@@ -1,6 +1,6 @@
-$ = require '../../component-jquery'
+$        = require '../../component-jquery'
 Backbone = require '../../solutionio-backbone'
-store = require '../../store'
+store    = require '../../store'
 
 exports.User = Backbone.Model.extend
 
