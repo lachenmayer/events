@@ -33,7 +33,7 @@ $ ->
     helperView: '#helper-view'
     container: '#main-view'
     el: $('#content')
-    accessoryTitle: 'Menu'
+    accessoryTitle: ' '
   App.NavBar.render()
 
   App.dispatcher.on 'navbar:accessoryButton', ->

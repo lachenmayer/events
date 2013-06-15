@@ -20,5 +20,8 @@
     "component-jade": "~0.3.1",
     "component-string": "~0.1.2",
     "component-coffee": "git://github.com/lachenmayer/component-coffee"
+  },
+  "dependencies": {
+    "grunt-combine": "~0.8.3"
   }
 }

@@ -6,6 +6,7 @@ userData      = require './database/users'
 commentData   = require './database/comments'
 calendarData  = require './calendar'
 database      = require './database/database'
+ldap          = require './ldapsearch'
 tagData       = require './database/tags'
 auth          = require './authenticate'
 groups        = require './database/groups'
@@ -299,6 +300,22 @@ createICalURL =
     nickname: "createICalURL"
   action: requireLoggedInUser (req, res, user) ->
     calendarData.createICalURL user.id, returnJson(res, "icalURL")
+
+
+getUserInfo =
+  spec:
+    description: "Returns relevant LDAP information for given uid"
+    path: "/user/getUserInfo/{uid}"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("uid"), swagger.errors.notFound("uid")]
+    nickname: "getUserInfo"
+  action: (req, res) ->
+    throw swagger.errors.invalid("uid") unless req.params.uid
+    ldap.getUserInfo req.params.uid, returnJson(res, "userInfo")
+
 
 getICalURL =
   spec:
@@ -621,6 +638,7 @@ swagger.addGet getAllEvents
 swagger.addGet getEventsInRange
 swagger.addGet getEventsFromTag
 swagger.addGet getEventById
+swagger.addGet getUserInfo
 swagger.addPost postChangeEvent
 swagger.addPut postGroupEvent
 swagger.addDelete postDeleteEvent
@@ -652,7 +670,7 @@ httpapp  = app
 
 
 httpapp.get '/user/*',(req,res) ->
-  res.redirect "https://127.0.0.1:#{HTTPS_PORT}#{req.url}"
+  res.redirect "https://#{req.get['Host']}:#{HTTPS_PORT}#{req.url}"
 
 
 http.createServer(httpapp).listen HTTP_PORT, ->

@@ -12,6 +12,7 @@ exports.EventView = EventView = Backbone.View.extend
     return unless @model.get('name')?
     @$el.html @template
       model: @model
+      comments: @model.get('comments')
       
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->
@@ -24,12 +25,13 @@ exports.EventView = EventView = Backbone.View.extend
       @subscribe()
 
   subscribe: ->
-    subButton  = @$el.find('.subscribe')
-    subscribed = !subButton.hasClass('on')
-    @model.set 'subscribed', subscribed
-    if subscribed # Subscribes to the event
-      $.get("/api/event/#{@model.get('id')}/subscribe")
-    else # Unsubscribe from the event
-      $.get("/api/event/#{@model.get('id')}/unsubscribe")
-    @render()
+    if App.User.isLoggedIn()
+      subButton  = @$el.find('.subscribe')
+      subscribed = !subButton.hasClass('on')
+      @model.set 'subscribed', subscribed
+      if subscribed # Subscribes to the event
+        $.get("/api/event/#{@model.get('id')}/subscribe")
+      else # Unsubscribe from the event
+        $.get("/api/event/#{@model.get('id')}/unsubscribe")
+      @render()
 

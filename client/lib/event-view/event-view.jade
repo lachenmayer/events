@@ -2,10 +2,11 @@
   .image
     img(src=model.get('image'))
   header
-    if model.get('subscribed')
-      .button.subscribe.on Subscribe
-    else
-      .button.subscribe.off Unsubscribe
+    if App.User.isLoggedIn()
+      if model.get('subscribed')
+        .button.subscribe.on Subscribe
+      else
+        .button.subscribe.off Unsubscribe
     h1= model.get('name')
     p.date= moment.unix(model.get('date')).format("MMM Do,")
       strong(class=moment.unix(model.get('date')).isSame(moment(), 'day') ? "today" : "")= moment.unix(model.get('date')).format("HH:mm")
@@ -17,3 +18,23 @@
     - }
   .description
     p= model.get('description')
+  
+  #comments
+    h2 Comments
+    ul
+      - if(comments == null) {
+        p
+          em No comments have been posted yet.
+      - } else {
+      -   for (comment in comments) {
+        li
+          strong= comment.get('name')
+          .body= comment.get('body')
+      -   }
+      - }
+      - if (App.User.isLoggedIn()) {
+        h2 Post Comment
+        form(action='')
+          textarea
+          input(type='submit', value='Post Comment')
+      - }

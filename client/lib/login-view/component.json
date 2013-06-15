@@ -1,12 +1,5 @@
 {
   "name": "login",
-  "repo": "main/login",
-  "description": "",
-  "version": "0.0.1",
-  "keywords": [],
-  "dependencies": {},
-  "development": {},
-  "license": "MIT",
   "main": "index.js",
   "scripts": [
     "index.coffee"
@@ -15,6 +8,7 @@
     "login.styl"
   ],
   "templates": [
-    "login.jade"
+    "login.jade",
+    "logout.jade"
   ]
 }

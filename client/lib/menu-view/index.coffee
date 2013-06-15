@@ -1,18 +1,15 @@
-_         = require '../component-underscore'
-Backbone  = require '../solutionio-backbone'
+_           = require '../component-underscore'
+Backbone    = require '../solutionio-backbone'
+{LoginView} = require '../login-view'
 
 exports.MenuView = Backbone.View.extend
+
   mainTemplate: require './menu-view'
+
+  initialize: ->
+    @loginView = new LoginView()
 
   render: ->
     @$el.html _.template @mainTemplate()
-    @onSubmit()
+    @loginView.setElement(@$('.login')).render()
 
-  onSubmit: ->
-    @$el.find('form').submit (e) =>
-      e.preventDefault()
-      username = @$el.find('.username input').val()
-      password = @$el.find('.password input').val()
-      App.User.login username, password, (err) ->
-        unless err
-          console.log "logged in: #{App.User.isLoggedIn()}"

@@ -9,11 +9,13 @@ TagView = Backbone.View.extend
     @render()
 
   render: ->
-    name    = @model.get('tagName')
-    checked = @model.get('subscribed')
+    name      = @model.get('tagName')
+    checked   = @model.get('subscribed')
+    numEvents = @model.get('count')
 
     @$el.html _.template @mainTemplate
       name: name
+      numEvents: numEvents
 
     li = @$el.find('li')
 

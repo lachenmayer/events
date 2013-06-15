@@ -1,6 +1,10 @@
-$ = require '../../component-jquery'
+$        = require '../../component-jquery'
 Backbone = require '../../solutionio-backbone'
-store = require '../../store'
+store    = require '../../store'
+
+UserInfo = Backbone.Model.extend
+  url: ->
+    "/api/user/info/#{@attributes.username}"
 
 exports.User = Backbone.Model.extend
 
@@ -8,10 +12,6 @@ exports.User = Backbone.Model.extend
     user = store 'User'
     if user?
       this[key] = user[key] for key of user
-    @clearInfo()
-
-  url: ->
-    "/user/#{@id}"
 
   isLoggedIn: ->
     @validLogin this
@@ -25,8 +25,7 @@ exports.User = Backbone.Model.extend
         return fn? data.error
       unless @validLogin data
         return fn? 'Invalid response'
-      @storeInfo username, data.id, data.key
-      fn? null
+      @storeInfo username, data.id, data.key, fn? null
 
   validLogin: (data) ->
     data.key? and data.id?
@@ -34,11 +33,19 @@ exports.User = Backbone.Model.extend
   logout: ->
     @clearInfo()
 
-  storeInfo: (@username, @id, @key) ->
-    store 'User',
+  storeInfo: (@username, @id, @key, fn) ->
+    userInfo = new UserInfo
       username: username
-      id: id
-      key: key
+    onFetch = (info) ->
+      store 'User',
+        username: username
+        id: id
+        key: key
+        userInfo: info
+      fn? null
+    userInfo.fetch
+      success: onFetch
+      error: onFetch
 
   clearInfo: ->
     store 'User', null

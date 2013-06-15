@@ -1,8 +1,10 @@
-#login
-  form(action='')
-    ul
-      li.username
-        input(type='text', placeholder='Username')
-      li.password
-        input(type='password', placeholder='Password')
-    input(type='submit', value='Log in')
+#menu
+  ul
+    li.login.menu-item
+    li.tags.menu-item
+      a(href='/tags') Tags
+    li.all-events.menu-item
+      a(href='/events') All events
+    if App.User.isLoggedIn()
+      li.all-events.menu-item
+        a(href='/') Your events
