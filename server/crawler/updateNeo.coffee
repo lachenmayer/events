@@ -51,6 +51,7 @@ cleanTags = (handler) ->
            DELETE t, r"
   db.query query, {}, (err, res) ->
     console.log "Submitted the query"
+    handler()
 
 main = ->
   console.log "Events-scrape: Updating the auto-generated events"
