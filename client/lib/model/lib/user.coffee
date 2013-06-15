@@ -8,7 +8,6 @@ exports.User = Backbone.Model.extend
     user = store 'User'
     if user?
       this[key] = user[key] for key of user
-    @clearInfo()
 
   url: ->
     "/user/#{@id}"
