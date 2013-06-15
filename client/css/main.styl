@@ -1,10 +1,12 @@
+$background_color = #eee
+
 body
   font-family: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif
   font-size: 100%
   line-height: 1.5
   margin: 0
   padding: 0
-  background-color #eee
+  background-color $background_color
 
 $nav_height = 46px
 
@@ -72,6 +74,11 @@ nav
 #helper-view
   height 100px
   display none
+  position fixed
+  top $navbar_height
+  width 100%
+  background-color $background_color
+  border-bottom 1px solid #ccc
 
 nav.shadow
   box-shadow: 0 3px 3px rgba(0,0,0,0.2)
