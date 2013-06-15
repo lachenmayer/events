@@ -12,6 +12,7 @@ exports.EventView = EventView = Backbone.View.extend
     return unless @model.get('name')?
     @$el.html @template
       model: @model
+      comments: @model.get('comments')
       
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->

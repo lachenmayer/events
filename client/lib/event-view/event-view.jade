@@ -17,3 +17,23 @@
     - }
   .description
     p= model.get('description')
+  
+  #comments
+    h2 Comments
+    ul
+      - if(comments == null) {
+        p
+          em No comments have been posted yet.
+      - } else {
+      -   for (comment in comments) {
+        li
+          strong= comment.get('name')
+          .body= comment.get('body')
+      -   }
+      - }
+      - if (App.User.isLoggedIn()) {
+        h2 Post Comment
+        form(action='')
+          textarea
+          input(type='submit', value='Post Comment')
+      - }

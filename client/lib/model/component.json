@@ -17,6 +17,8 @@
     "lib/tag.coffee",
     "lib/tags.coffee",
     "lib/user.coffee",
-    "lib/icalURL.coffee"
+    "lib/icalURL.coffee",
+    "lib/comment.coffee",
+    "lib/comments.coffee"
   ]
 }
