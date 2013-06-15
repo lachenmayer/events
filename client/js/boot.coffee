@@ -60,3 +60,9 @@ $ ->
   Backbone.history.start
     pushState: true
 
+  App.reloadPage = ->
+    App.Router.navigate window.location.pathname,
+      trigger: true
+      replace: true
+    App.MenuView.render()
+
