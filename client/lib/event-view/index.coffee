@@ -1,6 +1,8 @@
 Backbone = require '../solutionio-backbone'
 moment   = require '../moment'
 
+{SubscribeButton} = require '../subscribe-button'
+
 exports.EventView = EventView = Backbone.View.extend
 
   template: require './event-view'
@@ -11,6 +13,8 @@ exports.EventView = EventView = Backbone.View.extend
       @render()
     App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
       @subscribed = isSubscribed
+      
+    @subscribeButton = new SubscribeButton()
 
   render: ->
     @$el.html @template
@@ -20,7 +24,13 @@ exports.EventView = EventView = Backbone.View.extend
       subscribed: @isSubscribed
       App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
         @subscribed = isSubscribed
-        $('#subscribeBtn').html(if isSubscribed then "Unsubscribe" else "Subscribe")
+        @subscribeButton.setSubscribed @subscribed
+
+    $buttonEl = @$el.find('a.subscribe-button')
+    @subscribeButton.setElement  $buttonEl
+    @subscribeButton.render()
+    $buttonEl.click =>
+      @subscribe()
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->
         App.Router.navigate "/events/tagged/#{$(el).attr('data-tag')}", 
@@ -31,11 +41,6 @@ exports.EventView = EventView = Backbone.View.extend
       @addComment()
     @$el.find('.addComment').submit =>
       @addComment()
-
-  events:
-    'click button': (e) ->
-      @subscribe()
-
   addComment: ->
     id = @model.get('id')
     data =
@@ -62,13 +67,13 @@ exports.EventView = EventView = Backbone.View.extend
   subscribe: ->
     if App.User.isLoggedIn()
       @subscribed = not @subscribed
+      @subscribeButton.setSubscribed @subscribed
+      
       if @subscribed # Subscribes to the event
         console.log "Unsubscribe"
         App.Auth.authPost("/api/event/#{@model.get('id')}/subscribe")
-        $('#subscribeBtn').html("Unsubscribe")
       else # Unsubscribe from the event
         console.log "subscribe"
         App.Auth.authPost("/api/event/#{@model.get('id')}/unsubscribe")
-        $('#subscribeBtn').html("Subscribe")
 
 

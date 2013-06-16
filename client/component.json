@@ -29,7 +29,8 @@
     "menu-view",
     "feed-view",
     "firstTime-view",
-    "bottom-bar"
+    "bottom-bar",
+    "subscribe-button"
   ],
   "paths": [
     "lib"

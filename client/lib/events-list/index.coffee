@@ -7,6 +7,7 @@ jade      = require '../monstercat-jade-runtime'
 Model     = require '../model'
 Strings   = require('../strings').lang 'en'
 eventView = require '../event-view'
+{SubscribeButton} = require '../subscribe-button'
 
 moment.lang 'en',
   calendar:
@@ -67,9 +68,19 @@ exports.EventsListView = Backbone.View.extend
 
   filterData: (string) -> (event) ->
     # More powerful data filtering here
-    return string == '' ||
-    event.get('name').toLowerCase().indexOf(string.toLowerCase()) != -1 ||
-    event.get('location').toLowerCase().indexOf(string.toLowerCase()) != -1
+    query = string.toLowerCase()
+    if query == '' || query == '@' || query == '#' || query == '+'
+      return true
+    if query[0] == '@'
+      return event.get('location').toLowerCase().indexOf(query.substring(1)) != -1
+    if query[0] == '#'
+      return event.get('name').toLowerCase().indexOf(query.substring(1)) != -1
+    if query[0] == '+'
+      satisfying = event.get('tags').filter (tag) ->
+        tag.toLowerCase().indexOf(query.substring(1)) != -1
+      return satisfying.length > 0
+    return event.get('name').toLowerCase().indexOf(string.toLowerCase()) != -1 ||
+           event.get('location').toLowerCase().indexOf(string.toLowerCase()) != -1
 
   setFilter: (string) ->
     @filter = string
@@ -105,13 +116,16 @@ exports.BottomBarView = Backbone.View.extend
   
   initialize: ->
     @subscribed = @options?.subscribed
+    @subscribeButton = new SubscribeButton()
   
   setSubscribed: (subscribed)->
     @subscribed = subscribed
     @render()
   
   render: ->  
-    @$el.html _.template @bottomBar
-      subscribed: @subscribed
+    @$el.html _.template @bottomBar()
+      
+    @subscribeButton.setElement @$el.find('a.button-right')
+    @subscribeButton.render()
     this
 
