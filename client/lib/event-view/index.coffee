@@ -15,6 +15,9 @@ exports.EventView = EventView = Backbone.View.extend
     # Find out if the element has been subscribed to
     if App.User.isLoggedIn()
       App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
+        @subscribed = isSubscribed
+        $('#loading-indicator').hide();
+        $('#subscribeBtn').show()
         @$el.html @template
           model: @model
           loggedIn: true
@@ -39,6 +42,9 @@ exports.EventView = EventView = Backbone.View.extend
     console.log @$('.subscribeBtn')
     console.log @$el.find('.randomThing')  
     @$el.find('.subscribeBtn').on "click",  =>
+    
+  events:
+    'click button': (e) ->
       @subscribe()
 
     @$el.find('.addComment').click =>
@@ -77,14 +83,16 @@ exports.EventView = EventView = Backbone.View.extend
 
 
   subscribe: ->
-    console.log "subscribe pressed"
     if App.User.isLoggedIn()
-      subButton  = @$el.find('.subscribe')
-      subscribed = !subButton.hasClass('on')
-      @model.set 'subscribed', subscribed
-      if subscribed # Subscribes to the event
+      @subscribed = not @subscribed
+      if @subscribed # Subscribes to the event
         App.Auth.authPost("/api/event/#{@model.get('id')}/subscribe")
       else # Unsubscribe from the event
         App.Auth.authPost("/api/event/#{@model.get('id')}/unsubscribe")
-      @render()
+
+      $('#loading-indicator').show()
+
+      $('#subscribeBtn').hide()
+
+      @render()   
 

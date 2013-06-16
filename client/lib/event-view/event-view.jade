@@ -15,9 +15,15 @@
     - }
     if loggedIn
       if subscribed
-        button.subscribeBtn Subscribe
+        button.subscribeBtn(id="subscribeBtn") Subscribe
       else
-        button.subscribeBtn Unsubscribe
+        button.subscribeBtn(id="subscribeBtn") Unsubscribe
+    li
+      img(src="/images/loading.gif", style="display:none")
+      
+      
+
+
   .description
     p= model.get('description')
 
