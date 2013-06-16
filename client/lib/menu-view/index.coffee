@@ -12,4 +12,3 @@ exports.MenuView = Backbone.View.extend
   render: ->
     @$el.html _.template @mainTemplate()
     @loginView.setElement(@$('.login')).render()
-
