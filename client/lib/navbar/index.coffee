@@ -100,7 +100,6 @@ exports.NavBar = Backbone.View.extend
       @$accessoryButton.hide()
   
     if @viewObjects.length > 1
-      @$backButton.html '&larr;'
       @$backButton.show()
     else
       @$backButton.hide()
