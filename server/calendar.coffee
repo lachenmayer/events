@@ -30,7 +30,7 @@ class Event
 
     vobject.add 'UID', @uid
     vobject.add 'STSTAMP', startStamp.format(TIME_FORMAT)
-    vobject.add 'DTSTART', dateStamp
+    vobject.add 'DTSTART', startStamp.format(TIME_FORMAT)
     if @end?
       vobject.add 'DTEND', moment.unix(@end).format(TIME_FORMAT)
     else

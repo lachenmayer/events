@@ -58,17 +58,20 @@ returnJson = (res, field) -> (err, value) ->
 getLoggedInUser = (callback) -> (req, res) ->
   #req.cookie.userId = 12312
   #req.cookie.key = blah
+  console.log "rb", req.body
+  console.log "rq", req.query
   if not req.body or not req.body.userId
     if not req.query or not req.query.userId
-      callback()
+      return callback req, res, null
     else userId = parseInt(req.query.userId)
   else userId = parseInt(req.body.userId)
-    
+
   if not req.body or not req.body.key
     if not req.query or not req.query.key
-      callback()
+      return callback req, res, null
     else key = parseInt(req.query.key)
   else key = req.body.key
+
   console.log "User id is #{userId}, key is: #{key}"
   userData.getUserById userId, (err, user) ->
     if err
