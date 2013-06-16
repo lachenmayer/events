@@ -8,19 +8,14 @@
     p.date= moment.unix(model.get('date')).format("MMM Do,")
       strong(class=moment.unix(model.get('date')).isSame(moment(), 'day') ? "today" : "")= moment.unix(model.get('date')).format("HH:mm")
     p.location= model.get('location')
+    - if(App.User.isLoggedIn()) {
+    a.subscribe-button(href='')
+    - }
   ul.tags
     - for (tag in model.get('tags')) {
       li
         a(href='', data-tag=model.get('tags')[tag])= model.get('tags')[tag]
     - }
-    if App.User.isLoggedIn()
-      if !subscribed
-        button.subscribeBtn(id="subscribeBtn") Subscribe
-      else
-        button.subscribeBtn(id="subscribeBtn") Unsubscribe
-      
-      
-
 
   .description
     p= model.get('description')

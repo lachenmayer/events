@@ -7,6 +7,7 @@ jade      = require '../monstercat-jade-runtime'
 Model     = require '../model'
 Strings   = require('../strings').lang 'en'
 eventView = require '../event-view'
+{SubscribeButton} = require '../subscribe-button'
 
 moment.lang 'en',
   calendar:
@@ -105,13 +106,16 @@ exports.BottomBarView = Backbone.View.extend
   
   initialize: ->
     @subscribed = @options?.subscribed
+    @subscribeButton = new SubscribeButton()
   
   setSubscribed: (subscribed)->
     @subscribed = subscribed
     @render()
   
   render: ->  
-    @$el.html _.template @bottomBar
-      subscribed: @subscribed
+    @$el.html _.template @bottomBar()
+      
+    @subscribeButton.setElement @$el.find('a.button-right')
+    @subscribeButton.render()
     this
 

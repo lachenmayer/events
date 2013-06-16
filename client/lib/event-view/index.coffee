@@ -1,6 +1,8 @@
 Backbone = require '../solutionio-backbone'
 moment   = require '../moment'
 
+{SubscribeButton} = require '../subscribe-button'
+
 exports.EventView = EventView = Backbone.View.extend
 
   template: require './event-view'
@@ -12,6 +14,8 @@ exports.EventView = EventView = Backbone.View.extend
       
     App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
       @subscribed = isSubscribed
+      
+    @subscribeButton = new SubscribeButton()
 
   render: ->
     @$el.html @template
@@ -22,6 +26,9 @@ exports.EventView = EventView = Backbone.View.extend
       App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
         @subscribed = isSubscribed
         $('#subscribeBtn').html(if isSubscribed then "Unsubscribe" else "Subscribe")
+
+    @subscribeButton.setElement @$el.find('a.subscribe-button')
+    @subscribeButton.render()
 
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->
