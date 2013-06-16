@@ -46,10 +46,10 @@ handler = (f) -> (err, value) ->
 
 returnJson = (res, field) -> (err, value) ->
   if err
-    console.log err
+    console.log "Err:", err
     res.status(404).send "404: invalid data. Cannot return #{field}"
   else
-    console.log "The value is", value
+#    console.log "The value is", value
     value = {} unless value?
     res.send JSON.stringify value
 
@@ -58,13 +58,18 @@ returnJson = (res, field) -> (err, value) ->
 getLoggedInUser = (callback) -> (req, res) ->
   #req.cookie.userId = 12312
   #req.cookie.key = blah
-  if not req.cookie || not req.cookie.userId
-    userId = 23064 # Generate from key, work it out
-  else userId = req.cookie.userId || 23064
-  if not req.cookie || not req.cookie.key
-    key = "blahblahblah"
-  else key = req.cookie.key
-  console.log "User id is #{userId}"
+  if not req.body or not req.body.userId
+    if not req.query or not req.query.userId
+      callback()
+    else userId = parseInt(req.query.userId)
+  else userId = parseInt(req.body.userId)
+    
+  if not req.body or not req.body.key
+    if not req.query or not req.query.key
+      callback()
+    else key = parseInt(req.query.key)
+  else key = req.body.key
+  console.log "User id is #{userId}, key is: #{key}"
   userData.getUserById userId, (err, user) ->
     if err
       callback req, res, null
@@ -127,17 +132,10 @@ getEventById =
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("eventId"), swagger.errors.notFound("event")]
     nickname: "getNodeById"
-  action: getLoggedInUser (req, res, user) ->
+  action: (req, res) ->
     throw swagger.errors.invalid("eventId") unless req.params.eventId
     id = parseInt(req.params.eventId)
-    eventData.getEventById id, handler (event) ->
-      if user
-        userData.getUserEvents user.id, handler (subscribedEvents) ->
-          event.subscribed = id in (e.id for e in subscribedEvents)
-          returnJson(res, "event")(null, event)
-      else
-        event.subscribed = false
-        returnJson(res, "event")(null, event)
+    eventData.getEventById id, returnJson(res, "event")
 
 getEventsInRange =
   spec:
@@ -342,7 +340,9 @@ getICal =
     nickname: "getICal"
   action: (req, res) ->
     throw swagger.errors.invalid("id") unless req.params.id
-    calendarData.getICal req.params.id, returnJson(res, "user calendar")
+    calendarData.getICal req.params.id, handler (value) ->
+      res.attachment 'calendar.ics'
+      res.send value
 
 deleteICalURL =
   spec:
@@ -509,15 +509,30 @@ unsubscribeTag =
   action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
-
     userData.unsubscribeFrom user.id, id, returnJson(res, "success")
+
+isSubscribedToEvent =
+  spec:
+    description: "Subscribes to an event"
+    path: "/event.json/{id}/isSubscribed"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("id")]
+    nickname: "isSubscribedToEvent"
+  action: requireLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+    userData.isSubscribedToEvent user.id, id, returnJson(res, "isSubscribed")
+
 
 subscribeToEvent =
   spec:
     description: "Subscribes to an event"
     path: "/event.json/{id}/subscribe"
     notes: ""
-    method: "GET"
+    method: "POST"
     params: []
     responseClass: "string"
     errorResponses: [swagger.errors.invalid("id")]
@@ -534,7 +549,7 @@ unsubscribeFromEvent =
     description: "Unsubscribes from an event"
     path: "/event.json/{id}/unsubscribe"
     notes: ""
-    method: "GET"
+    method: "POST"
     params: []
     responseClass: "string"
     errorResponses: [swagger.errors.invalid("id")]
@@ -558,7 +573,6 @@ getComments =
   action: (req, res) ->
     throw swagger.errors.invalid('eventId') unless req.params.id
     eventId = parseInt req.params.id
-
     commentData.getCommentsFromEvent eventId, returnJson(res, "success")
 
 getComment =
@@ -652,8 +666,9 @@ swagger.addGet joinGroup
 swagger.addDelete deleteGroup
 swagger.addPost createNewGroup
 swagger.addGet getSubscribedEvents
-swagger.addGet subscribeToEvent
-swagger.addGet unsubscribeFromEvent
+swagger.addGet isSubscribedToEvent
+swagger.addPost subscribeToEvent
+swagger.addPost unsubscribeFromEvent
 swagger.addGet subscribeToTag
 swagger.addGet unsubscribeTag
 swagger.addGet getUserTags

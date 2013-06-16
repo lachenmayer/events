@@ -4,9 +4,9 @@ _ = require 'underscore'
 db = database.db
 
 createTag = (tagName, callback) ->
-  console.log "createTag"
+  # console.log "createTag"
   database.createUniqueNode "TAGS", {"tagName": tagName} , "TAG", database.handle callback, (tagNode) ->
-    console.log "Creating Tag: #{tagNode}, #{tagName}"
+    # console.log "Creating Tag: #{tagNode}, #{tagName}"
     callback null, tagNode
 
 findTagNode = (tagName, callback) ->
@@ -17,16 +17,16 @@ findTagNode = (tagName, callback) ->
   db.query query, {rootId: database.rootNodeId, tagName: tagName}, database.handle callback, (tags) ->
 #    (console.log t.t) for t in tags
     if tags.length > 0
-      console.log "Tag Found #{tagName}"
+      # console.log "Tag Found #{tagName}"
       callback null, tags[0].t
     else
-      console.log "Tag Not Found #{tagName}"
+      # console.log "Tag Not Found #{tagName}"
       callback null, null
 
 findOrCreateTag = (tag, callback) ->
   findTagNode tag, (err, tagNode) ->
     if err
-      console.log "findTag Fail"
+      # console.log "findTag Fail"
       callback err, null
     else if not tagNode
       createTag tag, (err, createdTag) ->
@@ -71,9 +71,9 @@ findPopularTags = (callback) ->
   callback null, null
 
 attachTag = (node, tagNode, callback) ->
-  console.log "Attaching tag: #{node}, #{tagNode}"
+  # console.log "Attaching tag: #{node}, #{tagNode}"
   database.makeRelationship node, tagNode, "TAGGED_WITH", database.handle callback, ->
-    console.log "Attached tag: #{tagNode}"
+    # console.log "Attached tag: #{tagNode}"
     callback null, tagNode
 
 exports.createTag = createTag

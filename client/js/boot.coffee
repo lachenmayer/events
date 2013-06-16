@@ -7,7 +7,7 @@ _                        = require 'component-underscore'
 {MenuView}               = require 'menu-view'
 {Router}                 = require 'routes'
 {NavBar}                 = require 'navbar'
-{Events, Tags, User}     = require 'model'
+{Event, Events, Tags, User, Auth}     = require 'model'
 Strings                  = require('strings').lang 'en'
 
 # Store our stuff in a global app object.
@@ -38,14 +38,13 @@ $ ->
 
   App.dispatcher.on 'navbar:accessoryButton', ->
     App.MenuView ?= new MenuView()
-    if App.NavBar.isHelperViewVisible()
-      App.NavBar.hideHelperView()
-    else
-      App.NavBar.showHelperView App.MenuView
+    App.NavBar.toggleHelperView App.MenuView
 
   App.EventsList = new Events
   App.TagList = new Tags
   App.User = new User
+  App.Event = new Event
+  App.Auth = new Auth
 
   App.EventsListView = new EventsListView
     collection: App.EventsList
@@ -58,4 +57,10 @@ $ ->
   App.Router = new Router
   Backbone.history.start
     pushState: true
+
+  App.reloadPage = ->
+    App.Router.navigate window.location.pathname,
+      trigger: true
+      replace: true
+    App.MenuView.render()
 

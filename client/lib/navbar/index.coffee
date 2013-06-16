@@ -68,12 +68,9 @@ exports.NavBar = Backbone.View.extend
 
   showHelperView: (view) ->
     @helperView = view
-    
     @$helperView.hide()
     view.setElement(@$helperView).render()
-    
     height = @$helperView.css('height')
-    
     @$helperView.slideDown()
     @$container.animate
       'padding-top': height
@@ -83,7 +80,13 @@ exports.NavBar = Backbone.View.extend
       @helperView = null
     @$container.animate
       'padding-top': '0px'
-      
+
+  toggleHelperView: (view) ->
+    if @isHelperViewVisible()
+      @hideHelperView()
+    else
+      @showHelperView view
+
   isHelperViewVisible: ->
     @helperView?.$el?
 

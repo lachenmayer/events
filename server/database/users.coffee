@@ -8,6 +8,7 @@ database = require './database'
 async    = require 'async'
 uuid     = require 'node-uuid'
 moment   =  require 'moment'
+ical     = require '../calendar'
 
 db = database.db
 
@@ -24,9 +25,11 @@ userNode = (username) ->
 newUser = (username, callback) ->
   createUser (userNode username), callback
 
+# Creates a user with a new API key node and the ical url
 createUserSimple = (username, callback) ->
   createUser {"username": username, "joinTimestamp": moment().unix() }, database.handle callback, (userNode) ->
-    createAPIKeyNode userNode, callback
+    createAPIKeyNode userNode, database.handle callback, ->
+      ical.createICalURL userNode.id, callback
 
 createAPIKeyNode = (userNode, callback) ->
   db.createNode({ 'key': '', 'timestamp': ''}).save database.handle callback, (apiNode) ->
@@ -81,7 +84,7 @@ generateNewAPIKey = (username, callback) ->
         nodes[0].data.key = new_key
         nodes[0].data.timestamp = timestamp
         nodes[0].save database.handle callback, (new_node) ->
-          callback null, {"key": new_key, "id": new_node.id}
+          callback null, {"key": new_key, "id": userNode.id}
 
 # Verifies the key and returns whether the USERNAME, KEYAPI combination is valid
 verifyKey = (username, keyAPI, callback) ->
@@ -99,6 +102,17 @@ subscribeTo = (userId, nodeId, callback) ->
     eventNode = data[0].n
     database.makeRelationship userNode, eventNode, "SUBSCRIBED_TO", database.handle callback, ->
       callback null, {success: true}
+
+# Check if user is subscribed to an event
+isSubscribed = (userId, nodeId, callback) ->
+  query = "START r=Node({rootId}), m=Node({userId}), event=Node({eventId})
+           MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|SUBSCRIBED_TO]->event
+           RETURN event"
+  db.query query, {rootId: database.rootNodeId, userId: userId, eventId: nodeId}, (err, event) ->
+    console.log "err:", err, "event:",event, "event.length:", event.length
+    # console.log "isSubscribedToEvent:", event, (event and event.event.length > 0)
+    callback null, {isSubscribed: (event and event.length > 0)}
+
 
 # Unsubscribes from an event
 unsubscribeFrom = (userId, nodeId, callback) ->
@@ -270,22 +284,23 @@ stalkAPerson = (username1, username2, callback) ->
     followAPerson users[0], users[1], callback
 
 # Exporting the functions globally
-exports.newUser     = newUser
-exports.generateNewAPIKey = generateNewAPIKey
-exports.getUserById = getUserById
-exports.getUserFriends = getUserFriends
-exports.getUserEvents  = getUserEvents
-exports.removeUser         = removeUser
-exports.getUserInvited     = getUserInvited
-exports.getUserInvitations = getUserInvitations
-exports.getUserFollowing   = getUserFollowing
-exports.findFriendDistance = findFriendDistance
-exports.findUserByUsername = findUser
-exports.checkLogIn         = checkLogIn
-exports.addToFriends       = addToFriends
-exports.send_invite        = send_invite
-exports.removeFromFriends  = removeFromFriends
-exports.followAPerson      = stalkAPerson
-exports.unfollowAPerson    = unfollowAPerson
-exports.subscribeTo        = subscribeTo
-exports.unsubscribeFrom    = unsubscribeFrom
+exports.newUser               = newUser
+exports.generateNewAPIKey   = generateNewAPIKey
+exports.getUserById         = getUserById
+exports.getUserFriends      = getUserFriends
+exports.getUserEvents       = getUserEvents
+exports.removeUser          = removeUser
+exports.getUserInvited      = getUserInvited
+exports.getUserInvitations  = getUserInvitations
+exports.getUserFollowing    = getUserFollowing
+exports.findFriendDistance  = findFriendDistance
+exports.isSubscribedToEvent = isSubscribed
+exports.findUserByUsername  = findUser
+exports.checkLogIn          = checkLogIn
+exports.addToFriends        = addToFriends
+exports.send_invite         = send_invite
+exports.removeFromFriends   = removeFromFriends
+exports.followAPerson       = stalkAPerson
+exports.unfollowAPerson     = unfollowAPerson
+exports.subscribeTo         = subscribeTo
+exports.unsubscribeFrom     = unsubscribeFrom

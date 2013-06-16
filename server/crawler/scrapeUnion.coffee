@@ -89,6 +89,6 @@ fetchAndExecute = (uri, handler) ->
   }, (error, response, body) ->
     $ = cheerio.load(body)
     handler $
-    console.log "Paresed #{uri}"
+    console.log "Parsed #{uri}"
 
 exports.scrape = scrape
