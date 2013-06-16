@@ -13,37 +13,36 @@ class CommentsModel
   constructor: ->
     @created = false
 
-  initialize: (@originNode, comment, @author) ->
+  initialize: (@originNode, comment, @author, @username) ->
     @data =
       comment: comment
-      author:  @author
+      author:  @username
       createDate: moment().unix()
+
+  toModel: (commentNode) ->
+    model = new CommentsModel()
+    model.data    = commentNode.data
+    model.id      = commentNode.id
+    model.author  = commentNode.data.author
+    model.created = true
+
+    model.data.id = model.id
+    return model
 
   getListFromOrigin: (id, callback) ->
     query = "START o=node({originId})
              MATCH o-[:#{@relation}]->c
              RETURN c"
-    db.query query, {originId: id}, database.handle callback, (comments) ->
-      toModel = (comment) ->
-        model = new CommentsModel()
-        model.data = comment.c.data
-        model.author = comment.c.data.author
-        model.id = comment.id
-        return model
-      models = (toModel(comment) for comment in comments)
+    db.query query, {originId: id}, database.handle callback, (comments) =>
+      models = (@toModel(comment.c) for comment in comments)
       callback null, models
 
   # Gets a new node from a gievn id
   getFromId: (id, callback) ->
     query = "START i=node({commentId})
              RETURN i"
-    db.query query, {commentId: id}, database.handle callback, (value) ->
-      model = new CommentsModel()
-      model.data    = value[0].i.data
-      model.id      = value[0].i.id
-      model.author  = value[0].i.data.author
-      model.created = true
-
+    db.query query, {commentId: id}, database.handle callback, (value) =>
+      model = @toModel value[0].i
       callback null, model
 
   save: (callback) ->
@@ -105,7 +104,7 @@ deleteComment = (commentId, callback) ->
 
 addNewComment = (eventId, authorId, data, callback) ->
   comment = new CommentsModel()
-  comment.initialize eventId, data.comment, authorId
+  comment.initialize eventId, data.comment, authorId, data.author
   comment.save callback
 
 # Defining the publicly available functions

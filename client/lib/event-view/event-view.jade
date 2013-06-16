@@ -1,3 +1,5 @@
+- comments = model.get('comments')
+
 #event-view
   .image
     img(src=model.get('image'))
@@ -22,23 +24,21 @@
 
   .description
     p= model.get('description')
-  
+
   #comments
     h2 Comments
+
     ul
-      - if(comments == null) {
+      if comments.length == 0
         p
           em No comments have been posted yet.
-      - } else {
-      -   for (comment in comments) {
-        li
-          strong= comment.get('name')
-          .body= comment.get('body')
-      -   }
-      - }
-      - if (App.User.isLoggedIn()) {
+      else
+        for comment in comments
+          li
+            .body.comment= comment.comment
+            strong.author @#{comment.author}
+      if App.User.isLoggedIn()
         h2 Post Comment
         form(action='')
-          textarea
-          input(type='submit', value='Post Comment')
-      - }
+          textarea.newComment
+          input.addComment(type='submit', value='Post Comment')
