@@ -17,18 +17,18 @@ feeds           = require('../feed-view')
 exports.Router = Backbone.Router.extend
 
   routes:
-    ''                    : 'events'
-    'events'              : 'allEvents'
-    'event/new'           : 'createEvent'
-    'event/:id'           : 'event'
-    'events/tagged/:tag'  : 'taggedEvents'
-    'events/subscribed'   : 'subscribedEvents'
-    'firstTime'           : 'firstTime'
+    ''                       : 'events'
+    'events'                 : 'events'
+    'event/new'              : 'createEvent'
+    'event/:id'              : 'event'
+    'events/tagged/:tag'     : 'taggedEvents'
+    'events/subscribed'      : 'subscribedEvents'
+    'firstTime'              : 'firstTime'
     'ical/subscribe/outlook' : 'outlook'
     'ical/subscribe/gmail'   : 'gmail'
-    'tags'                : 'tags'
-    'login'               : 'login'
-    '*default'            : 'defaultRoute'
+    'tags'                   : 'tags'
+    'login'                  : 'login'
+    '*default'               : 'defaultRoute'
 
 
   gmail: ->
