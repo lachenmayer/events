@@ -1,0 +1,5 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+coffee $DIR/../server/database/deleteAll.coffee
+coffee $DIR/../server/database/database.coffee
+coffee $DIR/../server/crawler/updateNeo.coffee
