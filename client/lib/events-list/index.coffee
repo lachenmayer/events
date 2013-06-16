@@ -45,6 +45,7 @@ exports.EventsListView = Backbone.View.extend
         @dayLists.push day if day.events.length > 0
         day = newDay eventDate
       day.events.push e
+    @dayLists.push day if day.events.length > 0
 
   openEvent: (eventId) ->
     App.Router.navigate "/event/#{eventId}", true
