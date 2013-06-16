@@ -11,9 +11,11 @@ exports.EventView = EventView = Backbone.View.extend
     @model.getComments => @render()
     @model.bind 'change', =>
       @render()
-    App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
-      @subscribed = isSubscribed
-      @subscribeButton.setSubscribed isSubscribed
+      
+    if App.User.isLoggedIn()
+      App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
+        @subscribed = isSubscribed
+        @subscribeButton.setSubscribed isSubscribed
       
     @subscribeButton = new SubscribeButton()
 
@@ -23,9 +25,11 @@ exports.EventView = EventView = Backbone.View.extend
       comments: @model.get('comments')
       commentURL: @commentURL
       subscribed: @isSubscribed
+      
+    if App.User.isLoggedIn()
       App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
-#         @subscribed = isSubscribed
-#         @subscribeButton.setSubscribed @subscribed
+        @subscribed = isSubscribed
+        @subscribeButton.setSubscribed @subscribed
 
     $buttonEl = @$el.find('a.subscribe-button')
     @subscribeButton.setElement  $buttonEl

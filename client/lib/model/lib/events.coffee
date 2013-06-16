@@ -10,9 +10,3 @@ exports.Events = Backbone.Collection.extend
   url: ->
     base = '/api/events'
     return if @tagName? then "#{base}/tagged/#{@tagName}" else base
-    
-  fetch: (options)->  
-    return Backbone.Collection.prototype.fetch.call(this, options) unless App.User.isLoggedIn()
-
-    App.Auth.authGet '/api/user/events', (json)=>
-      @reset json

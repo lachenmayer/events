@@ -91,7 +91,12 @@ exports.EventsListView = Backbone.View.extend
     @setFilter text
 
   displayEvents: ->
+#     console.log @dayLists
+  
     values = @applyFilter @dayLists, @filterData(@filter)
+    
+    console.log values
+    
     @$el.find('#days').html _.template @daysTemplate
       days: values
 
