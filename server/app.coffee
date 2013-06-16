@@ -203,7 +203,7 @@ postGroupEvent =
       image:        req.body.image
       source:       "userEntered"
       host:         user.username
-      tags:         []
+      tags:         req.body.tags
     console.log "data:", data
     userData.findUserByUsername user.username, (err, user) ->
       if err
