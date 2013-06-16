@@ -40,7 +40,6 @@ exports.Router = Backbone.Router.extend
     console.log "Opening outlook"
     App.OutlookView ?= new feeds.OutlookView
       model: new ICalURL
-
     @loadView App.OutlookView, Strings.setupOutlook
 
   firstTime: ->
