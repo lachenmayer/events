@@ -8,8 +8,6 @@ exports.SubscribeButton = Backbone.View.extend
     @subscribed = @options?.subscribe
     
   setSubscribed: (subscribed)->
-    console.log 'Here'
-    
     if subscribed
       @$el.addClass('subscribed')
       @$el.find('.icon').addClass 'icon-check'
