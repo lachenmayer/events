@@ -14,7 +14,6 @@ exports.User = Backbone.Model.extend
       this[key] = user[key] for key of user
 
   isLoggedIn: ->
-    console.log 'valid login: ' + @validLogin this
     @validLogin this
 
   login: (username, password, fn) ->
@@ -26,7 +25,7 @@ exports.User = Backbone.Model.extend
         return fn? data.error
       unless @validLogin data
         return fn? 'Invalid response'
-      @storeInfo username, data.id, data.key, fn? null
+      @storeInfo username, data.id, data.key, ((err) -> fn? err)
 
   validLogin: (data) ->
     data.key? and data.id?
@@ -38,13 +37,12 @@ exports.User = Backbone.Model.extend
     userInfo = new UserInfo
       username: username
     onFetch = (info) =>
-      console.log 'stored'
-      @userInfo = info
+      @userInfo = info.attributes
       store 'User',
         username: username
         id: id
         key: key
-        userInfo: info
+        userInfo: info.attributes
       fn? null
     userInfo.fetch
       success: onFetch
