@@ -2,13 +2,18 @@ $        = require '../../component-jquery'
 Backbone = require '../../solutionio-backbone'
 
 exports.Auth = Backbone.Model.extend 
-  authPost:  (url) ->
+  authPost:  (url, data) ->
+    console.log "url: #{url}"
     authData = 
       "userId": App.User.id
       "key": App.User.key
-    $.post(url, authData)
+    if data
+      dataPacket = _.extend authData, data
+    else
+      dataPacket = data
+    console.log "dataPacket:", dataPacket
+    $.post(url, dataPacket)
   authGet:  (url, callback) ->
-    console.log "AuthGet:", url, callback
     authData = 
       "userId": App.User.id
       "key": App.User.key

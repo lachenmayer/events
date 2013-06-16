@@ -52,7 +52,7 @@ exports.CreateEventView = Backbone.View.extend
       @allFieldsValid(@validFields(@inputValues()))).filter(id)
     validSubmission.onValue (val) =>
       console.log "SUBMIT"
-      console.log @inputValues()
+      App.Auth.authPost '/api/event/new', @inputValues()
 
   inputValues: ->
     what: @what.val()

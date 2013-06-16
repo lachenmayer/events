@@ -52,5 +52,4 @@ exports.EventsListView = Backbone.View.extend
   render: ->
     @$el.html _.template @mainTemplate
       days: @dayLists
-    this
 

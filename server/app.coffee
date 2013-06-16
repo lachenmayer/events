@@ -517,7 +517,7 @@ unsubscribeTag =
 
 isSubscribedToEvent =
   spec:
-    description: "Subscribes to an event"
+    description: "Checks if subscribed to an event"
     path: "/event.json/{id}/isSubscribed"
     notes: ""
     method: "GET"
@@ -528,7 +528,22 @@ isSubscribedToEvent =
   action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
-    userData.isSubscribedToEvent user.id, id, returnJson(res, "isSubscribed")
+    userData.isSubscribedTo user.id, id, returnJson(res, "isSubscribed")
+
+isSubscribedToTag =
+  spec:
+    description: "Checks if subscribed to a tag"
+    path: "/tags/{id}/isSubscribed"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("id")]
+    nickname: "isSubscribedToTag"
+  action: requireLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+    userData.isSubscribedTo user.id, id, returnJson(res, "isSubscribed")
 
 
 subscribeToEvent =
