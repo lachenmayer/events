@@ -8,6 +8,7 @@ exports.Auth = Backbone.Model.extend
       "key": App.User.key
     $.post(url, authData)
   authGet:  (url, callback) ->
+    console.log "AuthGet:", url, callback
     authData = 
       "userId": App.User.id
       "key": App.User.key

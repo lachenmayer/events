@@ -69,7 +69,7 @@ getLoggedInUser = (callback) -> (req, res) ->
   if not req.body or not req.body.key
     if not req.query or not req.query.key
       return callback req, res, null
-    else key = parseInt(req.query.key)
+    else key = req.query.key
   else key = req.body.key
 
   console.log "User id is #{userId}, key is: #{key}"
