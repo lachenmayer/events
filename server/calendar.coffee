@@ -1,8 +1,8 @@
 ###
   Provides the iCal interoperability
 ###
-jsDAV  = require 'jsDAV/lib/VObject/component'
-prop   = require 'jsDAV/lib/VObject/property'
+jsDAV  = require './fixlib/jsDAV/VObject/component'
+prop   = require './fixlib/jsDAV/VObject/property'
 moment = require 'moment'
 database = require './database/database'
 users  = require './database/users'
@@ -58,6 +58,7 @@ eventToVObject = (event) ->
   return event.toVObject()
 
 toVCalendar = (prodId, events) ->
+
   vcal = createICal prodId, events
   return vcal.serialize()
 
