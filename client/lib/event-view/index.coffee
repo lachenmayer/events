@@ -25,10 +25,13 @@ exports.EventView = EventView = Backbone.View.extend
       subscribed: @isSubscribed
       App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
         @subscribed = isSubscribed
-        $('#subscribeBtn').html(if isSubscribed then "Unsubscribe" else "Subscribe")
+        @subscribeButton.setSubscribed @subscribed
 
-    @subscribeButton.setElement @$el.find('a.subscribe-button')
+    $buttonEl = @$el.find('a.subscribe-button')
+    @subscribeButton.setElement  $buttonEl
     @subscribeButton.render()
+    $buttonEl.click =>
+      @subscribe()
 
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->
@@ -43,10 +46,6 @@ exports.EventView = EventView = Backbone.View.extend
 
     @$el.find('.addComment').submit =>
       @addComment()
-    
-  events:
-    'click button': (e) ->
-      @subscribe()
 
   addComment: ->
     id = @model.get('id')
@@ -74,13 +73,13 @@ exports.EventView = EventView = Backbone.View.extend
   subscribe: ->
     if App.User.isLoggedIn()
       @subscribed = not @subscribed
+      @subscribeButton.setSubscribed @subscribed
+      
       if @subscribed # Subscribes to the event
         console.log "Unsubscribe"
         App.Auth.authPost("/api/event/#{@model.get('id')}/subscribe")
-        $('#subscribeBtn').html("Unsubscribe")
       else # Unsubscribe from the event
         console.log "subscribe"
         App.Auth.authPost("/api/event/#{@model.get('id')}/unsubscribe")
-        $('#subscribeBtn').html("Subscribe")
 
 
