@@ -76,8 +76,12 @@ exports.Router = Backbone.Router.extend
     
     eventsView = new EventsListView
       collection: taggedEvents
+
+    App.Auth.authGet "/api/tags/#{tagName}/isSubscribed/", (result)=>
+      bview = eventsView.bottomBarView()
+      bview.setSubscribed result?.subscribed?
     
-    @loadView eventsView, "'#{tagName}' Events"
+      @loadView eventsView, "'#{tagName}' Events", bview
 
   login: ->
     App.LoginView ?= new LoginView
@@ -105,11 +109,13 @@ exports.Router = Backbone.Router.extend
       model: event
     @loadView eventView, Strings.eventViewTitle
 
-  loadView: (view, title) ->
+  loadView: (view, title, bottomBarView=null) ->
     App.NavBar.pushViewObject
       view: view
       title: title
       url: window.location.pathname
+      
+    App.BottomBar.setContentView bottomBarView
       
   routeNotFound: ->
     App.NotFoundView ?= new NotFoundView()

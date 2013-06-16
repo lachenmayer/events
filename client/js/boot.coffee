@@ -7,6 +7,7 @@ _                        = require 'component-underscore'
 {MenuView}               = require 'menu-view'
 {Router}                 = require 'routes'
 {NavBar}                 = require 'navbar'
+{BottomBar}              = require 'bottom-bar'
 {Event, Events, Tags, User, Auth}     = require 'model'
 Strings                  = require('strings').lang 'en'
 
@@ -35,6 +36,10 @@ $ ->
     el: $('#content')
     accessoryTitle: ' '
   App.NavBar.render()
+  
+  App.BottomBar = new BottomBar
+    el: $('#bottom-bar')
+  App.BottomBar.render()
 
   App.dispatcher.on 'navbar:accessoryButton', ->
     App.MenuView ?= new MenuView()

@@ -15,6 +15,7 @@
     "events-list.styl"
   ],
   "templates": [
-    "events-list.jade"
+    "events-list.jade",
+    "bottom-bar.jade"
   ]
 }

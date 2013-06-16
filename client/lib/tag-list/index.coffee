@@ -1,6 +1,7 @@
 Backbone = require '../solutionio-backbone'
 _        = require '../underscore'
 List     = require '../cayasso-list'
+{Auth}   = require '../model'
 
 TagView = Backbone.View.extend
   mainTemplate: require './tag-item'
@@ -23,16 +24,30 @@ TagView = Backbone.View.extend
       li.addClass 'checked'
     else
       li.removeClass 'checked'
-
+      
     li.click =>
-      @check()
+      @check li
 
-  check: ->
+  check: (el)->
     @model.set('subscribed', !@model.get('subscribed'))
     name = if @model.get('subscribed') then 'subscribe' else 'unsubscribe'
     tagId = @model.get('id')
-    $.get("/api/tags/#{tagId}/#{name}")
-    @render()
+    App.Auth.authGet("/api/tags/#{tagId}/#{name}")
+    @setChecked el, true
+    
+  setChecked: (listEl, checked)->
+    console.log listEl
+
+    $e = listEl.find('.check')
+    console.log $e
+  
+    if @model.get('subscribed')
+      $e.removeClass 'icon-check-empty'
+      $e.addClass 'icon-check'
+    else
+      $e.addClass 'icon-check-empty'
+      $e.removeClass 'icon-check'
+
 
 exports.TagListView = Backbone.View.extend
 
