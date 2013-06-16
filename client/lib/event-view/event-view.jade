@@ -16,11 +16,6 @@
       li
         a(href='', data-tag=model.get('tags')[tag])= model.get('tags')[tag]
     - }
-    if App.User.isLoggedIn()
-      if !subscribed
-        button.subscribeBtn(id="subscribeBtn") Subscribe
-      else
-        button.subscribeBtn(id="subscribeBtn") Unsubscribe
 
   .description
     p= model.get('description')
