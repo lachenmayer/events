@@ -56,9 +56,11 @@ exports.Router = Backbone.Router.extend
 
   events: ->
     @createNewEventsList()
+    @loadView App.EventsListView, Strings.upcomingEvents
 
   subscribedEvents: ->
     @createNewEventsList()
+    @loadView App.EventsListView, Strings.upcomingEvents
 
   tags: ->
     App.TagList.setLoggedIn App.User.isLoggedIn()
@@ -119,6 +121,8 @@ exports.Router = Backbone.Router.extend
     @loadView eventView, Strings.eventViewTitle
 
   loadView: (view, title, bottomBarView=null) ->
+    return if App.NavBar.currentViewObject()?.url is window.location.pathname
+  
     App.NavBar.pushViewObject
       view: view
       title: title
