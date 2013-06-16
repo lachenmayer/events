@@ -1,13 +1,12 @@
+mixin menuItem(className, url, text)
+  a(href=url)
+    li(class=className + ' menu-item')= text
+
 #menu
   ul
-    li.login.menu-item
-    li.tags.menu-item
-      a(href='/tags') Tags
-    li.all-events.menu-item
-      a(href='/events') All events
+    li.login
+    mixin menuItem('tags', '/tags', 'Tags')
+    mixin menuItem('all-events', '/events', 'All events')
     if App.User.isLoggedIn()
-      li.all-events.menu-item
-        a(href='/') Your events
-      li.all-events.menu-item
-        a(href='/firstTime') Your Calendar (ICAL/Google Calendar/Outlook)
-
+      mixin menuItem('your-events', '/', 'Your events')
+      mixin menuItem('calendar', '/firstTime', 'Your calendar')
