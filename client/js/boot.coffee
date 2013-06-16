@@ -38,10 +38,7 @@ $ ->
 
   App.dispatcher.on 'navbar:accessoryButton', ->
     App.MenuView ?= new MenuView()
-    if App.NavBar.isHelperViewVisible()
-      App.NavBar.hideHelperView()
-    else
-      App.NavBar.showHelperView App.MenuView
+    App.NavBar.toggleHelperView App.MenuView
 
   App.EventsList = new Events
   App.TagList = new Tags
