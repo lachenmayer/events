@@ -83,7 +83,7 @@ generateNewAPIKey = (username, callback) ->
       else
         nodes[0].data.key = new_key
         nodes[0].data.timestamp = timestamp
-        nodes[0].save database.handle callback, (new_node) ->
+        nodes[0].save database.handle callback, ->
           callback null, {"key": new_key, "id": userNode.id}
 
 # Verifies the key and returns whether the USERNAME, KEYAPI combination is valid
@@ -125,9 +125,9 @@ unsubscribeFrom = (userId, nodeId, callback) ->
 # Returns the list of events a given user has subscribed to
 getUserEvents = (id, callback) ->
   query = "START r=Node({rootId}), m=Node({myId})
-           MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|SUBSCRIBED_TO]->event
+           MATCH r-[:USERS]->u-->mg-[:MEMBER_OF*0..]->g-[:ORGANIZES|SUBSCRIBED_TO]->()<-[:TAGGED_WITH*0..1]-event
            RETURN event"
-  db.query query, {rootId: database.rootNodeId, myId: id}, (err, events) ->
+  db.query query, {rootId: database.rootNodeId, myId: parseInt(id)}, (err, events) ->
     database.returnValue err, events, ((data) -> database.returnListWithId (value.event for value in data)), callback
 
 # Returns the list of friends a given user has
