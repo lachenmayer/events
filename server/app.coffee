@@ -198,12 +198,12 @@ postGroupEvent =
       name:         req.body.what
       description:  req.body.description
       location:     req.body.where
-      date:         req.body.date
+      date:         moment().unix(req.body.date).unix()
       image:        req.body.image
       source:       "userEntered"
       host:         user.username
       tags:         []
-      
+    console.log "data:", data
     userData.findUserByUsername user.username, (err, user) ->
       if err
         throw swagger.invalid("user")
