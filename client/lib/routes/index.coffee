@@ -50,9 +50,15 @@ exports.Router = Backbone.Router.extend
 
     @loadView App.FirstTimeView, Strings.firstTime
 
-  events: ->
+  createNewEventsList: ->
     App.EventsListView ?= new EventsListView
       collection: App.EventsList
+
+  events: ->
+    @createNewEventsList()
+
+  subscribedEvents: ->
+    @createNewEventsList()
 
   tags: ->
     App.TagList.setLoggedIn App.User.isLoggedIn()

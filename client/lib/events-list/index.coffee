@@ -20,8 +20,10 @@ moment.lang 'en',
 exports.EventsListView = Backbone.View.extend
 
   mainTemplate: require './events-list'
+  daysTemplate: require './days'
 
   initialize: ->
+    @filter = ''
     @dayLists = []
     @collection.bind 'reset', =>
       @splitEvents()
@@ -54,11 +56,44 @@ exports.EventsListView = Backbone.View.extend
   openEvent: (eventId) ->
     App.Router.navigate "/event/#{eventId}", true
 
+  applyFilter: (dayLists, f) ->
+    filterEvent = (day) ->
+      date: day.date
+      events: (day.events.filter (event) -> f event)
+    result = (filterEvent(day) for day in dayLists)
+
+    result.filter (day) ->
+      day.events.length > 0
+
+  filterData: (string) -> (event) ->
+    # More powerful data filtering here
+    return string == '' ||
+    event.get('name').toLowerCase().indexOf(string.toLowerCase()) != -1 ||
+    event.get('location').toLowerCase().indexOf(string.toLowerCase()) != -1
+
+  setFilter: (string) ->
+    @filter = string
+    @displayEvents()
+
+  filterText: ->
+    text = @$el.find('.filter').val()
+    @setFilter text
+
+  displayEvents: ->
+    values = @applyFilter @dayLists, @filterData(@filter)
+    @$el.find('#days').html _.template @daysTemplate
+      days: values
+
   render: ->
     @$el.html _.template @mainTemplate
-      days: @dayLists
       loading: @loading
       noEvents: @dayLists?.length is 0
+      filter: @filter
+
+    @$el.find('.filter').keyup =>
+      @filterText()
+
+    @displayEvents()
     this
     
   bottomBarView: ->

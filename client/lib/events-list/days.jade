@@ -1,0 +1,13 @@
+for day in days
+  .day
+    .day-header
+      p= day.date.calendar()
+    .day-events
+      table
+        for event in day.events
+          tr(class=event.get('id'))
+            td.time(class=moment.unix(event.get('date')).isSame(moment(), 'day') ? "starting-soon" : "")
+              span= moment.unix(event.get('date')).format('H:mm')
+            td.info
+              h2.name= event.get('name')
+              p.location= event.get('location')
