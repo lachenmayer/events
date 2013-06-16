@@ -28,7 +28,8 @@
     "not-found",
     "menu-view",
     "feed-view",
-    "firstTime-view"
+    "firstTime-view",
+    "bottom-bar"
   ],
   "paths": [
     "lib"
