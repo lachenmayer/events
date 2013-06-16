@@ -38,8 +38,8 @@ $tagsort_height = 40px
     
     li
       padding-left: 50px
-      background: url('/images/checkbox_normal.png') 10px center no-repeat;
-      clear: both
+      background #fff
+      clear both
       height: 60px
       display: table
       width: 100%
@@ -50,6 +50,8 @@ $tagsort_height = 40px
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      padding 0 20px
+      border-bottom 1px solid #ccc
       
       label
         cursor: pointer
@@ -64,13 +66,13 @@ $tagsort_height = 40px
       div.right
         width: 10%
         text-align: right
-        padding-right: 20px
-        
-    li.checked
-      background-image: url('/images/checkbox_active.png')
-      
-      label
-        font-weight: 600
-        
-    li:nth-child(odd)
-      background-color #dedede
+        padding-right 20px
+      .chevron
+        color #888
+        width: 30px
+        text-align center
+      .check
+        font-size 20px
+        padding-right 20px
+      .check:before
+        width 20px

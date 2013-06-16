@@ -94,4 +94,23 @@ exports.EventsListView = Backbone.View.extend
 
     @displayEvents()
     this
+    
+  bottomBarView: ->
+    @bview = new exports.BottomBarView() unless @bview?
+    @bview
+    
+exports.BottomBarView = Backbone.View.extend
+  bottomBar: require './bottom-bar'
+  
+  initialize: ->
+    @subscribed = @options?.subscribed
+  
+  setSubscribed: (subscribed)->
+    @subscribed = subscribed
+    @render()
+  
+  render: ->  
+    @$el.html _.template @bottomBar
+      subscribed: @subscribed
+    this
 

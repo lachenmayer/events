@@ -1,11 +1,12 @@
 Backbone = require '../solutionio-backbone'
 _        = require '../underscore'
 List     = require '../cayasso-list'
+{Auth}   = require '../model'
 
 TagView = Backbone.View.extend
   mainTemplate: require './tag-item'
 
-  initialize: ->
+  initialize: ->  
     @render()
 
   render: ->
@@ -18,21 +19,33 @@ TagView = Backbone.View.extend
       numEvents: numEvents
 
     li = @$el.find('li')
+    @setChecked li
+    
+    li.find('.chevron').click =>
+      App.Router.navigate "/events/tagged/#{name}",
+        trigger: true
 
-    if (checked)
-      li.addClass 'checked'
-    else
-      li.removeClass 'checked'
+    li.find('.clickme').click =>
+      @check li
 
-    li.click =>
-      @check()
-
-  check: ->
+  check: (el)->
     @model.set('subscribed', !@model.get('subscribed'))
     name = if @model.get('subscribed') then 'subscribe' else 'unsubscribe'
     tagId = @model.get('id')
-    $.get("/api/tags/#{tagId}/#{name}")
-    @render()
+    App.Auth.authGet("/api/tags/#{tagId}/#{name}")
+    
+    @setChecked el, true
+    
+  setChecked: (listEl)->
+    $e = listEl.find('.check')
+  
+    if @model.get('subscribed')
+      $e.removeClass 'icon-check-empty'
+      $e.addClass 'icon-check'
+    else
+      $e.addClass 'icon-check-empty'
+      $e.removeClass 'icon-check'
+
 
 exports.TagListView = Backbone.View.extend
 
@@ -66,7 +79,8 @@ exports.TagListView = Backbone.View.extend
         App.dispatcher.trigger 'sort_options:change', index
 
     @collection.each (tag) ->
-      newItem = new TagView({model: tag})
+      newItem = new TagView
+        model: tag
       $('#taglist ul').append(newItem.$el)
 
     @list = new List 'taglist',

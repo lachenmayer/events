@@ -16,6 +16,7 @@
   ],
   "templates": [
     "events-list.jade",
-    "days.jade"
+    "days.jade",
+    "bottom-bar.jade"
   ]
 }

@@ -8,6 +8,7 @@ EventsListView  = require('../events-list').EventsListView
 CreateEventView = require('../create-event-view').CreateEventView
 LoginView       = require('../login-view').LoginView
 TagListView     = require('../tag-list').TagListView
+{Tags}          = require '../model'
 Strings         = require('../strings').lang 'en'
 NotFoundView    = require('../not-found').NotFoundView
 FirstTimeView   = require('../firstTime-view').FirstTimeView
@@ -60,8 +61,10 @@ exports.Router = Backbone.Router.extend
     @createNewEventsList()
 
   tags: ->
+    App.TagList.setLoggedIn App.User.isLoggedIn()
     App.TagListView ?= new TagListView
       collection: App.TagList
+      
     @loadView App.TagListView, Strings.tags
 
   event: (id) ->
@@ -82,8 +85,12 @@ exports.Router = Backbone.Router.extend
     
     eventsView = new EventsListView
       collection: taggedEvents
+
+    App.Auth.authGet "/api/tags/#{tagName}/isSubscribed/", (result)=>
+      bview = eventsView.bottomBarView()
+      bview.setSubscribed result?.subscribed?
     
-    @loadView eventsView, "'#{tagName}' Events"
+      @loadView eventsView, "'#{tagName}' Events", bview
 
   login: ->
     App.LoginView ?= new LoginView
@@ -111,11 +118,13 @@ exports.Router = Backbone.Router.extend
       model: event
     @loadView eventView, Strings.eventViewTitle
 
-  loadView: (view, title) ->
+  loadView: (view, title, bottomBarView=null) ->
     App.NavBar.pushViewObject
       view: view
       title: title
       url: window.location.pathname
+      
+    App.BottomBar.setContentView bottomBarView
       
   routeNotFound: ->
     App.NotFoundView ?= new NotFoundView()
