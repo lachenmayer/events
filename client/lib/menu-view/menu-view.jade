@@ -1,5 +1,5 @@
 mixin menuItem(className, url, text)
-  a(href='/#' + url)
+  a(href='', onClick='App.Router.navigate("'+url+'", {trigger:true}); return false;')
     li(class=className + ' menu-item')= text
 
 #menu

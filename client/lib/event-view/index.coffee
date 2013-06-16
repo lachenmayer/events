@@ -9,7 +9,6 @@ exports.EventView = EventView = Backbone.View.extend
     @model.getComments => @render()
     @model.bind 'change', =>
       @render()
-      
     App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
       @subscribed = isSubscribed
 
@@ -22,21 +21,17 @@ exports.EventView = EventView = Backbone.View.extend
       App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
         @subscribed = isSubscribed
         $('#subscribeBtn').html(if isSubscribed then "Unsubscribe" else "Subscribe")
-
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->
         App.Router.navigate "/events/tagged/#{$(el).attr('data-tag')}", 
           replace: true
           trigger: true
         return false
-
-
     @$el.find('.insertComment').click =>
       @addComment()
-
     @$el.find('.addComment').submit =>
       @addComment()
-    
+
   events:
     'click button': (e) ->
       @subscribe()
