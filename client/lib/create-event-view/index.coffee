@@ -10,7 +10,7 @@ exports.CreateEventView = Backbone.View.extend
 
   template: require './create-event-view'
 
-  inputs: ['what', 'description', 'when', 'where']
+  inputs: ['what', 'description', 'when', 'where', 'tags']
 
   render: ->
     @$el.html @template
@@ -22,6 +22,14 @@ exports.CreateEventView = Backbone.View.extend
   elems: ->
     for elem in @inputs.concat 'date', 'submit'
       this[elem] = @$el.find ".#{elem}"
+
+  onSubmission: ->
+    @submitButtonClick.doAction '.preventDefault'
+    validSubmission = @submitButtonClick.map(=>
+      @allFieldsValid(@validFields(@inputValues()))).filter(id)
+    validSubmission.onValue (val) =>
+      console.log "SUBMIT"
+      App.Auth.authPost '/api/event/new', @inputValues()
 
   parseDates: ->
     dates = @when.asEventStream('keyup')
@@ -46,20 +54,13 @@ exports.CreateEventView = Backbone.View.extend
     valids = validateNow.map => @validFields(@inputValues())
     valids.onValue (fields) => @highlightInvalidFields fields
 
-  onSubmission: ->
-    @submitButtonClick.doAction '.preventDefault'
-    validSubmission = @submitButtonClick.map(=>
-      @allFieldsValid(@validFields(@inputValues()))).filter(id)
-    validSubmission.onValue (val) =>
-      console.log "SUBMIT"
-      App.Auth.authPost '/api/event/new', @inputValues()
-
   inputValues: ->
-    what: @what.val()
-    description: @description.val()
-    when: @when.val()
-    date: @parsedDate?.unix()
-    where: @where.val()
+    values = {}
+    for input in @inputs
+      values[input] = this[input].val()
+    values.tags = values.tags.split(',').map((tag) -> tag.trim())
+    values.date = @parsedDate?.unix()
+    values
 
   # (field: value) -> (field: bool)
   validFields: (fields) ->
