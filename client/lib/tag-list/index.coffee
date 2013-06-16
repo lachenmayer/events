@@ -20,8 +20,12 @@ TagView = Backbone.View.extend
 
     li = @$el.find('li')
     @setChecked li
-      
-    li.click =>
+    
+    li.find('.chevron').click =>
+      App.Router.navigate "/events/tagged/#{name}",
+        trigger: true
+
+    li.find('.clickme').click =>
       @check li
 
   check: (el)->
