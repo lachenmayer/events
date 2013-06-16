@@ -694,6 +694,7 @@ swagger.addPost subscribeToEvent
 swagger.addPost unsubscribeFromEvent
 swagger.addGet subscribeToTag
 swagger.addGet unsubscribeTag
+swagger.addGet isSubscribedToTag
 swagger.addGet getUserTags
 
 swagger.addGet getComments
