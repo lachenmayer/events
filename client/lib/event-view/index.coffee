@@ -39,9 +39,8 @@ exports.EventView = EventView = Backbone.View.extend
           trigger: true
         return false
 
-    console.log @$('.subscribeBtn')
-    console.log @$el.find('.randomThing')  
-    @$el.find('.subscribeBtn').on "click",  =>
+    @$el.find('.insertComment').click =>
+      @addComment()
 
     @$el.find('.addComment').click =>
       @addComment()
