@@ -129,6 +129,7 @@ setICalURL = (nodeId, newId, callback) ->
 # Creates an ICal url for the user
 # In case the url removes the previous one and craetes a new one
 createICalURL = (nodeId, callback) ->
+  console.log "Creating a new ical url"
   setUniqueID database.handle callback, (newId) ->
     setICalURL nodeId, newId, callback
 

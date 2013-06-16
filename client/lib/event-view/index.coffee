@@ -12,7 +12,6 @@ exports.EventView = EventView = Backbone.View.extend
       
     App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
       @subscribed = isSubscribed
-      @render()
 
   render: ->
     @$el.html @template
@@ -20,6 +19,9 @@ exports.EventView = EventView = Backbone.View.extend
       comments: @model.get('comments')
       commentURL: @commentURL
       subscribed: @isSubscribed
+      App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
+        @subscribed = isSubscribed
+        $('#subscribeBtn').html(if isSubscribed then "Unsubscribe" else "Subscribe")
 
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->
@@ -28,10 +30,11 @@ exports.EventView = EventView = Backbone.View.extend
           trigger: true
         return false
 
+
     @$el.find('.insertComment').click =>
       @addComment()
 
-    @$el.find('.addComment').click =>
+    @$el.find('.addComment').submit =>
       @addComment()
     
   events:
@@ -43,10 +46,12 @@ exports.EventView = EventView = Backbone.View.extend
     data =
       comment: @$el.find('.newComment').val()
 
-    author = "Get logged in username"
+    author = App.User.username
     # Use backbone to push into the collection directly
-    $.post @model.commentsUrl(), data, =>
+
+    App.Auth.authPost @model.commentsUrl(), data, =>
       @insertComment data.comment, author, moment().unix()
+    return false
 
   insertComment: (comment, author, added) ->
     newComment =

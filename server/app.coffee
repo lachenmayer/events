@@ -13,6 +13,7 @@ groups        = require './database/groups'
 fs            = require 'fs'
 http          = require 'http'
 https         = require 'https'
+moment        = require 'moment'
 
 server_options =
   key: fs.readFileSync "#{__dirname}/cert/server.key"
@@ -187,19 +188,23 @@ postGroupEvent =
     nickname: "postGroupEvent"
   action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("event") unless (\
-      req.query.name \
-      and req.query.location \
-      and req.query.description)
-    if not req.query.image     
-      req.query.image = ""
+          req.body.what \
+      and req.body.date \
+      and req.body.where \
+      and req.body.userId \
+      and req.body.description)
+    if not req.body.image     
+      req.body.image = ""
     data =
-      name: req.query.name
-      location: req.query.location
-      image: req.query.image
-      url: req.query.url
-      description: req.query.description
-      host: user.username
-
+      name:         req.body.what
+      description:  req.body.description
+      location:     req.body.where
+      date:         +req.body.date
+      image:        req.body.image
+      source:       "userEntered"
+      host:         user.username
+      tags:         []
+    console.log "data:", data
     userData.findUserByUsername user.username, (err, user) ->
       if err
         throw swagger.invalid("user")
@@ -673,7 +678,7 @@ swagger.addGet getEventsFromTag
 swagger.addGet getEventById
 swagger.addGet getUserInfo
 swagger.addPost postChangeEvent
-swagger.addPut postGroupEvent
+swagger.addPost postGroupEvent
 swagger.addDelete postDeleteEvent
 swagger.addDelete deleteICalURL
 swagger.addGet getICalURL

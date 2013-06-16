@@ -14,7 +14,7 @@
         a(href='', data-tag=model.get('tags')[tag])= model.get('tags')[tag]
     - }
     if App.User.isLoggedIn()
-      if subscribed
+      if !subscribed
         button.subscribeBtn(id="subscribeBtn") Subscribe
       else
         button.subscribeBtn(id="subscribeBtn") Unsubscribe
@@ -39,6 +39,6 @@
             strong.author @#{comment.author}
       if App.User.isLoggedIn()
         h2 Post Comment
-        form(action='')
+        form.addComment(action='')
           textarea.newComment
-          input.addComment(type='submit', value='Post Comment')
+          input(type='submit', value='Post Comment')
