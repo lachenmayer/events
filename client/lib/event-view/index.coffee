@@ -12,7 +12,6 @@ exports.EventView = EventView = Backbone.View.extend
       
     App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
       @subscribed = isSubscribed
-      @render()
 
   render: ->
     @$el.html @template
@@ -20,6 +19,9 @@ exports.EventView = EventView = Backbone.View.extend
       comments: @model.get('comments')
       commentURL: @commentURL
       subscribed: @isSubscribed
+      App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
+        @subscribed = isSubscribed
+        $('#subscribeBtn').html(if isSubscribed then "Unsubscribe" else "Subscribe")
 
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->
@@ -27,6 +29,7 @@ exports.EventView = EventView = Backbone.View.extend
           replace: true
           trigger: true
         return false
+
 
     @$el.find('.insertComment').click =>
       @addComment()
