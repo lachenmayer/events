@@ -21,6 +21,7 @@ exports.Router = Backbone.Router.extend
     'event/new'           : 'createEvent'
     'event/:id'           : 'event'
     'events/tagged/:tag'  : 'taggedEvents'
+    'events/subscribed'   : 'subscribedEvents'
     'firstTime'           : 'firstTime'
     'ical/subscribe/outlook' : 'outlook'
     'ical/subscribe/gmail'   : 'gmail'

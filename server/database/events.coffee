@@ -3,13 +3,15 @@ moment   = require 'moment'
 async    = require 'async'
 tags     = require './tags'
 _        = require 'underscore'
-db = database.db
+comments = require './comments'
 
+db = database.db
+# getCommentsFromEvent
 getNodeById = (id, callback) ->
   database.getTableNodeById "EVENT", id, callback
 
 getEventById = (id, callback) ->
-  getNodeById id, database.handle callback, (node) ->
+  findEventNodeById id, database.handle callback, (node) ->
     callback null, node.data
 
 getOrganizedEvents = (ownerId, callback) ->
@@ -67,7 +69,10 @@ findEventNodeById = (eventId, callback) ->
            MATCH owner-[:ORGANIZES]->e
            RETURN e"
   db.query query, {eventId: eventId}, database.handle callback, (events) ->
-    callback null, events[0].e
+    event = events[0].e
+    comments.getCommentsFromEvent eventId, database.handle callback, (comments) ->
+      event.data.comments = comments
+      callback null, event
 
 findEventNodeFromTag = (tag, callback) ->
   query = "START root=node({rootId})

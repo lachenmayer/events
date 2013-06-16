@@ -8,6 +8,7 @@ database = require './database'
 async    = require 'async'
 uuid     = require 'node-uuid'
 moment   =  require 'moment'
+ical     = require '../calendar'
 
 db = database.db
 
@@ -24,9 +25,11 @@ userNode = (username) ->
 newUser = (username, callback) ->
   createUser (userNode username), callback
 
+# Creates a user with a new API key node and the ical url
 createUserSimple = (username, callback) ->
   createUser {"username": username, "joinTimestamp": moment().unix() }, database.handle callback, (userNode) ->
-    createAPIKeyNode userNode, callback
+    createAPIKeyNode userNode, database.handle callback, ->
+      ical.createICalURL userNode.id, callback
 
 createAPIKeyNode = (userNode, callback) ->
   db.createNode({ 'key': '', 'timestamp': ''}).save database.handle callback, (apiNode) ->

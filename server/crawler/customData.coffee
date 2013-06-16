@@ -5,6 +5,8 @@ moment = require 'moment'
 
 
 # List of all of the events that need to be added to the database
+# TODO: add the list of the presentations.
+# This way one can quickly set up the system
 events = [
   {
     name: "My custom event"

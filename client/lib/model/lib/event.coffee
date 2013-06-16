@@ -7,6 +7,7 @@ exports.Event = Backbone.Model.extend
     if @isNew()
       return base
     base + '/' + @id
+
   isSubscribed: (id, callback) ->
     base = '/api/event' + '/' + id + '/isSubscribed'
     App.Auth.authGet base, (res) ->
@@ -17,3 +18,12 @@ exports.Event = Backbone.Model.extend
 
 
   
+  commentsUrl: ->
+    id = @get 'id'
+    "/api/event/#{id}/comments"
+
+  getComments: (callback) ->
+    @set 'comments', []
+    $.get @commentsUrl(), (data) =>
+      @set 'comments', data
+      callback data

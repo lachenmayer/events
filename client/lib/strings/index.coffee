@@ -27,6 +27,8 @@ strings =
     en: 'Synchronize events with Gmail'
   setupOutlook:
     en: 'Synchronize events with Outlook'
+  subscribedEvents:
+    en: 'Subscribed events'
 
 exports.lang = (language) ->
   return this if @language is language

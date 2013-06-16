@@ -49,6 +49,7 @@ returnJson = (res, field) -> (err, value) ->
     console.log "Err:", err
     res.status(404).send "404: invalid data. Cannot return #{field}"
   else
+#    console.log "The value is", value
     value = {} unless value?
     res.send JSON.stringify value
 
@@ -339,7 +340,9 @@ getICal =
     nickname: "getICal"
   action: (req, res) ->
     throw swagger.errors.invalid("id") unless req.params.id
-    calendarData.getICal req.params.id, returnJson(res, "user calendar")
+    calendarData.getICal req.params.id, handler (value) ->
+      res.attachment 'calendar.ics'
+      res.send value
 
 deleteICalURL =
   spec:

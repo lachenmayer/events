@@ -1,3 +1,5 @@
+- comments = model.get('comments')
+
 #event-view
   .image
     img(src=model.get('image'))
@@ -18,9 +20,10 @@
         button.subscribeBtn Unsubscribe
   .description
     p= model.get('description')
-  
+
   #comments
     h2 Comments
+
     ul
       - if(comments == null) {
         p
@@ -28,13 +31,13 @@
       - } else {
       -   for (comment in comments) {
         li
-          strong= comment.get('name')
-          .body= comment.get('body')
+          .body.comment= comment.comment
+          strong.author @#{comment.author}
       -   }
       - }
       - if (App.User.isLoggedIn()) {
         h2 Post Comment
         form(action='')
-          textarea
-          input(type='submit', value='Post Comment')
+          textarea.newComment
+          input.addComment(type='submit', value='Post Comment')
       - }
