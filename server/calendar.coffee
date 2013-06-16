@@ -1,8 +1,8 @@
 ###
   Provides the iCal interoperability
 ###
-jsDAV  = require './fixlib/jsDAV/VObject/component'
-prop   = require './fixlib/jsDAV/VObject/property'
+jsDAV  = require './fixlib/jsDAV/lib/VObject/component'
+prop   = require './fixlib/jsDAV/lib/VObject/property'
 moment = require 'moment'
 database = require './database/database'
 users  = require './database/users'
