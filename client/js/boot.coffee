@@ -7,7 +7,7 @@ _                        = require 'component-underscore'
 {MenuView}               = require 'menu-view'
 {Router}                 = require 'routes'
 {NavBar}                 = require 'navbar'
-{Events, Tags, User, Auth}     = require 'model'
+{Event, Events, Tags, User, Auth}     = require 'model'
 Strings                  = require('strings').lang 'en'
 
 # Store our stuff in a global app object.
@@ -46,6 +46,7 @@ $ ->
   App.EventsList = new Events
   App.TagList = new Tags
   App.User = new User
+  App.Event = new Event
   App.Auth = new Auth
 
   App.EventsListView = new EventsListView

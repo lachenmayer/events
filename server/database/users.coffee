@@ -100,6 +100,17 @@ subscribeTo = (userId, nodeId, callback) ->
     database.makeRelationship userNode, eventNode, "SUBSCRIBED_TO", database.handle callback, ->
       callback null, {success: true}
 
+# Check if user is subscribed to an event
+isSubscribed = (userId, nodeId, callback) ->
+  query = "START r=Node({rootId}), m=Node({userId}), event=Node({eventId})
+           MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|SUBSCRIBED_TO]->event
+           RETURN event"
+  db.query query, {rootId: database.rootNodeId, userId: userId, eventId: nodeId}, (err, event) ->
+    console.log "err:", err, "event:",event, "event.length:", event.length
+    # console.log "isSubscribedToEvent:", event, (event and event.event.length > 0)
+    callback null, {isSubscribed: (event and event.length > 0)}
+
+
 # Unsubscribes from an event
 unsubscribeFrom = (userId, nodeId, callback) ->
   query = "START r=node({rootId}), u=node({userId}), n=node({eventId})
@@ -270,22 +281,23 @@ stalkAPerson = (username1, username2, callback) ->
     followAPerson users[0], users[1], callback
 
 # Exporting the functions globally
-exports.newUser     = newUser
-exports.generateNewAPIKey = generateNewAPIKey
-exports.getUserById = getUserById
-exports.getUserFriends = getUserFriends
-exports.getUserEvents  = getUserEvents
-exports.removeUser         = removeUser
-exports.getUserInvited     = getUserInvited
-exports.getUserInvitations = getUserInvitations
-exports.getUserFollowing   = getUserFollowing
-exports.findFriendDistance = findFriendDistance
-exports.findUserByUsername = findUser
-exports.checkLogIn         = checkLogIn
-exports.addToFriends       = addToFriends
-exports.send_invite        = send_invite
-exports.removeFromFriends  = removeFromFriends
-exports.followAPerson      = stalkAPerson
-exports.unfollowAPerson    = unfollowAPerson
-exports.subscribeTo        = subscribeTo
-exports.unsubscribeFrom    = unsubscribeFrom
+exports.newUser               = newUser
+exports.generateNewAPIKey   = generateNewAPIKey
+exports.getUserById         = getUserById
+exports.getUserFriends      = getUserFriends
+exports.getUserEvents       = getUserEvents
+exports.removeUser          = removeUser
+exports.getUserInvited      = getUserInvited
+exports.getUserInvitations  = getUserInvitations
+exports.getUserFollowing    = getUserFollowing
+exports.findFriendDistance  = findFriendDistance
+exports.isSubscribedToEvent = isSubscribed
+exports.findUserByUsername  = findUser
+exports.checkLogIn          = checkLogIn
+exports.addToFriends        = addToFriends
+exports.send_invite         = send_invite
+exports.removeFromFriends   = removeFromFriends
+exports.followAPerson       = stalkAPerson
+exports.unfollowAPerson     = unfollowAPerson
+exports.subscribeTo         = subscribeTo
+exports.unsubscribeFrom     = unsubscribeFrom
