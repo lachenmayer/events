@@ -82,17 +82,16 @@ exports.Router = Backbone.Router.extend
       tagName: tagName
     eventsView = new EventsListView
       collection: taggedEvents
-      loadView = (view)=>
-        @loadView eventsView, "'#{tagName}' Events", view
-
-      if App.User.isLoggedIn()
-        App.Auth.authGet "/api/tags/#{tagName}/isSubscribed/", (result)=>
-          bview = eventsView.bottomBarView()
-          bview.setSubscribed result?.subscribed?
-        
-          loadView bview
-      else
-        loadView null
+    loadView = (view)=>
+      @loadView eventsView, "'#{tagName}' Events", view
+    if App.User.isLoggedIn()
+      App.Auth.authGet "/api/tags/#{tagName}/isSubscribed/", (result)=>
+        bview = eventsView.bottomBarView()
+        bview.setSubscribed result?.subscribed?
+      
+        loadView bview
+    else
+      loadView null
   login: ->
     App.LoginView ?= new LoginView
     @loadView App.LoginView, Strings.loginViewTitle
