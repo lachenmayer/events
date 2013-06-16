@@ -14,12 +14,10 @@
         a(href='', data-tag=model.get('tags')[tag])= model.get('tags')[tag]
     - }
     if loggedIn
-      if subscribed
+      if ! subscribed
         button.subscribeBtn(id="subscribeBtn") Subscribe
       else
         button.subscribeBtn(id="subscribeBtn") Unsubscribe
-    li
-      img(src="/images/loading.gif", style="display:none")
       
       
 

@@ -1,0 +1,20 @@
+{
+  "name": "bottom-bar",
+  "repo": "main/bottom-bar",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.coffee"
+  ],
+  "styles": [
+    "bottom-bar.styl"
+  ],
+  "templates": [
+    "bottom-bar.jade"
+  ]
+}

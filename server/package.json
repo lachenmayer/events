@@ -27,7 +27,6 @@
     "async": "~0.2.9",
     "node-krb5": "0.0.3",
     "node-uuid": "~1.4.0",
-    "jsDAV": "~0.3.2",
     "feedparser": "~0.15.4",
     "q": "~0.9.6",
     "email-templates": "~0.1.0",

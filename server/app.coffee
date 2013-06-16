@@ -38,8 +38,9 @@ swagger.setAppHandler app
 
 swagger.addModels swaggerModels
 
-handler = (f) -> (err, value) ->
+handler = (res, f) -> (err, value) ->
   if err
+    console.log "err:", err
     res.status(404).send "404: invalid data."
   else
     f value
@@ -58,17 +59,20 @@ returnJson = (res, field) -> (err, value) ->
 getLoggedInUser = (callback) -> (req, res) ->
   #req.cookie.userId = 12312
   #req.cookie.key = blah
+  console.log "rb", req.body
+  console.log "rq", req.query
   if not req.body or not req.body.userId
     if not req.query or not req.query.userId
-      callback()
+      return callback req, res, null
     else userId = parseInt(req.query.userId)
   else userId = parseInt(req.body.userId)
-    
+
   if not req.body or not req.body.key
     if not req.query or not req.query.key
-      callback()
-    else key = parseInt(req.query.key)
+      return callback req, res, null
+    else key = req.query.key
   else key = req.body.key
+
   console.log "User id is #{userId}, key is: #{key}"
   userData.getUserById userId, (err, user) ->
     if err
@@ -340,7 +344,7 @@ getICal =
     nickname: "getICal"
   action: (req, res) ->
     throw swagger.errors.invalid("id") unless req.params.id
-    calendarData.getICal req.params.id, handler (value) ->
+    calendarData.getICal req.params.id, handler res, (value) ->
       res.attachment 'calendar.ics'
       res.send value
 
