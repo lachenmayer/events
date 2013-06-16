@@ -13,6 +13,7 @@ groups        = require './database/groups'
 fs            = require 'fs'
 http          = require 'http'
 https         = require 'https'
+moment        = require 'moment'
 
 server_options =
   key: fs.readFileSync "#{__dirname}/cert/server.key"
@@ -198,7 +199,7 @@ postGroupEvent =
       name:         req.body.what
       description:  req.body.description
       location:     req.body.where
-      date:         moment().unix(req.body.date).unix()
+      date:         +req.body.date
       image:        req.body.image
       source:       "userEntered"
       host:         user.username

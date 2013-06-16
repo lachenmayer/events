@@ -57,11 +57,10 @@ getEventRelation = (nodeId, relation, callback) ->
 # Creates a new event and returns the id of the event
 # Adds the default relationships to denote the event
 createEvent = (ownerId, data, callback) ->
-  values = database.serializeData data
   query = "START owner=node({ownerId}), root=node({rootId})
-           CREATE (e {#{values}}), owner-[:ORGANIZES]->e, root-[:EVENT]->events-[:EVENT]->e
+           CREATE (e {values}), owner-[:ORGANIZES]->e, root-[:EVENT]->events-[:EVENT]->e
            RETURN e"
-  db.query query, {ownerId: ownerId, rootId: database.rootNodeId}, database.handle callback, (event) ->
+  db.query query, {ownerId: ownerId, rootId: database.rootNodeId, values: data}, database.handle callback, (event) ->
     console.log "Created Event!"
     callback null, event[0].e.id
 
