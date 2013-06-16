@@ -1,5 +1,5 @@
 mixin menuItem(className, url, text)
-  a(href=url)
+  a(href='/#' + url)
     li(class=className + ' menu-item')= text
 
 #menu
@@ -10,3 +10,4 @@ mixin menuItem(className, url, text)
     if App.User.isLoggedIn()
       mixin menuItem('your-events', '/', 'Your events')
       mixin menuItem('calendar', '/firstTime', 'Your calendar')
+      mixin menuItem('create-event', '/event/new', 'Create an event')
