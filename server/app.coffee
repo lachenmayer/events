@@ -38,8 +38,9 @@ swagger.setAppHandler app
 
 swagger.addModels swaggerModels
 
-handler = (f) -> (err, value) ->
+handler = (res, f) -> (err, value) ->
   if err
+    console.log "err:", err
     res.status(404).send "404: invalid data."
   else
     f value
@@ -343,7 +344,7 @@ getICal =
     nickname: "getICal"
   action: (req, res) ->
     throw swagger.errors.invalid("id") unless req.params.id
-    calendarData.getICal req.params.id, handler (value) ->
+    calendarData.getICal req.params.id, handler res, (value) ->
       res.attachment 'calendar.ics'
       res.send value
 
