@@ -62,7 +62,9 @@ createEvent = (ownerId, data, callback) ->
            CREATE (e {#{values}}), owner-[:ORGANIZES]->e, root-[:EVENT]->events-[:EVENT]->e
            RETURN e"
   db.query query, {ownerId: ownerId, rootId: database.rootNodeId}, database.handle callback, (event) ->
+    console.log "Created Event!"
     callback null, event[0].e.id
+
 
 findEventNodeById = (eventId, callback) ->
   query = "START e=node({eventId})

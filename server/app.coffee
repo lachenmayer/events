@@ -187,19 +187,23 @@ postGroupEvent =
     nickname: "postGroupEvent"
   action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("event") unless (\
-      req.query.name \
-      and req.query.location \
-      and req.query.description)
-    if not req.query.image     
-      req.query.image = ""
+          req.body.what \
+      and req.body.date \
+      and req.body.where \
+      and req.body.userId \
+      and req.body.description)
+    if not req.body.image     
+      req.body.image = ""
     data =
-      name: req.query.name
-      location: req.query.location
-      image: req.query.image
-      url: req.query.url
-      description: req.query.description
-      host: user.username
-
+      name:         req.body.what
+      description:  req.body.description
+      location:     req.body.where
+      date:         req.body.date
+      image:        req.body.image
+      source:       "userEntered"
+      host:         user.username
+      tags:         []
+      
     userData.findUserByUsername user.username, (err, user) ->
       if err
         throw swagger.invalid("user")
@@ -517,7 +521,7 @@ unsubscribeTag =
 
 isSubscribedToEvent =
   spec:
-    description: "Subscribes to an event"
+    description: "Checks if subscribed to an event"
     path: "/event.json/{id}/isSubscribed"
     notes: ""
     method: "GET"
@@ -528,7 +532,22 @@ isSubscribedToEvent =
   action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("id") unless req.params.id
     id = parseInt req.params.id
-    userData.isSubscribedToEvent user.id, id, returnJson(res, "isSubscribed")
+    userData.isSubscribedTo user.id, id, returnJson(res, "isSubscribed")
+
+isSubscribedToTag =
+  spec:
+    description: "Checks if subscribed to a tag"
+    path: "/tags/{id}/isSubscribed"
+    notes: ""
+    method: "GET"
+    params: []
+    responseClass: "string"
+    errorResponses: [swagger.errors.invalid("id")]
+    nickname: "isSubscribedToTag"
+  action: requireLoggedInUser (req, res, user) ->
+    throw swagger.errors.invalid("id") unless req.params.id
+    id = parseInt req.params.id
+    userData.isSubscribedTo user.id, id, returnJson(res, "isSubscribed")
 
 
 subscribeToEvent =
@@ -658,7 +677,7 @@ swagger.addGet getEventsFromTag
 swagger.addGet getEventById
 swagger.addGet getUserInfo
 swagger.addPost postChangeEvent
-swagger.addPut postGroupEvent
+swagger.addPost postGroupEvent
 swagger.addDelete postDeleteEvent
 swagger.addDelete deleteICalURL
 swagger.addGet getICalURL
@@ -675,6 +694,7 @@ swagger.addPost subscribeToEvent
 swagger.addPost unsubscribeFromEvent
 swagger.addGet subscribeToTag
 swagger.addGet unsubscribeTag
+swagger.addGet isSubscribedToTag
 swagger.addGet getUserTags
 
 swagger.addGet getComments

@@ -109,7 +109,7 @@ isSubscribed = (userId, nodeId, callback) ->
            MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|SUBSCRIBED_TO]->event
            RETURN event"
   db.query query, {rootId: database.rootNodeId, userId: userId, eventId: nodeId}, (err, event) ->
-    console.log "err:", err, "event:",event, "event.length:", event.length
+    # console.log "err:", err, "event:",event, "event.length:", event.length
     # console.log "isSubscribedToEvent:", event, (event and event.event.length > 0)
     callback null, {isSubscribed: (event and event.length > 0)}
 
@@ -294,7 +294,7 @@ exports.getUserInvited      = getUserInvited
 exports.getUserInvitations  = getUserInvitations
 exports.getUserFollowing    = getUserFollowing
 exports.findFriendDistance  = findFriendDistance
-exports.isSubscribedToEvent = isSubscribed
+exports.isSubscribedTo      = isSubscribed
 exports.findUserByUsername  = findUser
 exports.checkLogIn          = checkLogIn
 exports.addToFriends        = addToFriends

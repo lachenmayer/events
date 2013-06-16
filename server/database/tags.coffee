@@ -58,6 +58,17 @@ getAllTags = (callback) ->
     # console.log JSON.stringify(t.t.data)+' --- '+t['count(c)'] for t in tags
     callback null, database.returnListWithId (t.t for t in tags)
 
+# Check if user is subscribed to an tag
+isSubscribed = (userId, nodeId, callback) ->
+  query = "START r=Node({rootId}), m=Node({userId}), event=Node({eventId})
+           MATCH r-[:USERS]->u-->m-[:MEMBER_OF*0..]->g-[:ORGANIZES|SUBSCRIBED_TO]->tag
+           RETURN tag"
+  db.query query, {rootId: database.rootNodeId, userId: userId, eventId: nodeId}, (err, data) ->
+    console.log "err:", err, "event:",data, "data.length:", data.length
+    # console.log "isSubscribedToEvent:", event, (event and event.event.length > 0)
+    callback null, {isSubscribed: (data and data.length > 0)}
+
+
 
 getUserTags = (userId, callback) ->
   findSubscribedTags userId, database.handle callback, (subscribed) ->
