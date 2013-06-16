@@ -14,8 +14,8 @@ exports.EventView = EventView = Backbone.View.extend
     if App.User.isLoggedIn()
       App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
         @subscribed = isSubscribed
-        $('#loading-indicator').hide();
-        $('#subscribeBtn').show()
+        console.log "isSubscribed: #{isSubscribed}"
+        # $('#loading-indicator').hide();
         @$el.html @template
           model: @model
           loggedIn: true
@@ -42,13 +42,12 @@ exports.EventView = EventView = Backbone.View.extend
     if App.User.isLoggedIn()
       @subscribed = not @subscribed
       if @subscribed # Subscribes to the event
+        console.log "Unsubscribe"
         App.Auth.authPost("/api/event/#{@model.get('id')}/subscribe")
+        $('#subscribeBtn').html("Unsubscribe")
       else # Unsubscribe from the event
+        console.log "subscribe"
         App.Auth.authPost("/api/event/#{@model.get('id')}/unsubscribe")
+        $('#subscribeBtn').html("Subscribe")
 
-      $('#loading-indicator').show()
-
-      $('#subscribeBtn').hide()
-
-      @render()   
 
