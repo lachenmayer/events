@@ -8,6 +8,7 @@ EventsListView  = require('../events-list').EventsListView
 CreateEventView = require('../create-event-view').CreateEventView
 LoginView       = require('../login-view').LoginView
 TagListView     = require('../tag-list').TagListView
+{Tags}          = require '../model'
 Strings         = require('../strings').lang 'en'
 NotFoundView    = require('../not-found').NotFoundView
 FirstTimeView   = require('../firstTime-view').FirstTimeView
@@ -54,8 +55,10 @@ exports.Router = Backbone.Router.extend
       collection: App.EventsList
 
   tags: ->
+    App.TagList.setLoggedIn App.User.isLoggedIn()
     App.TagListView ?= new TagListView
       collection: App.TagList
+      
     @loadView App.TagListView, Strings.tags
 
   event: (id) ->

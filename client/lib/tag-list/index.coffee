@@ -6,7 +6,7 @@ List     = require '../cayasso-list'
 TagView = Backbone.View.extend
   mainTemplate: require './tag-item'
 
-  initialize: ->
+  initialize: ->  
     @render()
 
   render: ->
@@ -19,11 +19,7 @@ TagView = Backbone.View.extend
       numEvents: numEvents
 
     li = @$el.find('li')
-
-    if (checked)
-      li.addClass 'checked'
-    else
-      li.removeClass 'checked'
+    @setChecked li
       
     li.click =>
       @check li
@@ -33,13 +29,11 @@ TagView = Backbone.View.extend
     name = if @model.get('subscribed') then 'subscribe' else 'unsubscribe'
     tagId = @model.get('id')
     App.Auth.authGet("/api/tags/#{tagId}/#{name}")
+    
     @setChecked el, true
     
-  setChecked: (listEl, checked)->
-    console.log listEl
-
+  setChecked: (listEl)->
     $e = listEl.find('.check')
-    console.log $e
   
     if @model.get('subscribed')
       $e.removeClass 'icon-check-empty'
@@ -81,7 +75,8 @@ exports.TagListView = Backbone.View.extend
         App.dispatcher.trigger 'sort_options:change', index
 
     @collection.each (tag) ->
-      newItem = new TagView({model: tag})
+      newItem = new TagView
+        model: tag
       $('#taglist ul').append(newItem.$el)
 
     @list = new List 'taglist',
