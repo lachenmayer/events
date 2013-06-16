@@ -9,28 +9,17 @@ exports.EventView = EventView = Backbone.View.extend
     @model.getComments => @render()
     @model.bind 'change', =>
       @render()
+      
+    App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
+      @subscribed = isSubscribed
+      @render()
 
   render: ->
-    return unless @model.get('name')?
-    # Find out if the element has been subscribed to
-    if App.User.isLoggedIn()
-      App.Event.isSubscribed @model.get('id'), (isSubscribed) =>
-        @subscribed = isSubscribed
-        console.log "isSubscribed: #{isSubscribed}"
-        # $('#loading-indicator').hide();
-        @$el.html @template
-          model: @model
-          loggedIn: true
-          comments: @model.get('comments')
-          commentURL: @commentURL
-          subscribed: isSubscribed
-    else  
-      @$el.html @template
-        model: @model
-        loggedIn: false
-        comments: @model.get('comments')
-        commentURL: @commentURL
-    
+    @$el.html @template
+      model: @model
+      comments: @model.get('comments')
+      commentURL: @commentURL
+      subscribed: @isSubscribed
 
     @$el.find('ul.tags li a').each (index, el)->
       $(el).click ->

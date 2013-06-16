@@ -25,8 +25,10 @@ exports.EventsListView = Backbone.View.extend
     @dayLists = []
     @collection.bind 'reset', =>
       @splitEvents()
+      @loading = false
       @render()
     @collection.fetch()
+    @loading = true
 
   events:
     'click tr': (e) ->
@@ -39,12 +41,14 @@ exports.EventsListView = Backbone.View.extend
       date: date
       events: []
     day = newDay moment()
+    
     @collection.each (e) =>
       eventDate = moment.unix e.get 'date'
       unless eventDate.isSame day.date, 'day'
         @dayLists.push day if day.events.length > 0
         day = newDay eventDate
       day.events.push e
+    @dayLists.push day if day.events.length > 0
 
   openEvent: (eventId) ->
     App.Router.navigate "/event/#{eventId}", true
@@ -52,4 +56,7 @@ exports.EventsListView = Backbone.View.extend
   render: ->
     @$el.html _.template @mainTemplate
       days: @dayLists
+      loading: @loading
+      noEvents: @dayLists?.length is 0
+    this
 

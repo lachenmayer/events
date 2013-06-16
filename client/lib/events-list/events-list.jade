@@ -1,7 +1,11 @@
 #events-list
-  - if (typeof days[0] === 'undefined') {
+  - if (typeof loading !== "undefined" && loading) {
   #loading
     h2 Loading Events...
+  - }
+  - if (typeof noEvents !== "undefined" && noEvents) {
+  #no-events
+    h2 No events.
   - }
   for day in days
     .day
