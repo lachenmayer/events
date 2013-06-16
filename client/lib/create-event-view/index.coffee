@@ -28,8 +28,10 @@ exports.CreateEventView = Backbone.View.extend
     validSubmission = @submitButtonClick.map(=>
       @allFieldsValid(@validFields(@inputValues()))).filter(id)
     validSubmission.onValue (val) =>
-      console.log "SUBMIT"
       App.Auth.authPost '/api/event/new', @inputValues()
+      App.Router.navigate '/',
+        trigger: true
+        replace: true
 
   parseDates: ->
     dates = @when.asEventStream('keyup')
