@@ -34,20 +34,17 @@ exports.Router = Backbone.Router.extend
   gmail: ->
     App.GmailView ?= new feeds.GmailView
       model: new ICalURL
-
     @loadView App.GmailView, Strings.setupGmail
 
   outlook: ->
     console.log "Opening outlook"
     App.OutlookView ?= new feeds.OutlookView
       model: new ICalURL
-
     @loadView App.OutlookView, Strings.setupOutlook
 
   firstTime: ->
     App.FirstTimeView ?= new FirstTimeView
       model: new ICalURL
-
     @loadView App.FirstTimeView, Strings.firstTime
 
   createNewEventsList: ->
@@ -66,7 +63,6 @@ exports.Router = Backbone.Router.extend
     App.TagList.setLoggedIn App.User.isLoggedIn()
     App.TagListView ?= new TagListView
       collection: App.TagList
-      
     @loadView App.TagListView, Strings.tags
 
   event: (id) ->
@@ -80,14 +76,12 @@ exports.Router = Backbone.Router.extend
         success: (event) =>
           App.EventsList.add event
           @loadEventView event
-          
+
   taggedEvents: (tagName)->
     taggedEvents = new Events
       tagName: tagName
-    
     eventsView = new EventsListView
       collection: taggedEvents
-
       loadView = (view)=>
         @loadView eventsView, "'#{tagName}' Events", view
 
@@ -99,7 +93,6 @@ exports.Router = Backbone.Router.extend
           loadView bview
       else
         loadView null
-
   login: ->
     App.LoginView ?= new LoginView
     @loadView App.LoginView, Strings.loginViewTitle
@@ -110,7 +103,6 @@ exports.Router = Backbone.Router.extend
 
   defaultRoute: (route) ->
     return if @removeTrailingSlash route
-    
     @routeNotFound()
 
   removeTrailingSlash: (route) ->
@@ -128,14 +120,12 @@ exports.Router = Backbone.Router.extend
 
   loadView: (view, title, bottomBarView=null) ->
     return if App.NavBar.currentViewObject()?.url is window.location.pathname
-  
     App.NavBar.pushViewObject
       view: view
       title: title
       url: window.location.pathname
-      
     App.BottomBar.setContentView bottomBarView
-      
+
   routeNotFound: ->
     App.NotFoundView ?= new NotFoundView()
     @loadView App.NotFoundView, Strings.notFoundTitle

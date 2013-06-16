@@ -1,8 +1,10 @@
 - comments = model.get('comments')
 
 #event-view
+  - var image = model.get('image'); if (image !== '') {
   .image
     img(src=model.get('image'))
+  - }
   header
     h1= model.get('name')
     p.date= moment.unix(model.get('date')).format("MMM Do,")
