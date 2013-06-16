@@ -29,6 +29,7 @@ newUser = (username, callback) ->
 createUserSimple = (username, callback) ->
   createUser {"username": username, "joinTimestamp": moment().unix() }, database.handle callback, (userNode) ->
     createAPIKeyNode userNode, database.handle callback, ->
+      console.log "Creating a new ical url"
       ical.createICalURL userNode.id, callback
 
 createAPIKeyNode = (userNode, callback) ->
@@ -39,7 +40,8 @@ createAPIKeyNode = (userNode, callback) ->
 # Sets up the new user
 createUser = (data, callback) ->
   database.createNode "USERS", data, "USER", database.handle callback, (userNode) ->
-    createAPIKeyNode userNode, callback
+    createAPIKeyNode userNode, database.handle callback, ->
+      ical.createICalURL userNode.id, callback
 
 # Removes the API key for the given user from the database
 removeAPIKey = (username, callback) ->

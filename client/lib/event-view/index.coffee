@@ -31,7 +31,7 @@ exports.EventView = EventView = Backbone.View.extend
     @$el.find('.insertComment').click =>
       @addComment()
 
-    @$el.find('.addComment').click =>
+    @$el.find('.addComment').submit =>
       @addComment()
     
   events:
@@ -43,10 +43,12 @@ exports.EventView = EventView = Backbone.View.extend
     data =
       comment: @$el.find('.newComment').val()
 
-    author = "Get logged in username"
+    author = App.User.username
     # Use backbone to push into the collection directly
-    $.post @model.commentsUrl(), data, =>
+
+    App.Auth.authPost @model.commentsUrl(), data, =>
       @insertComment data.comment, author, moment().unix()
+    return false
 
   insertComment: (comment, author, added) ->
     newComment =

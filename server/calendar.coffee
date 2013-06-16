@@ -26,6 +26,7 @@ class Event
   toVObject: ->
     vobject = jsDAV.create('VEVENT')
     startStamp = moment.unix(@start)
+    dateStamp  = moment().format(TIME_FORMAT)
 
     vobject.add 'UID', @uid
     vobject.add 'STSTAMP', startStamp.format(TIME_FORMAT)
@@ -36,17 +37,14 @@ class Event
       vobject.add 'DTEND', startStamp.add('h', 1).format(TIME_FORMAT)
     pushValue vobject, 'LOCATION', @location
     vobject.add 'SUMMARY', @summary
-    vobject.add 'DESCRIPTION', @description.replace("\n", '').replace("\r", '')
-    vobject.add 'SEQUENCE', "0"
+    vobject.add 'DESCRIPTION', @description
 
     return vobject
 
 createICal = (prodid, events) ->
   vcal = jsDAV.create('VCALENDAR')
-  vcal.add "METHOD", "PUBLISH"
   vcal.add 'VERSION', '2.0'
-  vcal.add 'PRODID', "-//group125//eventsList//EN"
-  vcal.add 'CALSCALE', 'GREGORIAN'
+  vcal.add 'PRODID', prodid
   for e in events
     if not e.tagName?
       vcal.add eventToVObject(e)
@@ -89,7 +87,7 @@ getICalUser = (icalId, callback) ->
 
 getICal = (icalId, callback) ->
   getICalUser icalId, database.handle callback, (userId) ->
-    users.getUserEvents userId, database.handle callback, (events) ->
+    events.getSubscribedEvents userId, database.handle callback, (events) ->
       callback null, toVCalendar("prodid", events)
 
 # Removes the ICal url for the user
@@ -131,6 +129,7 @@ setICalURL = (nodeId, newId, callback) ->
 # Creates an ICal url for the user
 # In case the url removes the previous one and craetes a new one
 createICalURL = (nodeId, callback) ->
+  console.log "Creating a new ical url"
   setUniqueID database.handle callback, (newId) ->
     setICalURL nodeId, newId, callback
 
