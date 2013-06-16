@@ -3,10 +3,16 @@ Event    = require('./event').Event
 
 exports.Events = Backbone.Collection.extend
   initialize: (options)->
-    @tagName = options?.tagName
+    @tagName = options?.tagName 
 
   model: Event
 
   url: ->
     base = '/api/events'
     return if @tagName? then "#{base}/tagged/#{@tagName}" else base
+    
+  fetch: (options)->  
+    return Backbone.Collection.prototype.fetch.call(this, options) unless App.User.isLoggedIn()
+
+    App.Auth.authGet '/api/user/events', (json)=>
+      @reset json

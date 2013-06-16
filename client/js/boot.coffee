@@ -45,11 +45,11 @@ $ ->
     App.MenuView ?= new MenuView()
     App.NavBar.toggleHelperView App.MenuView
 
-  App.EventsList = new Events
   App.TagList = new Tags
   App.User = new User
   App.Event = new Event
   App.Auth = new Auth
+  App.EventsList = new Events
 
   App.EventsListView = new EventsListView
     collection: App.EventsList

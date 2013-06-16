@@ -18,7 +18,7 @@ exports.Router = Backbone.Router.extend
 
   routes:
     ''                    : 'events'
-    'events'              : 'events'
+    'events'              : 'allEvents'
     'event/new'           : 'createEvent'
     'event/:id'           : 'event'
     'events/tagged/:tag'  : 'taggedEvents'

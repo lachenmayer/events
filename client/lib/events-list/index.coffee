@@ -43,6 +43,7 @@ exports.EventsListView = Backbone.View.extend
     day = newDay moment()
     
     @collection.each (e) =>
+      return unless e.get 'name'
       eventDate = moment.unix e.get 'date'
       unless eventDate.isSame day.date, 'day'
         @dayLists.push day if day.events.length > 0
