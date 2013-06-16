@@ -42,24 +42,13 @@ exports.EventView = EventView = Backbone.View.extend
     console.log @$('.subscribeBtn')
     console.log @$el.find('.randomThing')  
     @$el.find('.subscribeBtn').on "click",  =>
+
+    @$el.find('.addComment').click =>
+      @addComment()
     
   events:
     'click button': (e) ->
       @subscribe()
-
-    @$el.find('.addComment').click =>
-      @addComment()
-
-    @$el.find('.subscribe').click =>
-      @subscribe()
-
-    @$el.find('.delete').click =>
-      @removeComment(this)
-
-  removeComment: (element) ->
-    # remove from the comments list
-    # remove from the collection
-    # synchronize the comments list
 
   addComment: ->
     id = @model.get('id')
