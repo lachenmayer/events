@@ -13,3 +13,13 @@ exports.FirstTimeView = Backbone.View.extend
     @$el.html _.template @mainTemplate
       url: @model.getIcalURL()
       rssUrl: "url2"
+
+    el = @$el.find('.resetURL')
+    el.click =>
+      if not el.hasClass 'disabled'
+        el.addClass 'disabled'
+        url = "/api/user/ical/url/reload/"
+        App.Auth.authGet url, (data) =>
+          @model.set 'icalId', data
+          el.removeClass 'disabled'
+      return false
