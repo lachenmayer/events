@@ -26,6 +26,9 @@ exports.GmailView = Backbone.View.extend
     @$el.html _.template @mainTemplate
       url: @model.getIcalURL()
 
+    @$el.find('.url').click =>
+      @$el.find('.url').select()
+
 exports.OutlookView = Backbone.View.extend
   mainTemplate: require './outlook'
 
@@ -37,3 +40,6 @@ exports.OutlookView = Backbone.View.extend
   render: ->
     @$el.html _.template @mainTemplate
       url: @model.getIcalURL()
+
+    @$el.find('.url').click =>
+      @$el.find('.url').select()
