@@ -25,6 +25,8 @@ exports.EventsListView = Backbone.View.extend
 
   initialize: ->
     @filter = ''
+    @tag = ''
+    @subscribed = false
     @dayLists = []
     @collection.bind 'reset', =>
       @splitEvents()
@@ -66,21 +68,43 @@ exports.EventsListView = Backbone.View.extend
     result.filter (day) ->
       day.events.length > 0
 
-  filterData: (string) -> (event) ->
+  hasTag: (query, event, f) ->
+    satisfying = event.get('tags').filter (tag) ->
+      f query, tag
+#      tag.toLowerCase().indexOf(query.substring(1)) != -1
+    return satisfying.length > 0
+
+  substrMatch: (query, value) ->
+    value.toLowerCase().indexOf(query) != -1
+
+  exactMatch: (query, value) ->
+    query == value.toLowerCase()
+
+  filterData: (string) -> (event) =>
     # More powerful data filtering here
     query = string.toLowerCase()
+    if @subscribed && !event.get('subscribed')
+      return false
+    if @tag != '' && !@hasTag @tag.toLowerCase(), event, @exactMatch
+      return false
     if query == '' || query == '@' || query == '#' || query == '+'
       return true
     if query[0] == '@'
-      return event.get('location').toLowerCase().indexOf(query.substring(1)) != -1
+      return @substrMatch query.substr(1), event.get('location')
     if query[0] == '#'
-      return event.get('name').toLowerCase().indexOf(query.substring(1)) != -1
+      return @substrMatch query.substr(1), event.get('name')
     if query[0] == '+'
-      satisfying = event.get('tags').filter (tag) ->
-        tag.toLowerCase().indexOf(query.substring(1)) != -1
-      return satisfying.length > 0
-    return event.get('name').toLowerCase().indexOf(string.toLowerCase()) != -1 ||
-           event.get('location').toLowerCase().indexOf(string.toLowerCase()) != -1
+      return @hasTag query.substr(1), event, @substrMatch
+    return @substrMatch query, event.get('name') ||
+           @substrMatch query, event.get('location')
+
+  setSubscribedFilter: (value) ->
+    @subscribed = value
+    @displayEvents()
+
+  setTagFilter: (string) ->
+    @tag = string
+    @displayEvents()
 
   setFilter: (string) ->
     @filter = string
@@ -94,8 +118,6 @@ exports.EventsListView = Backbone.View.extend
 #     console.log @dayLists
   
     values = @applyFilter @dayLists, @filterData(@filter)
-    
-    console.log values
     
     @$el.find('#days').html _.template @daysTemplate
       days: values

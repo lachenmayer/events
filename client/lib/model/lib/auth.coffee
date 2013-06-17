@@ -9,8 +9,11 @@ exports.Auth = Backbone.Model.extend
     data["key"] = App.User.key
     $.post(url, data, callback)
   authGet:  (url, callback) ->
-    authData = 
-      "userId": App.User.id
-      "key": App.User.key
+    if App.User.isLoggedIn()
+      authData =
+        "userId": App.User.id
+        "key": App.User.key
+    else
+      authData = {}
     $.get(url, authData, callback)
 

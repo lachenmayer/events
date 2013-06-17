@@ -60,8 +60,6 @@ returnJson = (res, field) -> (err, value) ->
 getLoggedInUser = (callback) -> (req, res) ->
   #req.cookie.userId = 12312
   #req.cookie.key = blah
-  console.log "rb", req.body
-  console.log "rq", req.query
   if not req.body or not req.body.userId
     if not req.query or not req.query.userId
       return callback req, res, null
@@ -173,8 +171,17 @@ getAllEvents =
     responseClass: "event"
     errorResponses: [swagger.errors.notFound("events")]
     nickname: "getAllEvents"
-  action: (req, res) ->
-    eventData.getAllEvents returnJson(res, "events")
+  action: getLoggedInUser (req, res, user) ->
+    if not user
+      eventData.getAllEvents returnJson(res, "events")
+    else
+      eventData.getAllEvents handler res, (events) ->
+        userData.getUserEvents user.id, handler res, (subscribed) ->
+          subIds = (sub.id for sub in subscribed)
+          for event in events
+            event.subscribed = event.id in subIds
+
+          returnJson(res, "events")(null, events)
 
 postGroupEvent =
   spec:

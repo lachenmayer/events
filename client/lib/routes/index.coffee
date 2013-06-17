@@ -17,7 +17,7 @@ feeds           = require('../feed-view')
 exports.Router = Backbone.Router.extend
 
   routes:
-    ''                       : 'events'
+    ''                       : 'subscribedEvents'
     'events'                 : 'events'
     'event/new'              : 'createEvent'
     'event/:id'              : 'event'
@@ -53,10 +53,13 @@ exports.Router = Backbone.Router.extend
 
   events: ->
     @createNewEventsList()
+    App.EventsListView.setTagFilter ''
+    App.EventsListView.setSubscribedFilter false
     @loadView App.EventsListView, Strings.upcomingEvents
 
   subscribedEvents: ->
     @createNewEventsList()
+    App.EventsListView.setSubscribedFilter true
     @loadView App.EventsListView, Strings.upcomingEvents
 
   tags: ->
@@ -78,10 +81,10 @@ exports.Router = Backbone.Router.extend
           @loadEventView event
 
   taggedEvents: (tagName)->
-    taggedEvents = new Events
-      tagName: tagName
-    eventsView = new EventsListView
-      collection: taggedEvents
+    @createNewEventsList
+    App.EventsListView.setTagFilter tagName
+    App.EventsListView.setSubscribedFilter false
+    eventsView = App.EventsListView
     loadView = (view)=>
       @loadView eventsView, "'#{tagName}' Events", view
     if App.User.isLoggedIn()
