@@ -115,12 +115,15 @@ exports.EventsListView = Backbone.View.extend
     @setFilter text
 
   displayEvents: ->
-#     console.log @dayLists
-  
     values = @applyFilter @dayLists, @filterData(@filter)
-    
+
     @$el.find('#days').html _.template @daysTemplate
       days: values
+
+  addEvent: (event) ->
+    @collection.add (new Model.Event(event))
+    @splitEvents()
+    @displayEvents()
 
   render: ->
     @$el.html _.template @mainTemplate
@@ -149,7 +152,7 @@ exports.BottomBarView = Backbone.View.extend
     @subscribed = subscribed
     @render()
   
-  render: ->  
+  render: ->
     @$el.html _.template @bottomBar()
       
     $buttonEl = @$el.find('a.subscribe-button')

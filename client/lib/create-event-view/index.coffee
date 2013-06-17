@@ -3,6 +3,7 @@ chrono          = require '../chrono'
 Bacon           = require '../baconjs'
 moment          = require '../moment'
 Strings         = require('../strings').lang 'en'
+Event           = require('../model').Event
 
 id = (x) -> x
 
@@ -28,7 +29,9 @@ exports.CreateEventView = Backbone.View.extend
     validSubmission = @submitButtonClick.map(=>
       @allFieldsValid(@validFields(@inputValues()))).filter(id)
     validSubmission.onValue (val) =>
-      App.Auth.authPost '/api/event/new', @inputValues()
+      App.Auth.authPost '/api/event/new', @inputValues(), =>
+        App.EventsListView.collection.fetch()
+
       App.Router.navigate '/',
         trigger: true
         replace: true
