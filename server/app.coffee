@@ -60,8 +60,6 @@ returnJson = (res, field) -> (err, value) ->
 getLoggedInUser = (callback) -> (req, res) ->
   #req.cookie.userId = 12312
   #req.cookie.key = blah
-  console.log "rb", req.body
-  console.log "rq", req.query
   if not req.body or not req.body.userId
     if not req.query or not req.query.userId
       return callback req, res, null
@@ -173,8 +171,17 @@ getAllEvents =
     responseClass: "event"
     errorResponses: [swagger.errors.notFound("events")]
     nickname: "getAllEvents"
-  action: (req, res) ->
-    eventData.getAllEvents returnJson(res, "events")
+  action: getLoggedInUser (req, res, user) ->
+    if not user
+      eventData.getAllEvents returnJson(res, "events")
+    else
+      eventData.getAllEvents handler res, (events) ->
+        userData.getUserEvents user.id, handler res, (subscribed) ->
+          subIds = (sub.id for sub in subscribed)
+          for event in events
+            event.subscribed = event.id in subIds
+
+          returnJson(res, "events")(null, events)
 
 postGroupEvent =
   spec:
@@ -184,7 +191,7 @@ postGroupEvent =
     method: "POST"
     params: []
     responseClass: "event"
-    errorResponses: [swagger.errors.invalid("event")]
+    errorResponses: [swagger.errors.invalid("event"), swagger.errors.invalid("user")]
     nickname: "postGroupEvent"
   action: requireLoggedInUser (req, res, user) ->
     throw swagger.errors.invalid("event") unless (\
@@ -207,7 +214,7 @@ postGroupEvent =
     console.log "data:", data
     userData.findUserByUsername user.username, (err, user) ->
       if err
-        throw swagger.invalid("user")
+        throw swagger.errors.invalid("user")
       else
         eventData.createEvent user.id, data, returnJson(res, "event")
 
@@ -222,9 +229,9 @@ usesKeys = (data, keys) ->
 postChangeEvent =
   spec:
     description: "Changes an existing event"
-    path: "/event/{id}/edit"
+    path: "/event.json/{id}"
     notes: "Modifies the currently existing event in the database"
-    method: "POST"
+    method: "PUT"
     params: []
     responseClass: "event"
     errorResponses: [swagger.errors.invalid("event")]
@@ -241,7 +248,7 @@ postChangeEvent =
 postDeleteEvent =
   spec:
     description: "Deletes an event"
-    path: "/event/{id}"
+    path: "/event.json/{id}"
     notes: "Removes the event from the list of existing events"
     method: "DELETE"
     params: []
@@ -677,7 +684,7 @@ swagger.addGet getEventsInRange
 swagger.addGet getEventsFromTag
 swagger.addGet getEventById
 swagger.addGet getUserInfo
-swagger.addPost postChangeEvent
+swagger.addPut postChangeEvent
 swagger.addPost postGroupEvent
 swagger.addDelete postDeleteEvent
 swagger.addDelete deleteICalURL

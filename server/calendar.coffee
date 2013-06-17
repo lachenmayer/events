@@ -26,7 +26,6 @@ class Event
   toVObject: ->
     vobject = jsDAV.create('VEVENT')
     startStamp = moment.unix(@start)
-    dateStamp  = moment().format(TIME_FORMAT)
 
     vobject.add 'UID', @uid
     vobject.add 'STSTAMP', startStamp.format(TIME_FORMAT)
@@ -87,7 +86,7 @@ getICalUser = (icalId, callback) ->
 
 getICal = (icalId, callback) ->
   getICalUser icalId, database.handle callback, (userId) ->
-    events.getSubscribedEvents userId, database.handle callback, (events) ->
+    users.getUserEvents userId, database.handle callback, (events) ->
       callback null, toVCalendar("prodid", events)
 
 # Removes the ICal url for the user

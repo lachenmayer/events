@@ -1,16 +1,16 @@
-- mainUrl = "calendar.google.com"
+- mainUrl = "http://calendar.google.com"
+#subscribe
+  h2 Step 1
+  p Log into gmail by going to
+  a(href=mainUrl)=mainUrl
 
-h2.step Step 1
-p Log into gmail by going to
-a(href=mainUrl) gmail logon page
+  h2 Step 2
+  p Click on the arrow from other calendars
+  p Click import from URL
 
-h2.step Step 2
-p Click on the arrow from other calendars
-p Click import from URL
+  h2 Step 3
+  p Enter into the address URL
+  input.url(value=url, placeholder="Fetching your ical url.")
 
-h2.step Step 3
-p Enter into the address URL
-input(value=url, placeholder="Fetching your ical url.")
-
-p Click Add
-p Congratulations. You have just added a calendar.
+  p Click Add
+  p Congratulations. You have just added a calendar.

@@ -62,7 +62,8 @@ createEvent = (ownerId, data, callback) ->
            RETURN e"
   db.query query, {ownerId: ownerId, rootId: database.rootNodeId, values: data}, database.handle callback, (event) ->
     console.log "Created Event!"
-    callback null, event[0].e.id
+    event[0].e.data.subscribed = false
+    callback null, database.returnDataWithId event[0].e
 
 
 findEventNodeById = (eventId, callback) ->

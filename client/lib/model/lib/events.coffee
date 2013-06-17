@@ -7,6 +7,9 @@ exports.Events = Backbone.Collection.extend
 
   model: Event
 
+  fetch: ->
+    App.Auth.authGet @url(), (data) =>
+      @reset data
+
   url: ->
-    base = '/api/events'
-    return if @tagName? then "#{base}/tagged/#{@tagName}" else base
+    '/api/events'

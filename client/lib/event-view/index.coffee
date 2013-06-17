@@ -46,6 +46,15 @@ exports.EventView = EventView = Backbone.View.extend
       @addComment()
     @$el.find('.addComment').submit =>
       @addComment()
+
+    @$el.find('.delete-button').click =>
+      @deleteNode()
+
+  deleteNode: ->
+    @model.destroy success: =>
+      App.EventsListView.collection.fetch()
+      App.Router.navigate "/", true
+
   addComment: ->
     id = @model.get('id')
     data =
