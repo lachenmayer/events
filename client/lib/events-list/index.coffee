@@ -130,7 +130,22 @@ exports.BottomBarView = Backbone.View.extend
   render: ->  
     @$el.html _.template @bottomBar()
       
-    @subscribeButton.setElement @$el.find('a.button-right')
+    $buttonEl = @$el.find('a.subscribe-button')
+    @subscribeButton.setElement $buttonEl
     @subscribeButton.render()
+    $buttonEl.click =>
+      @subscribe()
     this
+
+  subscribe: ->    
+    if App.User.isLoggedIn()
+      @subscribed = not @subscribed
+      @subscribeButton.setSubscribed @subscribed
+      
+#       if @subscribed # Subscribes to the event
+#         console.log "Unsubscribe"
+#         App.Auth.authPost("/api/event/#{@model.get('id')}/subscribe")
+#       else # Unsubscribe from the event
+#         console.log "subscribe"
+#         App.Auth.authPost("/api/event/#{@model.get('id')}/unsubscribe")
 
